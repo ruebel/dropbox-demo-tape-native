@@ -1,0 +1,43 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "private": true,
+  "scripts": {
+    "debugger": "open \"rndebugger://set-debugger-loc?host=localhost&port=19001\"",
+    "start": "exp start"
+  },
+  "eslintConfig": {
+    "extends": "gsandf-react",
+    "env": {
+      "jest": true
+    },
+    "parser": "babel-eslint"
+  },
+  "dependencies": {
+    "array-move": "^1.0.0",
+    "dropbox": "^2.5.13",
+    "expo": "^24.0.0",
+    "history": "^4.7.2",
+    "promise-file-reader": "^1.0.0",
+    "prop-types": "^15.6.0",
+    "query-string": "^5.0.1",
+    "react": "16.0.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react-native-sortable-listview": "^0.2.7",
+    "react-native-swipe-list-view": "^1.0.4",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-native": "^4.2.0",
+    "react-router-redux": "^4.0.8",
+    "redux": "^3.7.2",
+    "redux-persist": "^5.4.0",
+    "redux-thunk": "^2.2.0",
+    "styled-components": "^2.4.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "babel-preset-expo": "^4.0.0",
+    "babel-preset-react-native-stage-0": "^1.0.1",
+    "eslint": "^4.15.0",
+    "eslint-config-gsandf-react": "^1.0.2"
+  }
+}
