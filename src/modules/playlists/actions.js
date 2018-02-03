@@ -1,6 +1,10 @@
-import Dropbox from 'dropbox';
 import { FileSystem } from 'expo';
-import { createDownloader, transformFile } from '../utils';
+import {
+  createDownloader,
+  getDropboxConnection,
+  handleError,
+  transformFile
+} from '../utils';
 import { getSelectedPlaylist } from './selectors';
 import types from './types';
 
@@ -20,6 +24,7 @@ export const downloadTracks = tracks => async (dispatch, getState) => {
         track.name,
         track.path_display,
         state,
+        // Notify redux store of file download progress
         progress => dispatch(downloadProgress(track.id, progress))
       ),
       track
@@ -32,11 +37,7 @@ export const downloadTracks = tracks => async (dispatch, getState) => {
     debugger;
     console.log(results);
   } catch (error) {
-    console.error(error);
-    dispatch({
-      payload: { message: error.message },
-      type: types.FAILED
-    });
+    handleError(error, dispatch, types.FAILED);
   }
 };
 
@@ -49,9 +50,8 @@ export const findPlaylists = () => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });
   const state = getState();
   try {
-    const dbx = new Dropbox({
-      accessToken: state.auth.user.params.access_token
-    });
+    const dbx = getDropboxConnection(state);
+    // Search for playlist files
     const { matches } = await dbx.filesSearch({
       path: '',
       query: '.mix'
@@ -82,11 +82,37 @@ export const findPlaylists = () => async (dispatch, getState) => {
       type: types.SUCCESS
     });
   } catch (error) {
-    console.error(error);
-    dispatch({
-      payload: { message: error.message },
-      type: types.FAILED
+    handleError(error, dispatch, types.FAILED);
+  }
+};
+
+export const savePlaylist = () => async (dispatch, getState) => {
+  const state = getState();
+  const playlist = getSelectedPlaylist(state);
+  try {
+    const dbx = getDropboxConnection(state);
+    // Upload playlist to dropbox
+    const result = await dbx.filesUpload({
+      // Do not rename on conflict
+      autorename: false,
+      // File data to upload
+      contents: playlist.data,
+      // Overwrite previous version of file (if exists)
+      mode: {
+        '.tag': 'overwrite'
+      },
+      // Do not notify users of change
+      mute: true,
+      // Path to file in dropbox
+      path: playlist.meta.path_lower
     });
+    console.log(result);
+    dispatch({
+      payload: result,
+      type: types.SAVE_SUCCESS
+    });
+  } catch (error) {
+    handleError(error, dispatch, types.FAILED);
   }
 };
 
@@ -104,13 +130,13 @@ export const updateTrackInfo = () => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });
   const state = getState();
   try {
-    const dbx = new Dropbox({
-      accessToken: state.auth.user.params.access_token
-    });
     const playlist = getSelectedPlaylist(state);
+    // If there aren't any tracks there's nothing to update so exit
     if (!playlist || !playlist.tracks || playlist.tracks.length === 0) {
       return;
     }
+    // Connect to dropbox and update the track information
+    const dbx = getDropboxConnection(state);
     const results = await Promise.all(
       playlist.tracks.map(track =>
         dbx.filesGetMetadata({
@@ -123,10 +149,6 @@ export const updateTrackInfo = () => async (dispatch, getState) => {
       type: types.UPDATE_TRACKS
     });
   } catch (error) {
-    console.error(error);
-    dispatch({
-      payload: { message: error.message },
-      type: types.FAILED
-    });
+    handleError(error, dispatch, types.FAILED);
   }
 };

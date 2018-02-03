@@ -5,9 +5,10 @@ import { Link, withRouter } from 'react-router-native';
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
 
+import Button from '../../Button';
 import TrackList from './TrackList';
 
-import { updateTracks } from '../../../modules/playlists/actions';
+import { savePlaylist, updateTracks } from '../../../modules/playlists/actions';
 import { getSelectedPlaylist } from '../../../modules/playlists/selectors';
 import { playlistType } from '../../../types';
 
@@ -29,12 +30,13 @@ class Details extends React.Component {
   };
 
   render() {
-    const { match, playlist } = this.props;
+    const { match, playlist, savePlaylist } = this.props;
     return (
       <View>
         <Link to={`${match.url}/add`}>
           <Text>Add Tracks</Text>
         </Link>
+        <Button onPress={savePlaylist} text="Save" />
         <TrackList
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}
@@ -48,6 +50,7 @@ class Details extends React.Component {
 Details.propTypes = {
   match: PropTypes.object,
   playlist: playlistType,
+  savePlaylist: PropTypes.func.isRequired,
   updateTracks: PropTypes.func.isRequired
 };
 
@@ -57,6 +60,7 @@ const mapStateToProps = state => ({
 
 export default withRouter(
   connect(mapStateToProps, {
+    savePlaylist,
     updateTracks
   })(Details)
 );

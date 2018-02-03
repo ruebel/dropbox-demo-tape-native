@@ -1,12 +1,9 @@
+import Dropbox from 'dropbox';
 import { FileSystem } from 'expo';
 
+// Dropbox public download API URL
 const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
 
-export const transformFile = file => ({
-  ...file,
-  path: file.path_display,
-  type: file['.tag']
-});
 /**
  * Create a resumable downloader with proper headers
  * @param  {String} local  Local path to save file
@@ -31,3 +28,38 @@ export const createDownloader = (local, remote, state) =>
       }
     }
   );
+
+/**
+ * Returns a dropbox sdk instance using state credentials
+ * @param  {Object} state App state
+ * @return {Object}       Connected dropbox SDK instance
+ */
+export const getDropboxConnection = state =>
+  new Dropbox({
+    accessToken: state.auth.user.params.access_token
+  });
+
+/**
+ * Generic error handler
+ * @param  {Object} error    Caught error object
+ * @param  {Func} dispatch   Redux dispatch fn
+ * @param  {String} type     Redux action type
+ */
+export const handleError = (error, dispatch, type) => {
+  console.error(error);
+  dispatch({
+    payload: { message: error.message },
+    type: type
+  });
+};
+
+/**
+ * Transform dropbox file object shape to shape usable by client
+ * @param  {Object} file File object shape from dropbox
+ * @return {Object}      Transformed file object
+ */
+export const transformFile = file => ({
+  ...file,
+  path: file.path_display,
+  type: file['.tag']
+});

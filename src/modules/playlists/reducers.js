@@ -41,6 +41,11 @@ export default (state = initialState, action) => {
           () => action.payload.progress
         )
       };
+    case types.SAVE_SUCCESS:
+      return updateSelected(state, playlist => ({
+        ...playlist,
+        hasChanges: false
+      }));
     case types.SELECT:
       return {
         ...state,
@@ -59,7 +64,8 @@ export default (state = initialState, action) => {
         data: {
           ...playlist.data,
           tracks: action.payload
-        }
+        },
+        hasChanges: true
       }));
     default:
       return state;
