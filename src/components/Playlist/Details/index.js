@@ -36,7 +36,11 @@ class Details extends React.Component {
         <Link to={`${match.url}/add`}>
           <Text>Add Tracks</Text>
         </Link>
-        <Button onPress={savePlaylist} text="Save" />
+        <Button
+          disabled={!playlist.hasChanges}
+          onPress={savePlaylist}
+          text="Save"
+        />
         <TrackList
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}

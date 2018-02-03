@@ -91,12 +91,12 @@ export const savePlaylist = () => async (dispatch, getState) => {
   const playlist = getSelectedPlaylist(state);
   try {
     const dbx = getDropboxConnection(state);
-    // Upload playlist to dropbox
-    const result = await dbx.filesUpload({
+    // Upload playlist to dropbox (dropbox will return new metadata)
+    const meta = await dbx.filesUpload({
       // Do not rename on conflict
       autorename: false,
       // File data to upload
-      contents: playlist.data,
+      contents: JSON.stringify(playlist.data),
       // Overwrite previous version of file (if exists)
       mode: {
         '.tag': 'overwrite'
@@ -106,9 +106,8 @@ export const savePlaylist = () => async (dispatch, getState) => {
       // Path to file in dropbox
       path: playlist.meta.path_lower
     });
-    console.log(result);
     dispatch({
-      payload: result,
+      payload: meta,
       type: types.SAVE_SUCCESS
     });
   } catch (error) {

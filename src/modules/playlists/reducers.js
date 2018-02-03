@@ -44,7 +44,8 @@ export default (state = initialState, action) => {
     case types.SAVE_SUCCESS:
       return updateSelected(state, playlist => ({
         ...playlist,
-        hasChanges: false
+        hasChanges: false,
+        meta: action.payload
       }));
     case types.SELECT:
       return {
