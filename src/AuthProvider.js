@@ -1,10 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import { push } from 'react-router-redux';
 import PropTypes from 'prop-types';
 import Dropbox from 'dropbox';
-// import queryString from 'query-string';
-import { AuthSession } from 'expo';
+import { AuthSession, Constants } from 'expo';
 
 import Authenticate from './components/Authenticate';
 import { userType } from './types';
@@ -16,13 +14,12 @@ class AuthProvider extends React.Component {
   };
 
   handleLogin = async () => {
-    const dbx = new Dropbox({ clientId: 'ie394xarjsfdxr0' });
+    const dbx = new Dropbox({ clientId: Constants.manifest.extra.dbClientId });
     const redirectUrl = AuthSession.getRedirectUrl();
     const authUrl = dbx.getAuthenticationUrl(redirectUrl);
     const result = await AuthSession.startAsync({
       authUrl
     });
-    console.log(result);
     this.props.setUser(result);
   };
 
@@ -37,7 +34,6 @@ class AuthProvider extends React.Component {
 
 AuthProvider.propTypes = {
   children: PropTypes.node,
-  // push: PropTypes.func.isRequired,
   setUser: PropTypes.func.isRequired,
   user: userType
 };
