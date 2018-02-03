@@ -8,7 +8,11 @@ import arrayMove from 'array-move';
 import Button from '../../Button';
 import TrackList from './TrackList';
 
-import { savePlaylist, updateTracks } from '../../../modules/playlists/actions';
+import {
+  downloadTracks,
+  savePlaylist,
+  updateTracks
+} from '../../../modules/playlists/actions';
 import { getSelectedPlaylist } from '../../../modules/playlists/selectors';
 import { playlistType } from '../../../types';
 
@@ -30,7 +34,7 @@ class Details extends React.Component {
   };
 
   render() {
-    const { match, playlist, savePlaylist } = this.props;
+    const { downloadTracks, match, playlist, savePlaylist } = this.props;
     return (
       <View>
         <Link to={`${match.url}/add`}>
@@ -41,6 +45,7 @@ class Details extends React.Component {
           onPress={savePlaylist}
           text="Save"
         />
+        <Button onPress={downloadTracks} text="Download" />
         <TrackList
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}
@@ -52,6 +57,7 @@ class Details extends React.Component {
 }
 
 Details.propTypes = {
+  downloadTracks: PropTypes.func.isRequired,
   match: PropTypes.object,
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
@@ -64,6 +70,7 @@ const mapStateToProps = state => ({
 
 export default withRouter(
   connect(mapStateToProps, {
+    downloadTracks,
     savePlaylist,
     updateTracks
   })(Details)

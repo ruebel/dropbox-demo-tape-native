@@ -62,6 +62,7 @@ const Track = ({ onRemove, position, sortHandlers, track }) => (
         <Name>{getFileName(track.path)}</Name>
         <Path>{getFilePath(track.path)}</Path>
       </View>
+      {track.downloadStatus && <Name>{track.downloadStatus.percent}%</Name>}
     </Inner>
   </Wrapper>
 );

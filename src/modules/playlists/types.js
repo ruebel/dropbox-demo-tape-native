@@ -1,6 +1,7 @@
 const prefix = 'PLAYLISTS';
 
 export default {
+  DOWNLOAD_PROGRESS: `${prefix}/DOWNLOAD_PROGRESS`,
   FAILED: `${prefix}/FAILED`,
   PENDING: `${prefix}/PENDING`,
   SAVE_SUCCESS: `${prefix}/SAVE_SUCCESS`,

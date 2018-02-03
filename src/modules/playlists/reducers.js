@@ -4,7 +4,6 @@ const initialState = {
   data: [],
   error: null,
   pending: false,
-  pendingFiles: [],
   selectedId: null
 };
 
@@ -17,8 +16,33 @@ const updateSelected = (state, update) => ({
   pending: false
 });
 
+const updateTrackById = (id, items, update) =>
+  items.map(item => (item.id === id ? update(item) : item));
+
 export default (state = initialState, action) => {
   switch (action.type) {
+    case types.DOWNLOAD_PROGRESS:
+      return updateSelected(state, playlist => ({
+        ...playlist,
+        data: {
+          ...playlist.data,
+          tracks: updateTrackById(
+            action.payload.id,
+            playlist.data.tracks,
+            track => ({
+              ...track,
+              downloadStatus: {
+                ...action.payload.progress,
+                percent: Math.ceil(
+                  action.payload.progress.totalBytesWritten /
+                    action.payload.progress.totalBytesExpectedToWrite *
+                    100
+                )
+              }
+            })
+          )
+        }
+      }));
     case types.FAILED:
       return {
         ...state,
@@ -31,15 +55,6 @@ export default (state = initialState, action) => {
         ...state,
         error: null,
         pending: true
-      };
-    case types.PENDING_FILES:
-      return {
-        ...state,
-        pendingFiles: updateById(
-          action.payload.id,
-          state.pendingFiles,
-          () => action.payload.progress
-        )
       };
     case types.SAVE_SUCCESS:
       return updateSelected(state, playlist => ({

@@ -1,4 +1,5 @@
 import { FileSystem } from 'expo';
+import throttle from 'lodash.throttle';
 import {
   createDownloader,
   getDropboxConnection,
@@ -8,33 +9,31 @@ import {
 import { getSelectedPlaylist } from './selectors';
 import types from './types';
 
-export const downloadTracks = tracks => async (dispatch, getState) => {
+export const downloadTracks = () => async (dispatch, getState) => {
+  const state = getState();
+  const playlist = getSelectedPlaylist(state);
+  const { tracks } = playlist.data;
   if (!tracks || tracks.length === 0) {
     return;
   }
-  dispatch({
-    payload: tracks,
-    type: types.PENDING_FILES
-  });
   try {
-    const state = getState();
     // Create downloaders for all fo the tracks
-    const trackDownloaders = tracks.map(track => ({
-      downloader: createDownloader(
-        track.name,
+    const trackDownloaders = tracks.map(track =>
+      createDownloader(
+        track.id,
         track.path_display,
         state,
         // Notify redux store of file download progress
-        progress => dispatch(downloadProgress(track.id, progress))
-      ),
-      track
-    }));
+        throttle(
+          progress => dispatch(downloadProgress(track.id, progress)),
+          250
+        )
+      )
+    );
     // Download the files
     const results = await Promise.all(
-      trackDownloaders.map(t => t.download.downloadAsync())
+      trackDownloaders.map(d => d.downloadAsync())
     );
-    // eslint-disable-next-line
-    debugger;
     console.log(results);
   } catch (error) {
     handleError(error, dispatch, types.FAILED);

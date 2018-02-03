@@ -9,16 +9,18 @@ const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
  * @param  {String} local  Local path to save file
  * @param  {String} remote Remote location to download from
  * @param  {Object} state  Current app state
+ * @param  {Func} progress  Current app state
  * @return {Object}        Resumable Downloader Object
  */
-export const createDownloader = (local, remote, state) =>
+export const createDownloader = (local, remote, state, progress) => {
+  const localPath = FileSystem.documentDirectory + local;
   // Since the dropbox SDK only supports downloading as Blobs and RN
   // doesn't have support for blobs at the moment I am using the
   // Expo FileSystem Resumable Downloader to download the file
   // (the regular downloader doesn't support headers)
-  FileSystem.createDownloadResumable(
+  return FileSystem.createDownloadResumable(
     dropBoxDownloadUrl,
-    FileSystem.documentDirectory + local,
+    localPath,
     {
       headers: {
         Authorization: 'Bearer ' + state.auth.user.params.access_token,
@@ -26,8 +28,10 @@ export const createDownloader = (local, remote, state) =>
           path: remote
         })
       }
-    }
+    },
+    progress
   );
+};
 
 /**
  * Returns a dropbox sdk instance using state credentials

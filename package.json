@@ -17,6 +17,7 @@
     "dropbox": "^2.5.13",
     "expo": "^24.0.0",
     "history": "^4.7.2",
+    "lodash.throttle": "^4.1.1",
     "promise-file-reader": "^1.0.0",
     "prop-types": "^15.6.0",
     "query-string": "^5.0.1",
