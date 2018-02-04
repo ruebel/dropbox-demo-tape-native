@@ -43,7 +43,10 @@ export const getDropboxConnection = state =>
     accessToken: state.auth.user.params.access_token
   });
 
-export const getFileName = track => `${track.id}-${track.rev}`;
+export const getFileName = track => `${track.id}-${track.rev}.mp3`;
+
+export const getFilePath = track =>
+  `${FileSystem.documentDirectory}${getFileName(track)}`;
 
 /**
  * Generic error handler
@@ -60,9 +63,7 @@ export const handleError = (error, dispatch, type) => {
 };
 
 export const isDownloaded = async track => {
-  const info = await FileSystem.getInfoAsync(
-    FileSystem.documentDirectory + getFileName(track)
-  );
+  const info = await FileSystem.getInfoAsync(getFilePath(track));
   return {
     ...track,
     downloadStatus: info.exists ? 100 : null

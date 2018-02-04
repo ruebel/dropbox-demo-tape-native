@@ -1,5 +1,4 @@
-import Dropbox from 'dropbox';
-import { transformFile } from './utils';
+import { getDropboxConnection, handleError, transformFile } from './utils';
 
 const prefix = 'FILES';
 
@@ -23,9 +22,7 @@ export const actions = {
     dispatch({ type: types.PENDING });
     const state = getState();
     try {
-      const dbx = new Dropbox({
-        accessToken: state.auth.user.params.access_token
-      });
+      const dbx = getDropboxConnection(state);
       const { cursor, entries, hasMore } = await dbx.filesListFolder({
         path: folder
       });
@@ -36,15 +33,11 @@ export const actions = {
         path: folder
       };
       dispatch({
-        type: types.SUCCESS,
-        payload
+        payload,
+        type: types.SUCCESS
       });
     } catch (error) {
-      console.error(error);
-      dispatch({
-        type: types.FAILED,
-        payload: { message: error.message }
-      });
+      handleError(error, dispatch, types.FAILED);
     }
   }
 };
@@ -54,9 +47,9 @@ export const reducer = (state = initialState, action) => {
     case types.FAILED:
       return {
         ...state,
+        data: null,
         error: action.payload,
-        pending: false,
-        data: null
+        pending: false
       };
     case types.PENDING:
       return {

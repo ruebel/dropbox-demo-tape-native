@@ -5,6 +5,7 @@ import { Link, Switch, Route } from 'react-router-native';
 import { H1 } from './typography';
 import Container from './Container';
 import Loading from './Loading';
+import Player from './Player';
 import Playlist from './Playlist';
 import Playlists from './Playlists';
 
@@ -23,6 +24,7 @@ class App extends Component {
             <Route exact path="/" component={Playlists} />
             <Route path="/playlist" component={Playlist} />
           </Switch>
+          <Player />
         </View>
       </Container>
     );

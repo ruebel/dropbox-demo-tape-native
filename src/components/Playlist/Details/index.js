@@ -9,11 +9,10 @@ import Button from '../../Button';
 import TrackList from './TrackList';
 
 import {
-  downloadTracks,
-  savePlaylist,
-  updateTracks
-} from '../../../modules/playlists/actions';
-import { getSelectedPlaylist } from '../../../modules/playlists/selectors';
+  actions as playlistActions,
+  selectors as playlistSelectors
+} from '../../../modules/playlists';
+import { actions as audioActions } from '../../../modules/audio';
 import { playlistType } from '../../../types';
 
 class Details extends React.Component {
@@ -34,7 +33,7 @@ class Details extends React.Component {
   };
 
   render() {
-    const { downloadTracks, match, playlist, savePlaylist } = this.props;
+    const { downloadTracks, match, play, playlist, savePlaylist } = this.props;
     return (
       <View>
         <Link to={`${match.url}/add`}>
@@ -45,6 +44,7 @@ class Details extends React.Component {
           onPress={savePlaylist}
           text="Save"
         />
+        <Button onPress={() => play(0)} text="Play" />
         {playlist.data.tracks.some(track => !track.downloadStatus) && (
           <Button onPress={downloadTracks} text="Download Tracks" />
         )}
@@ -61,19 +61,21 @@ class Details extends React.Component {
 Details.propTypes = {
   downloadTracks: PropTypes.func.isRequired,
   match: PropTypes.object,
+  play: PropTypes.func.isRequired,
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
   updateTracks: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-  playlist: getSelectedPlaylist(state)
+  playlist: playlistSelectors.getSelectedPlaylist(state)
 });
 
 export default withRouter(
   connect(mapStateToProps, {
-    downloadTracks,
-    savePlaylist,
-    updateTracks
+    downloadTracks: playlistActions.downloadTracks,
+    play: audioActions.play,
+    savePlaylist: playlistActions.savePlaylist,
+    updateTracks: playlistActions.updateTracks
   })(Details)
 );
