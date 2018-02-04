@@ -31,14 +31,7 @@ export default (state = initialState, action) => {
             playlist.data.tracks,
             track => ({
               ...track,
-              downloadStatus: {
-                ...action.payload.progress,
-                percent: Math.ceil(
-                  action.payload.progress.totalBytesWritten /
-                    action.payload.progress.totalBytesExpectedToWrite *
-                    100
-                )
-              }
+              downloadStatus: action.payload.progress
             })
           )
         }
@@ -79,9 +72,10 @@ export default (state = initialState, action) => {
         ...playlist,
         data: {
           ...playlist.data,
-          tracks: action.payload
+          tracks: action.payload.tracks
         },
-        hasChanges: true
+        hasChanges: action.payload.hasChanges || playlist.hasChanges,
+        pending: false
       }));
     default:
       return state;

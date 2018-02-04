@@ -21,7 +21,10 @@ const BackText = styled.Text`
 
 const Inner = styled.View`
   align-items: center;
-  background-color: white;
+  background-color: ${p =>
+    p.disabled
+      ? p.theme.color.backgroundDisabled
+      : p.theme.color.backgroundPrimary};
   display: flex;
   flex-direction: row;
   padding: 20px;
@@ -56,13 +59,13 @@ const Track = ({ onRemove, position, sortHandlers, track }) => (
     <Back onPress={() => onRemove(track)}>
       <BackText>Remove</BackText>
     </Back>
-    <Inner>
+    <Inner disabled={!track.downloadStatus || track.downloadStatus < 100}>
       <Position>{position}</Position>
       <View>
         <Name>{getFileName(track.path)}</Name>
         <Path>{getFilePath(track.path)}</Path>
       </View>
-      {track.downloadStatus && <Name>{track.downloadStatus.percent}%</Name>}
+      {track.downloadStatus < 100 && <Name>{track.downloadStatus}%</Name>}
     </Inner>
   </Wrapper>
 );

@@ -43,6 +43,8 @@ export const getDropboxConnection = state =>
     accessToken: state.auth.user.params.access_token
   });
 
+export const getFileName = track => `${track.id}-${track.rev}`;
+
 /**
  * Generic error handler
  * @param  {Object} error    Caught error object
@@ -55,6 +57,16 @@ export const handleError = (error, dispatch, type) => {
     payload: { message: error.message },
     type: type
   });
+};
+
+export const isDownloaded = async track => {
+  const info = await FileSystem.getInfoAsync(
+    FileSystem.documentDirectory + getFileName(track)
+  );
+  return {
+    ...track,
+    downloadStatus: info.exists ? 100 : null
+  };
 };
 
 /**

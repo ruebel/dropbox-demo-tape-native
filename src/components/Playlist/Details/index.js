@@ -45,7 +45,9 @@ class Details extends React.Component {
           onPress={savePlaylist}
           text="Save"
         />
-        <Button onPress={downloadTracks} text="Download" />
+        {playlist.data.tracks.some(track => !track.downloadStatus) && (
+          <Button onPress={downloadTracks} text="Download Tracks" />
+        )}
         <TrackList
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}
