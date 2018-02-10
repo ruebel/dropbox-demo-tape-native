@@ -24,8 +24,8 @@ class App extends Component {
             <Route exact path="/" component={Playlists} />
             <Route path="/playlist" component={Playlist} />
           </Switch>
-          <Player />
         </View>
+        <Player />
       </Container>
     );
   }

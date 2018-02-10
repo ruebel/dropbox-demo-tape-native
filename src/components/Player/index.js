@@ -3,12 +3,18 @@ import PropTypes from 'prop-types';
 import { Audio } from 'expo';
 import { connect } from 'react-redux';
 
+import Control from './Control';
+
 import { trackType } from '../../types';
 import { getFilePath } from '../../modules/utils';
 import { actions as audioActions } from '../../modules/audio';
 import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
+  state = {
+    paused: false
+  };
+
   componentDidMount() {
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -17,23 +23,61 @@ class Player extends React.Component {
       playsInSilentModeIOS: true,
       shouldDuckAndroid: true
     });
+
     this.initializeSound();
   }
 
   componentWillReceiveProps(next) {
     if (next.track !== this.props.track) {
-      this.initializeSound();
+      this.initializeSound(next.track);
     }
   }
 
-  initializeSound = async () => {
-    if (!this.props.track) {
-      return;
+  handleAudioUpdate = status => {
+    if (status.isLoaded) {
+      this.setState({
+        duration: status.durationMillis,
+        isBuffering: status.isBuffering,
+        isPlaying: status.isPlaying,
+        position: status.positionMillis,
+        rate: status.rate,
+        shouldPlay: status.shouldPlay,
+        volume: status.volume
+      });
+      if (status.didJustFinish) {
+        this.props.trackComplete();
+      }
+    } else if (status.error) {
+      console.error(`PLAYER ERROR: ${status.error}`);
     }
+  };
+
+  handleDownload = () => {
+    console.log('download');
+  };
+
+  handlePause = () => {
+    if (this.state.paused) {
+      this.sound.playAsync();
+    } else {
+      this.sound.pauseAsync();
+    }
+    this.setState(state => ({
+      paused: !state.paused
+    }));
+  };
+
+  initializeSound = async trackOverride => {
     if (this.sound != null) {
       await this.sound.unloadAsync();
       this.sound.setOnPlaybackStatusUpdate(null);
       this.sound = null;
+    }
+    const track = trackOverride || this.props.track;
+
+    console.log('got track', track);
+    if (!track || !track.downloadStatus || track.downloadStatus < 100) {
+      return;
     }
 
     const source = { uri: getFilePath(this.props.track) };
@@ -49,37 +93,30 @@ class Player extends React.Component {
       initialStatus,
       this.handleAudioUpdate
     );
+
     this.sound = sound;
   };
 
-  handleAudioUpdate = status => {
-    if (status.isLoaded) {
-      this.setState({
-        duration: status.durationMillis,
-        isBuffering: status.isBuffering,
-        isPlaying: status.isPlaying,
-        position: status.positionMillis,
-        rate: status.rate,
-        shouldPlay: status.shouldPlay,
-        volume: status.volume
-      });
-      // this.props.onStatusUpdate(status);
-      if (status.didJustFinish) {
-        this.props.trackComplete();
-      }
-    } else if (status.error) {
-      console.error(`PLAYER ERROR: ${status.error}`);
-    }
-  };
-
   render() {
-    return null;
+    const { changeTrack, track } = this.props;
+    const { paused } = this.state;
+    return track && this.props.isPlaying ? (
+      <Control
+        canPlay={track.downloadStatus === 100}
+        name={track.name}
+        onDownload={this.handleDownload}
+        onNext={() => changeTrack(true)}
+        onPause={this.handlePause}
+        onPrevious={() => changeTrack(false)}
+        paused={paused}
+      />
+    ) : null;
   }
 }
 
 Player.propTypes = {
+  changeTrack: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool,
-  // onStatusUpdate: PropTypes.func.isRequired,
   track: trackType,
   trackComplete: PropTypes.func.isRequired
 };
@@ -90,5 +127,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
+  changeTrack: audioActions.changeTrack,
   trackComplete: audioActions.trackComplete
 })(Player);

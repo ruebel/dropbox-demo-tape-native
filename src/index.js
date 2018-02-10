@@ -10,14 +10,14 @@ import AuthProvider from './AuthProvider';
 import theme from './styles/theme';
 import configureStore from './store';
 
-const { history, persistor, store } = configureStore();
+const { persistor, store } = configureStore();
 
 export default () => (
   <ThemeProvider theme={theme}>
     <StoreProvider store={store}>
       <PersistGate persistor={persistor}>
         <AuthProvider>
-          <NativeRouter history={history}>
+          <NativeRouter>
             <App />
           </NativeRouter>
         </AuthProvider>

@@ -27,7 +27,7 @@ export const actions = {
       return;
     }
     const nextIndex = state.audio.index + (forward ? 1 : -1);
-    if (nextIndex === playlist.tracks.length || nextIndex < 0) {
+    if (nextIndex === playlist.data.tracks.length || nextIndex < 0) {
       return;
     }
     // Go to the next track
@@ -50,7 +50,7 @@ export const actions = {
       return;
     }
     let nextIndex = state.audio.index + 1;
-    if (nextIndex === playlist.tracks.length) {
+    if (nextIndex === playlist.data.tracks.length) {
       // We are at the end of the playlist
       if (state.audio.loop) {
         // Go back to the beginning if loop is set
