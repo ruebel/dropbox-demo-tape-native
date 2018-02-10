@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Text, View } from 'react-native';
-import { Link, withRouter } from 'react-router-native';
+import { View } from 'react-native';
+import { withRouter } from 'react-router-native';
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
 
-import Button from '../../Button';
+import ButtonWrapper from '../../ButtonWrapper';
+import IconButton from '../../IconButton';
 import TrackList from './TrackList';
 
 import {
@@ -14,6 +15,7 @@ import {
 } from '../../../modules/playlists';
 import { actions as audioActions } from '../../../modules/audio';
 import { playlistType } from '../../../types';
+import { color } from '../../../styles/theme';
 
 class Details extends React.Component {
   handleRemove = track => {
@@ -32,22 +34,39 @@ class Details extends React.Component {
     }
   };
 
+  showAdd = () => {
+    this.props.history.push(this.props.match.url + '/add');
+  };
+
   render() {
-    const { downloadTracks, match, play, playlist, savePlaylist } = this.props;
+    const { downloadTracks, play, playlist, savePlaylist } = this.props;
     return (
       <View>
-        <Link to={`${match.url}/add`}>
-          <Text>Add Tracks</Text>
-        </Link>
-        <Button
-          disabled={!playlist.hasChanges}
-          onPress={savePlaylist}
-          text="Save"
-        />
-        <Button onPress={() => play(0)} text="Play" />
-        {playlist.data.tracks.some(track => !track.downloadStatus) && (
-          <Button onPress={downloadTracks} text="Download Tracks" />
-        )}
+        <ButtonWrapper>
+          <IconButton
+            background={color.primary}
+            icon="add"
+            onPress={this.showAdd}
+          />
+          <IconButton
+            background={color.primary}
+            disabled={!playlist.hasChanges}
+            icon="save"
+            onPress={savePlaylist}
+          />
+          <IconButton
+            background={color.primary}
+            icon="play-arrow"
+            onPress={() => play(0)}
+          />
+          {playlist.data.tracks.some(track => !track.downloadStatus) && (
+            <IconButton
+              background={color.primary}
+              icon="file-download"
+              onPress={downloadTracks}
+            />
+          )}
+        </ButtonWrapper>
         <TrackList
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}
@@ -60,6 +79,7 @@ class Details extends React.Component {
 
 Details.propTypes = {
   downloadTracks: PropTypes.func.isRequired,
+  history: PropTypes.object,
   match: PropTypes.object,
   play: PropTypes.func.isRequired,
   playlist: playlistType,

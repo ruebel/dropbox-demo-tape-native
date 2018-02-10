@@ -19,12 +19,14 @@ const Wrapper = styled.View`
 
 const Title = styled.Text`
   color: ${p => p.theme.color.textExtraLight};
-  font-size: 14px;
   flex: 1;
+  font-size: 14px;
+  text-align: center;
 `;
 
 const Control = ({
   canPlay,
+  downloading,
   name,
   onDownload,
   onNext,
@@ -34,7 +36,11 @@ const Control = ({
 }) => {
   return (
     <Wrapper>
-      {!canPlay && <IconButton icon="file-download" onPress={onDownload} />}
+      {!canPlay &&
+        !downloading && (
+          <IconButton icon="file-download" onPress={onDownload} />
+        )}
+      {downloading && <IconButton icon="timelapse" onPress={() => 1} />}
       {canPlay && (
         <IconButton icon={paused ? 'play-arrow' : 'pause'} onPress={onPause} />
       )}
@@ -47,6 +53,7 @@ const Control = ({
 
 Control.propTypes = {
   canPlay: PropTypes.bool,
+  downloading: PropTypes.bool,
   name: PropTypes.string,
   onDownload: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,

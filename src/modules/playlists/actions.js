@@ -20,23 +20,22 @@ export const downloadTracks = () => async (dispatch, getState) => {
   }
   try {
     // Create downloaders for all fo the tracks
-    const trackDownloaders = tracks.map(track =>
-      createDownloader(
-        getFileName(track),
-        track.path_display,
-        state,
-        // Notify redux store of file download progress
-        throttle(
-          progress => dispatch(downloadProgress(track.id, progress)),
-          250
+    const trackDownloaders = tracks
+      .filter(track => !track.downloadProgress || track.downloadProgress < 100)
+      .map(track =>
+        createDownloader(
+          getFileName(track),
+          track.path_display,
+          state,
+          // Notify redux store of file download progress
+          throttle(
+            progress => dispatch(downloadProgress(track.id, progress)),
+            250
+          )
         )
-      )
-    );
+      );
     // Download the files
-    const results = await Promise.all(
-      trackDownloaders.map(d => d.downloadAsync())
-    );
-    console.log(results);
+    trackDownloaders.map(d => d.downloadAsync());
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }

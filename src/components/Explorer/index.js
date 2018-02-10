@@ -5,14 +5,14 @@ import styled from 'styled-components/native';
 import { playlistType } from '../../types';
 
 import BreadcrumbTrail from './BreadcrumbTrail';
-import Button from '../Button';
+import ButtonWrapper from '../ButtonWrapper';
 import Entry from './Entry';
+import IconButton from '../IconButton';
 import { Message } from '../typography';
 
 import { actions as fileActions } from '../../modules/files';
 import * as playlists from '../../modules/playlists';
-
-const ButtonWrapper = styled.View``;
+import { color } from '../../styles/theme';
 
 const Entries = styled.ScrollView`
   ${'' /* & > :last-of-type {
@@ -80,8 +80,16 @@ class Explorer extends Component {
     return (
       <Wrapper>
         <ButtonWrapper>
-          <Button onPress={this.handleBack} text="Cancel" />
-          <Button onPress={this.handleAdd} text="Done" />
+          <IconButton
+            background={color.primary}
+            icon="undo"
+            onPress={this.handleBack}
+          />
+          <IconButton
+            background={color.primary}
+            icon="save"
+            onPress={this.handleAdd}
+          />
         </ButtonWrapper>
         <BreadcrumbTrail path={path} onPress={getFiles} />
         <Entries>

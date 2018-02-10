@@ -8,6 +8,7 @@ import Control from './Control';
 import { trackType } from '../../types';
 import { getFilePath } from '../../modules/utils';
 import { actions as audioActions } from '../../modules/audio';
+import { actions as playlistActions } from '../../modules/playlists';
 import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
@@ -52,10 +53,6 @@ class Player extends React.Component {
     }
   };
 
-  handleDownload = () => {
-    console.log('download');
-  };
-
   handlePause = () => {
     if (this.state.paused) {
       this.sound.playAsync();
@@ -75,7 +72,6 @@ class Player extends React.Component {
     }
     const track = trackOverride || this.props.track;
 
-    console.log('got track', track);
     if (!track || !track.downloadStatus || track.downloadStatus < 100) {
       return;
     }
@@ -103,8 +99,9 @@ class Player extends React.Component {
     return track && this.props.isPlaying ? (
       <Control
         canPlay={track.downloadStatus === 100}
+        downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
         name={track.name}
-        onDownload={this.handleDownload}
+        onDownload={this.props.downloadTracks}
         onNext={() => changeTrack(true)}
         onPause={this.handlePause}
         onPrevious={() => changeTrack(false)}
@@ -116,6 +113,7 @@ class Player extends React.Component {
 
 Player.propTypes = {
   changeTrack: PropTypes.func.isRequired,
+  downloadTracks: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool,
   track: trackType,
   trackComplete: PropTypes.func.isRequired
@@ -128,5 +126,6 @@ const mapStateToProps = state => ({
 
 export default connect(mapStateToProps, {
   changeTrack: audioActions.changeTrack,
+  downloadTracks: playlistActions.downloadTracks,
   trackComplete: audioActions.trackComplete
 })(Player);

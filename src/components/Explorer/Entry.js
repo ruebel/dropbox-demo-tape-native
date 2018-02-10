@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
-import File from '../../icons/File';
-import Folder from '../../icons/Folder';
+
+import Icon from '../Icon';
+
 import { color } from '../../styles/theme';
 
 const Title = styled.Text`
@@ -24,11 +25,11 @@ const Entry = ({ entry, onPress, selected = false }) => {
   const iconColor = selected ? color.primary : color.textPrimary;
   return (
     <Wrapper onPress={() => onPress(entry)} selected={selected}>
-      {entry.type === 'file' ? (
-        <File color={iconColor} height={24} width={24} />
-      ) : (
-        <Folder color={iconColor} height={24} width={24} />
-      )}
+      <Icon
+        color={iconColor}
+        icon={entry.type === 'file' ? 'insert-drive-file' : 'folder'}
+        size={24}
+      />
       <Title>{entry.name}</Title>
     </Wrapper>
   );

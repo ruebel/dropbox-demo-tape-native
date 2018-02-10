@@ -8,8 +8,8 @@ import { trackList } from '../../../types';
 
 const List = styled(SortableListView)`
   flex: 1;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   min-height: 600;
 `;
 

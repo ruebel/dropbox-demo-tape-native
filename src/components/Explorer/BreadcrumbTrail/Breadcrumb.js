@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
-import Folder from '../../../icons/Folder';
+import Icon from '../../Icon';
 
 const Name = styled.Text`
   margin-left: 4px;
@@ -17,7 +17,7 @@ const Wrapper = styled.TouchableOpacity`
 const Breadcrumb = ({ name = 'Home', onPress, path }) => {
   return (
     <Wrapper onPress={() => onPress(path)}>
-      <Folder size={12} />
+      <Icon icon="folder" size={12} />
       <Name>{name}</Name>
     </Wrapper>
   );
