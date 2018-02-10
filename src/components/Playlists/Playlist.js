@@ -14,6 +14,8 @@ const Path = styled.Text`
 `;
 
 const Wrapper = styled.TouchableOpacity`
+  border-top-color: ${p => p.theme.color.borderPrimary};
+  border-top-width: 1px;
   padding-left: 8;
   padding-right: 8;
   padding-top: 8;
