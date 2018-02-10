@@ -8,7 +8,7 @@ const initialState = {
 };
 
 const updateById = (id, items, update) =>
-  items.map(item => (item.data.id === id ? update(item) : item));
+  items.map(item => (item.meta.id === id ? update(item) : item));
 
 const updateSelected = (state, update) => ({
   ...state,

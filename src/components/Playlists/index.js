@@ -30,7 +30,7 @@ class Playlists extends React.Component {
   handleAdd = () => {};
 
   handlePlaylistPress = playlist => {
-    this.props.selectPlaylist(playlist.data.id);
+    this.props.selectPlaylist(playlist.meta.id);
     this.props.history.push('/playlist');
   };
 

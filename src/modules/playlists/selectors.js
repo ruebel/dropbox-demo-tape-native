@@ -16,6 +16,6 @@ export const getSelectedPlaylist = state => {
     return;
   }
   return state.playlists.data.find(
-    playlist => playlist.data.id === state.playlists.selectedId
+    playlist => playlist.meta.id === state.playlists.selectedId
   );
 };
