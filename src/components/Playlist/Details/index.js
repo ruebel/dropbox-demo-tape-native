@@ -39,7 +39,14 @@ class Details extends React.Component {
   };
 
   render() {
-    const { downloadTracks, play, playlist, savePlaylist } = this.props;
+    const {
+      downloadTracks,
+      isPlaying,
+      play,
+      playlist,
+      savePlaylist,
+      stop
+    } = this.props;
     return (
       <View>
         <ButtonWrapper>
@@ -56,8 +63,8 @@ class Details extends React.Component {
           />
           <IconButton
             background={color.primary}
-            icon="play-arrow"
-            onPress={() => play(0)}
+            icon={isPlaying ? 'stop' : 'play-arrow'}
+            onPress={() => (isPlaying ? stop() : play(0))}
           />
           {playlist.data.tracks.some(track => !track.downloadStatus) && (
             <IconButton
@@ -80,14 +87,17 @@ class Details extends React.Component {
 Details.propTypes = {
   downloadTracks: PropTypes.func.isRequired,
   history: PropTypes.object,
+  isPlaying: PropTypes.bool,
   match: PropTypes.object,
   play: PropTypes.func.isRequired,
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
+  stop: PropTypes.func.isRequired,
   updateTracks: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
+  isPlaying: state.audio.isPlaying,
   playlist: playlistSelectors.getSelectedPlaylist(state)
 });
 
@@ -96,6 +106,7 @@ export default withRouter(
     downloadTracks: playlistActions.downloadTracks,
     play: audioActions.play,
     savePlaylist: playlistActions.savePlaylist,
+    stop: audioActions.stop,
     updateTracks: playlistActions.updateTracks
   })(Details)
 );

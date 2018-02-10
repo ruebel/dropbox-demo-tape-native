@@ -19,17 +19,25 @@ const Wrapper = styled.TouchableOpacity`
   margin-bottom: 8;
   width: 48;
   height: 48;
+  ${p =>
+    p.float &&
+    `
+    position: absolute;
+    bottom: 48;
+    right: 24;
+  `};
 `;
 
 const IconButton = ({
   background = 'transparent',
   color = 'white',
   disabled,
+  float,
   icon,
   onPress,
   size = 32
 }) => (
-  <Wrapper bg={background} disabled={disabled} onPress={onPress}>
+  <Wrapper bg={background} disabled={disabled} float={float} onPress={onPress}>
     <MaterialIcons color={color} name={icon} size={size} />
   </Wrapper>
 );
@@ -38,6 +46,7 @@ IconButton.propTypes = {
   background: PropTypes.string,
   color: PropTypes.string,
   disabled: PropTypes.bool,
+  float: PropTypes.bool,
   icon: PropTypes.string,
   onPress: PropTypes.func.isRequired,
   size: PropTypes.number
