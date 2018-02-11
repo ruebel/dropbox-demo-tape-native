@@ -21,10 +21,22 @@ const updateTrackById = (id, items, update) =>
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case types.DELETE:
+    case types.ADD_SUCCESS:
       return {
         ...state,
-        data: state.data.filter(p => p.meta.id !== action.payload)
+        data: [...state.data, action.payload],
+        error: null,
+        pending: false,
+        selectedId: action.payload.meta.id
+      };
+    case types.DELETE_SUCCESS:
+      return {
+        ...state,
+        data: state.data.filter(p => p.meta.id !== action.payload),
+        error: null,
+        pending: false,
+        selectedId:
+          state.selectedId === action.payload ? null : state.selectedId
       };
     case types.DOWNLOAD_PROGRESS:
       return updateSelected(state, playlist => ({

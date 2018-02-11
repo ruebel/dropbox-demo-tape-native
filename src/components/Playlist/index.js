@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-native';
 
 import Details from './Details';
-import Explorer from '../Explorer';
+import EditTracks from './EditTracks';
 import { H2 } from '../typography';
 
 import * as playlists from '../../modules/playlists';
@@ -22,7 +22,7 @@ class Playlist extends React.Component {
       <View>
         <H2>{playlist.data.title}</H2>
         <Switch>
-          <Route path={`${match.url}/add`} component={Explorer} />
+          <Route path={`${match.url}/add`} component={EditTracks} />
           <Route path={match.url} component={Details} />
         </Switch>
       </View>

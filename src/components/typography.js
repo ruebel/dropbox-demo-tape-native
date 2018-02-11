@@ -9,9 +9,9 @@ export const Empty = styled.Text`
 `;
 
 export const H1 = styled.Text`
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 300;
-  line-height: 41px;
+  line-height: 38px;
 `;
 
 export const H2 = styled.Text`

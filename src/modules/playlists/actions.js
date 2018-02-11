@@ -6,13 +6,37 @@ import {
   getFileName,
   handleError,
   isDownloaded,
-  transformFile
+  transformFile,
+  uploadFile
 } from '../utils';
 import { getSelectedPlaylist } from './selectors';
 import types from './types';
 
+export const createPlaylist = name => async (dispatch, getState) => {
+  dispatch({ type: types.PENDING });
+  const state = getState();
+  const path = state.files.path;
+  const fileName = `${path}${name}.mix`;
+  const data = {
+    title: name,
+    tracks: []
+  };
+  try {
+    const meta = uploadFile(data, fileName, state);
+    dispatch({
+      payload: {
+        data,
+        meta
+      },
+      type: types.ADD_SUCCESS
+    });
+  } catch (error) {
+    handleError(error, dispatch, types.FAILED);
+  }
+};
+
 export const deletePlaylist = playlist => async (dispatch, getState) => {
-  console.log('delete', playlist);
+  dispatch({ type: types.PENDING });
   try {
     const state = getState();
     const dbx = getDropboxConnection(state);
@@ -20,7 +44,7 @@ export const deletePlaylist = playlist => async (dispatch, getState) => {
     console.log(result);
     dispatch({
       payload: playlist.meta.id,
-      type: types.PENDING
+      type: types.DELETE_SUCCESS
     });
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
@@ -111,22 +135,12 @@ export const savePlaylist = () => async (dispatch, getState) => {
   const state = getState();
   const playlist = getSelectedPlaylist(state);
   try {
-    const dbx = getDropboxConnection(state);
-    // Upload playlist to dropbox (dropbox will return new metadata)
-    const meta = await dbx.filesUpload({
-      // Do not rename on conflict
-      autorename: false,
-      // File data to upload
-      contents: JSON.stringify(playlist.data),
-      // Overwrite previous version of file (if exists)
-      mode: {
-        '.tag': 'overwrite'
-      },
-      // Do not notify users of change
-      mute: true,
-      // Path to file in dropbox
-      path: playlist.meta.path_lower
-    });
+    // Upload playlist to dropbox
+    const meta = await uploadFile(
+      playlist.data,
+      playlist.meta.path_lower,
+      state
+    );
     dispatch({
       payload: meta,
       type: types.SAVE_SUCCESS

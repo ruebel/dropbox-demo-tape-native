@@ -2,107 +2,63 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components/native';
-import { playlistType } from '../../types';
+import { FlatList, RefreshControl } from 'react-native';
 
 import BreadcrumbTrail from './BreadcrumbTrail';
-import ButtonWrapper from '../ButtonWrapper';
 import Entry from './Entry';
-import IconButton from '../IconButton';
 import { Message } from '../typography';
 
 import { actions as fileActions } from '../../modules/files';
-import * as playlists from '../../modules/playlists';
-import { color } from '../../styles/theme';
-
-const Entries = styled.ScrollView`
-  ${'' /* & > :last-of-type {
-    border-bottom-color: ${p => p.theme.color.borderPrimary};
-    border-bottom-width: 1px;
-  } */};
-`;
 
 const Wrapper = styled.View``;
 
 class Explorer extends Component {
-  state = {
-    selected: []
-  };
-
   async componentDidMount() {
     this.props.getFiles(this.props.path);
-    this.selectTracks(this.props.playlist);
   }
-
-  componentWillReceiveProps(next) {
-    if (!next.playlist || next.playlist.id !== this.props.playlist.id) {
-      this.selectTracks(next.playlist);
-    }
-  }
-
-  handleAdd = () => {
-    this.props.updateTracks(this.state.selected);
-    this.handleBack();
-  };
-
-  handleBack = () => {
-    this.props.history.goBack();
-  };
 
   handleEntryPress = entry => {
     if (entry.type === 'folder') {
       this.props.getFiles(entry.path);
-    } else {
+    } else if (!this.props.folder) {
       this.toggleSelected(entry);
     }
   };
 
-  selectTracks = playlist => {
-    this.setState({
-      selected: playlist ? [...playlist.data.tracks] : []
-    });
-  };
-
   toggleSelected = entry => {
-    this.setState(state => {
-      if (state.selected.some(e => e.id === entry.id)) {
-        return {
-          selected: state.selected.filter(e => e.id !== entry.id)
-        };
+    const { onSelectionChange, selected } = this.props;
+    if (onSelectionChange) {
+      if (selected.some(e => e.id === entry.id)) {
+        onSelectionChange(selected.filter(e => e.id !== entry.id));
+      } else {
+        onSelectionChange([...selected, entry]);
       }
-      return {
-        selected: [...state.selected, entry]
-      };
-    });
+    }
   };
 
   render() {
-    const { files, getFiles, path } = this.props;
+    const { files, getFiles, path, selected } = this.props;
     return (
       <Wrapper>
-        <ButtonWrapper>
-          <IconButton
-            background={color.primary}
-            icon="undo"
-            onPress={this.handleBack}
-          />
-          <IconButton
-            background={color.primary}
-            icon="save"
-            onPress={this.handleAdd}
-          />
-        </ButtonWrapper>
         <BreadcrumbTrail path={path} onPress={getFiles} />
-        <Entries>
-          {files.map((entry, i) => (
-            <Entry
-              key={i}
-              entry={entry}
-              onPress={this.handleEntryPress}
-              selected={this.state.selected.some(e => e.id === entry.id)}
+        <FlatList
+          data={files}
+          keyExtractor={item => item.id}
+          ListEmptyComponent={<Message>There's nothing here</Message>}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.props.pending}
+              onRefresh={() => getFiles(this.props.path)}
             />
-          ))}
-        </Entries>
-        {files.length === 0 && <Message>There's nothing here</Message>}
+          }
+          renderItem={({ item }) => (
+            <Entry
+              entry={item}
+              onPress={this.handleEntryPress}
+              selected={selected.some(e => e.id === item.id)}
+            />
+          )}
+        />
       </Wrapper>
     );
   }
@@ -110,20 +66,24 @@ class Explorer extends Component {
 
 Explorer.propTypes = {
   files: PropTypes.arrayOf(PropTypes.object),
+  folder: PropTypes.bool,
   getFiles: PropTypes.func.isRequired,
-  history: PropTypes.object,
+  onSelectionChange: PropTypes.func,
   path: PropTypes.string,
-  playlist: playlistType,
-  updateTracks: PropTypes.func.isRequired
+  pending: PropTypes.bool,
+  selected: PropTypes.array
+};
+
+Explorer.defaultProps = {
+  selected: []
 };
 
 const mapStateToProps = state => ({
   files: state.files.data || [],
   path: state.files.path,
-  playlist: playlists.selectors.getSelectedPlaylist(state)
+  pending: state.files.pending
 });
 
 export default connect(mapStateToProps, {
-  getFiles: fileActions.getFiles,
-  updateTracks: playlists.actions.updateTracks
+  getFiles: fileActions.getFiles
 })(Explorer);

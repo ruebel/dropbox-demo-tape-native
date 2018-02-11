@@ -5,6 +5,7 @@ import styled from 'styled-components/native';
 
 import { H1 } from './typography';
 import Container from './Container';
+import CreatePlaylist from './CreatePlaylist';
 import Loading from './Loading';
 import Player from './Player';
 import Playlist from './Playlist';
@@ -27,6 +28,7 @@ class App extends Component {
         <View style={{ flex: 1 }}>
           <Switch>
             <Route exact path="/" component={Playlists} />
+            <Route path="/create" component={CreatePlaylist} />
             <Route path="/playlist" component={Playlist} />
           </Switch>
         </View>

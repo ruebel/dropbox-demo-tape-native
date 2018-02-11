@@ -33,6 +33,26 @@ export const createDownloader = (local, remote, state, progress) => {
   );
 };
 
+export const uploadFile = async (data, path, state) => {
+  const dbx = getDropboxConnection(state);
+  // Upload playlist to dropbox (dropbox will return new metadata)
+  const meta = await dbx.filesUpload({
+    // Do not rename on conflict
+    autorename: false,
+    // File data to upload
+    contents: JSON.stringify(data),
+    // Overwrite previous version of file (if exists)
+    mode: {
+      '.tag': 'overwrite'
+    },
+    // Do not notify users of change
+    mute: true,
+    // Path to file in dropbox
+    path
+  });
+  return meta;
+};
+
 /**
  * Returns a dropbox sdk instance using state credentials
  * @param  {Object} state App state

@@ -25,6 +25,10 @@ const Wrapper = styled.TouchableOpacity`
     position: absolute;
     bottom: 48;
     right: 24;
+    shadow-color: #000;
+    shadow-opacity: 0.5;
+    shadow-radius: 10;
+    shadow-offset: 0px 10px;
   `};
 `;
 
