@@ -27,10 +27,6 @@ const Wrapper = styled(SwipeRow)`
 
 const Playlist = ({ onDelete, onPress, playlist }) => {
   return (
-    // <Wrapper onPress={() => onPress(playlist)}>
-    //   <Name>{playlist.data.title}</Name>
-    //   <Path>{playlist.meta.path_display}</Path>
-    // </Wrapper>
     <Wrapper
       onRowPress={() => onPress(playlist)}
       underlayColor="#eee"

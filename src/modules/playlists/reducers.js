@@ -21,6 +21,11 @@ const updateTrackById = (id, items, update) =>
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case types.DELETE:
+      return {
+        ...state,
+        data: state.data.filter(p => p.meta.id !== action.payload)
+      };
     case types.DOWNLOAD_PROGRESS:
       return updateSelected(state, playlist => ({
         ...playlist,

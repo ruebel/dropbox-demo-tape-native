@@ -1,6 +1,7 @@
 const prefix = 'PLAYLISTS';
 
 export default {
+  DELETE: `${prefix}/DELETE`,
   DOWNLOAD_PROGRESS: `${prefix}/DOWNLOAD_PROGRESS`,
   FAILED: `${prefix}/FAILED`,
   PENDING: `${prefix}/PENDING`,

@@ -13,6 +13,18 @@ import types from './types';
 
 export const deletePlaylist = playlist => async (dispatch, getState) => {
   console.log('delete', playlist);
+  try {
+    const state = getState();
+    const dbx = getDropboxConnection(state);
+    const result = await dbx.filesDelete({ path: playlist.meta.path_lower });
+    console.log(result);
+    dispatch({
+      payload: playlist.meta.id,
+      type: types.PENDING
+    });
+  } catch (error) {
+    handleError(error, dispatch, types.FAILED);
+  }
 };
 
 export const downloadTracks = () => async (dispatch, getState) => {
