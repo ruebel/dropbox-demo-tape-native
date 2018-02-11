@@ -9,7 +9,6 @@ export const trackList = arrayOf(trackType);
 
 export const playlistType = shape({
   data: shape({
-    id: string.isRequired,
     title: string,
     tracks: trackList
   }),

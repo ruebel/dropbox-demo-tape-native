@@ -44,7 +44,7 @@ class EditTracks extends React.Component {
   render() {
     const { theme } = this.props;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <ButtonWrapper>
           <IconButton
             background={theme.color.primary}

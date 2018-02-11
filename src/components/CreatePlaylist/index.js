@@ -1,10 +1,9 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import ButtonWrapper from '../ButtonWrapper';
-import Container from '../Container';
 import Explorer from '../Explorer';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
@@ -25,13 +24,14 @@ class CreatePlaylist extends React.Component {
     this.setState({ name });
   };
 
-  handleSave = () => {
-    this.props.createPlaylist(this.state.name);
+  handleSave = async () => {
+    await this.props.createPlaylist(this.state.name);
+    this.props.history.push('/playlist');
   };
 
   render() {
     return (
-      <Container>
+      <View style={{ flex: 1 }}>
         <Text>Create Playlist</Text>
         <TextInput
           onChange={this.handleNameChange}
@@ -53,7 +53,7 @@ class CreatePlaylist extends React.Component {
           />
         </ButtonWrapper>
         <Explorer folder />
-      </Container>
+      </View>
     );
   }
 }

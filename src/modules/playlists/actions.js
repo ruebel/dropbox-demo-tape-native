@@ -22,7 +22,7 @@ export const createPlaylist = name => async (dispatch, getState) => {
     tracks: []
   };
   try {
-    const meta = uploadFile(data, fileName, state);
+    const meta = await uploadFile(data, fileName, state);
     dispatch({
       payload: {
         data,
@@ -30,6 +30,10 @@ export const createPlaylist = name => async (dispatch, getState) => {
       },
       type: types.ADD_SUCCESS
     });
+    return {
+      data,
+      meta
+    };
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }
@@ -40,8 +44,7 @@ export const deletePlaylist = playlist => async (dispatch, getState) => {
   try {
     const state = getState();
     const dbx = getDropboxConnection(state);
-    const result = await dbx.filesDelete({ path: playlist.meta.path_lower });
-    console.log(result);
+    await dbx.filesDelete({ path: playlist.meta.path_lower });
     dispatch({
       payload: playlist.meta.id,
       type: types.DELETE_SUCCESS

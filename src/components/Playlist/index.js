@@ -19,7 +19,7 @@ class Playlist extends React.Component {
   render() {
     const { loading, match, playlist } = this.props;
     return playlist && !loading ? (
-      <View>
+      <View style={{ flex: 1 }}>
         <H2>{playlist.data.title}</H2>
         <Switch>
           <Route path={`${match.url}/add`} component={EditTracks} />

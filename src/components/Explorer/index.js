@@ -2,13 +2,17 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components/native';
-import { FlatList, RefreshControl } from 'react-native';
+import { RefreshControl } from 'react-native';
 
 import BreadcrumbTrail from './BreadcrumbTrail';
 import Entry from './Entry';
 import { Message } from '../typography';
 
 import { actions as fileActions } from '../../modules/files';
+
+const List = styled.FlatList`
+  flex: 1;
+`;
 
 const Wrapper = styled.View``;
 
@@ -39,9 +43,9 @@ class Explorer extends Component {
   render() {
     const { files, getFiles, path, selected } = this.props;
     return (
-      <Wrapper>
+      <Wrapper style={{ flex: 1 }}>
         <BreadcrumbTrail path={path} onPress={getFiles} />
-        <FlatList
+        <List
           data={files}
           keyExtractor={item => item.id}
           ListEmptyComponent={<Message>There's nothing here</Message>}
