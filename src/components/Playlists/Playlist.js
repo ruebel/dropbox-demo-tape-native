@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
 
+import { Back, Inner, SwipeRow } from '../SwipeRow';
+
 import { playlistType } from '../../types';
 
 const Name = styled.Text`
@@ -13,25 +15,38 @@ const Path = styled.Text`
   font-size: 10px;
 `;
 
-const Wrapper = styled.TouchableOpacity`
-  border-top-color: ${p => p.theme.color.borderPrimary};
-  border-top-width: 1px;
-  padding-left: 8;
-  padding-right: 8;
-  padding-top: 8;
-  padding-bottom: 8;
+const StyledInner = styled(Inner)`
+  align-items: flex-start;
+  flex-direction: column;
 `;
 
-const Playlist = ({ onPress, playlist }) => {
+const Wrapper = styled(SwipeRow)`
+  border-top-color: ${p => p.theme.color.borderPrimary};
+  border-top-width: 1px;
+`;
+
+const Playlist = ({ onDelete, onPress, playlist }) => {
   return (
-    <Wrapper onPress={() => onPress(playlist)}>
-      <Name>{playlist.data.title}</Name>
-      <Path>{playlist.meta.path_display}</Path>
+    // <Wrapper onPress={() => onPress(playlist)}>
+    //   <Name>{playlist.data.title}</Name>
+    //   <Path>{playlist.meta.path_display}</Path>
+    // </Wrapper>
+    <Wrapper
+      onRowPress={() => onPress(playlist)}
+      underlayColor="#eee"
+      rightOpenValue={-85}
+    >
+      <Back onPress={() => onDelete(playlist)} text="Remove" />
+      <StyledInner>
+        <Name>{playlist.data.title}</Name>
+        <Path>{playlist.meta.path_display}</Path>
+      </StyledInner>
     </Wrapper>
   );
 };
 
 Playlist.propTypes = {
+  onDelete: PropTypes.func.isRequired,
   onPress: PropTypes.func.isRequired,
   playlist: playlistType
 };

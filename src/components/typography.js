@@ -1,5 +1,13 @@
 import styled from 'styled-components/native';
 
+export const Empty = styled.Text`
+  color: ${p => p.theme.color.textLight};
+  font-size: 16px;
+  margin-bottom: 16;
+  margin-top: 16;
+  text-align: center;
+`;
+
 export const H1 = styled.Text`
   font-size: 36px;
   font-weight: 300;

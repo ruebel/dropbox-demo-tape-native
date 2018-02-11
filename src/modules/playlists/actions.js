@@ -11,6 +11,10 @@ import {
 import { getSelectedPlaylist } from './selectors';
 import types from './types';
 
+export const deletePlaylist = playlist => async (dispatch, getState) => {
+  console.log('delete', playlist);
+};
+
 export const downloadTracks = () => async (dispatch, getState) => {
   const state = getState();
   const playlist = getSelectedPlaylist(state);

@@ -1,34 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import SwipeRow from './SwipeRow';
 import styled from 'styled-components/native';
 
+import { Back, Inner, SwipeRow } from '../../SwipeRow';
+
 import { getFilePath, getFileName } from '../utils';
-
-const Back = styled.TouchableOpacity`
-  align-items: center;
-  background-color: ${p => p.theme.color.error};
-  flex: 1;
-  flex-direction: row;
-  justify-content: flex-end;
-  padding: 15px;
-`;
-
-const BackText = styled.Text`
-  color: ${p => p.theme.color.textExtraLight};
-`;
-
-const Inner = styled.View`
-  align-items: center;
-  background-color: ${p =>
-    p.disabled
-      ? p.theme.color.backgroundDisabled
-      : p.theme.color.backgroundPrimary};
-  display: flex;
-  flex-direction: row;
-  padding: 20px;
-`;
 
 const Name = styled.Text`
   color: ${p => p.theme.color.textPrimary};
@@ -56,9 +33,7 @@ const Track = ({ onRemove, position, sortHandlers, track }) => (
     sortHandlers={sortHandlers}
     {...sortHandlers}
   >
-    <Back onPress={() => onRemove(track)}>
-      <BackText>Remove</BackText>
-    </Back>
+    <Back onPress={() => onRemove(track)} text="Remove" />
     <Inner disabled={!track.downloadStatus || track.downloadStatus < 100}>
       <Position>{position}</Position>
       <View>
