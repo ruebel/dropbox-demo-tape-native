@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components/native';
+import moment from 'moment';
 
 import Icon from '../Icon';
+import { Subtitle, Title } from '../typography';
 
 import { color } from '../../styles/theme';
 
-const Title = styled.Text`
-  margin-left: 10px;
+const Details = styled.View`
+  margin-left: 8;
 `;
 
 const Wrapper = styled.TouchableOpacity`
@@ -30,7 +32,12 @@ const Entry = ({ entry, onPress, selected = false }) => {
         icon={entry.type === 'file' ? 'insert-drive-file' : 'folder'}
         size={24}
       />
-      <Title>{entry.name}</Title>
+      <Details>
+        <Title>{entry.name}</Title>
+        {entry.type === 'file' && (
+          <Subtitle>{moment(entry.server_modified).fromNow()}</Subtitle>
+        )}
+      </Details>
     </Wrapper>
   );
 };

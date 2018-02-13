@@ -48,7 +48,7 @@ class Details extends React.Component {
       stop
     } = this.props;
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         <ButtonWrapper>
           <IconButton
             background={color.primary}

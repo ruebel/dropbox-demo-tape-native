@@ -22,3 +22,12 @@ export const H2 = styled.Text`
 export const Message = styled.Text`
   font-size: 24px;
 `;
+
+export const Subtitle = styled.Text`
+  color: ${p => p.theme.color.textLight};
+  font-size: 10px;
+`;
+
+export const Title = styled.Text`
+  color: ${p => p.theme.color.textPrimary};
+`;

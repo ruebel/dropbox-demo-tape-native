@@ -9,8 +9,6 @@ import { trackList } from '../../../types';
 const List = styled(SortableListView)`
   flex: 1;
   margin-top: 8px;
-  margin-bottom: 8px;
-  min-height: 600;
 `;
 
 const TrackList = ({ onRemove, onSortEnd, tracks }) => {

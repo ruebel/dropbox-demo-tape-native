@@ -1,23 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { View } from 'react-native';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 
 import { Back, Inner, SwipeRow } from '../../SwipeRow';
+import { Subtitle, Title } from '../../typography';
 
 import { getFilePath, getFileName } from '../utils';
 
-const Name = styled.Text`
-  color: ${p => p.theme.color.textPrimary};
-`;
-
-const Path = styled.Text`
-  color: ${p => p.theme.color.textLight};
-  font-size: 10px;
-`;
-
 const Position = styled.Text`
   color: ${p => p.theme.color.textPrimary};
+  margin-right: 8;
   width: 23px;
 `;
 
@@ -26,9 +19,9 @@ const Wrapper = styled(SwipeRow)`
   border-top-width: 1px;
 `;
 
-const Track = ({ onRemove, position, sortHandlers, track }) => (
+const Track = ({ onRemove, position, sortHandlers, theme, track }) => (
   <Wrapper
-    underlayColor="#eee"
+    underlayColor={theme.color.backgroundDisabled}
     rightOpenValue={-85}
     sortHandlers={sortHandlers}
     {...sortHandlers}
@@ -37,10 +30,11 @@ const Track = ({ onRemove, position, sortHandlers, track }) => (
     <Inner disabled={!track.downloadStatus || track.downloadStatus < 100}>
       <Position>{position}</Position>
       <View>
-        <Name>{getFileName(track.path)}</Name>
-        <Path>{getFilePath(track.path)}</Path>
+        <Title>{getFileName(track.path)}</Title>
+        <Subtitle>{getFilePath(track.path)}</Subtitle>
       </View>
-      {track.downloadStatus < 100 && <Name>{track.downloadStatus}%</Name>}
+      {track.downloadStatus > 0 &&
+        track.downloadStatus < 100 && <Title>{track.downloadStatus}%</Title>}
     </Inner>
   </Wrapper>
 );
@@ -49,7 +43,8 @@ Track.propTypes = {
   onRemove: PropTypes.func.isRequired,
   position: PropTypes.number,
   sortHandlers: PropTypes.object,
+  theme: PropTypes.object,
   track: PropTypes.object
 };
 
-export default Track;
+export default withTheme(Track);

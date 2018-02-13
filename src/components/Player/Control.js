@@ -6,14 +6,10 @@ import IconButton from '../IconButton';
 const Wrapper = styled.View`
   align-items: center;
   background: ${p => p.theme.color.primary};
-  bottom: 0;
   display: flex;
-  flex: 1;
   flex-direction: row;
   height: 50;
   justify-content: center;
-  left: 0;
-  position: absolute;
   width: 100%;
 `;
 

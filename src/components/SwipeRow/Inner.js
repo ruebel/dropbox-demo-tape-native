@@ -8,5 +8,5 @@ export default styled.View`
       : p.theme.color.backgroundPrimary};
   display: flex;
   flex-direction: row;
-  padding: 20px;
+  padding: 16px;
 `;

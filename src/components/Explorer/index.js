@@ -14,7 +14,9 @@ const List = styled.FlatList`
   flex: 1;
 `;
 
-const Wrapper = styled.View``;
+const Wrapper = styled.View`
+  flex: 1;
+`;
 
 class Explorer extends Component {
   async componentDidMount() {
@@ -43,7 +45,7 @@ class Explorer extends Component {
   render() {
     const { files, getFiles, path, selected } = this.props;
     return (
-      <Wrapper style={{ flex: 1 }}>
+      <Wrapper>
         <BreadcrumbTrail path={path} onPress={getFiles} />
         <List
           data={files}
