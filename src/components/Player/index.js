@@ -12,10 +12,6 @@ import { actions as playlistActions } from '../../modules/playlists';
 import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
-  state = {
-    paused: false
-  };
-
   componentDidMount() {
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -31,6 +27,12 @@ class Player extends React.Component {
   componentWillReceiveProps(next) {
     if (next.track !== this.props.track) {
       this.initializeSound(next.track);
+    }
+    if (
+      next.isPlaying !== this.props.isPlaying ||
+      next.paused !== this.props.paused
+    ) {
+      this.handlePause(next.isPlaying && !next.paused);
     }
   }
 
@@ -53,15 +55,16 @@ class Player extends React.Component {
     }
   };
 
-  handlePause = () => {
-    if (this.state.paused) {
-      this.sound.playAsync();
+  handlePause = shouldPlay => {
+    if (this.sound) {
+      if (shouldPlay) {
+        this.sound.playAsync();
+      } else {
+        this.sound.pauseAsync();
+      }
     } else {
-      this.sound.pauseAsync();
+      this.props.stop();
     }
-    this.setState(state => ({
-      paused: !state.paused
-    }));
   };
 
   initializeSound = async trackOverride => {
@@ -94,8 +97,7 @@ class Player extends React.Component {
   };
 
   render() {
-    const { changeTrack, track } = this.props;
-    const { paused } = this.state;
+    const { changeTrack, pause, paused, track } = this.props;
     return track && this.props.isPlaying ? (
       <Control
         canPlay={track.downloadStatus === 100}
@@ -103,7 +105,7 @@ class Player extends React.Component {
         name={track.name}
         onDownload={this.props.downloadTracks}
         onNext={() => changeTrack(true)}
-        onPause={this.handlePause}
+        onPause={pause}
         onPrevious={() => changeTrack(false)}
         paused={paused}
       />
@@ -115,17 +117,23 @@ Player.propTypes = {
   changeTrack: PropTypes.func.isRequired,
   downloadTracks: PropTypes.func.isRequired,
   isPlaying: PropTypes.bool,
+  pause: PropTypes.func.isRequired,
+  paused: PropTypes.bool,
+  stop: PropTypes.func.isRequired,
   track: trackType,
   trackComplete: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   isPlaying: state.audio.isPlaying,
+  paused: state.audio.paused,
   track: getPlayingTrack(state)
 });
 
 export default connect(mapStateToProps, {
   changeTrack: audioActions.changeTrack,
   downloadTracks: playlistActions.downloadTracks,
+  pause: audioActions.pause,
+  stop: audioActions.stop,
   trackComplete: audioActions.trackComplete
 })(Player);

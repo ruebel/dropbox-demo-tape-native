@@ -78,21 +78,31 @@ export const downloadTracks = () => async (dispatch, getState) => {
         )
       );
     // Download the files
-    trackDownloaders.map(d => d.downloadAsync());
+    trackDownloaders.slice(0, 2).map(d => d.downloadAsync());
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }
 };
 
-const downloadProgress = (id, progress) => ({
-  payload: {
-    id,
-    progress: Math.ceil(
+const downloadProgress = (id, progress) => (dispatch, getState) => {
+  const percentComplete = Math.min(
+    100,
+    Math.ceil(
       progress.totalBytesWritten / progress.totalBytesExpectedToWrite * 100
     )
-  },
-  type: types.DOWNLOAD_PROGRESS
-});
+  );
+  dispatch({
+    payload: {
+      id,
+      progress: percentComplete
+    },
+    type: types.DOWNLOAD_PROGRESS
+  });
+  if (percentComplete === 100) {
+    // After a track has completed download more
+    dispatch(downloadTracks());
+  }
+};
 
 export const findPlaylists = () => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });

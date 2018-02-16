@@ -1,14 +1,29 @@
 import { applyMiddleware, compose, createStore } from 'redux';
-import { persistStore, persistCombineReducers } from 'redux-persist';
+import {
+  createTransform,
+  persistStore,
+  persistCombineReducers
+} from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunkMiddleware from 'redux-thunk';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
 import createHistory from 'history/createMemoryHistory';
 import { reducers } from './modules';
 
+const blacklistTransform = createTransform((state, key) => {
+  return key !== 'audio'
+    ? {
+      ...state,
+      // Don't carry over error or playing states
+      paused: true
+    }
+    : state;
+});
+
 const config = {
   key: 'root',
-  storage
+  storage,
+  transforms: [blacklistTransform]
 };
 
 const rootReducer = persistCombineReducers(config, {

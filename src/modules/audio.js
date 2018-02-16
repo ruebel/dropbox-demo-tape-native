@@ -5,10 +5,12 @@ const prefix = 'AUDIO';
 const initialState = {
   index: 0,
   isPlaying: false,
-  loop: false
+  loop: false,
+  paused: false
 };
 
 export const types = {
+  PAUSE: `${prefix}/PAUSE`,
   PLAY: `${prefix}/PLAY`,
   STOP: `${prefix}/STOP`
 };
@@ -36,6 +38,9 @@ export const actions = {
       type: types.PLAY
     });
   },
+  pause: () => ({
+    type: types.PAUSE
+  }),
   play: (index = 0) => ({
     payload: index,
     type: types.PLAY
@@ -72,6 +77,11 @@ export const actions = {
 
 export const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case types.PAUSE:
+      return {
+        ...state,
+        paused: !state.paused
+      };
     case types.PLAY:
       return {
         ...state,

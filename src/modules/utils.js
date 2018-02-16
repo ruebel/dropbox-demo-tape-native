@@ -63,7 +63,8 @@ export const getDropboxConnection = state =>
     accessToken: state.auth.user.params.access_token
   });
 
-export const getFileName = track => `${track.id}-${track.rev}.mp3`;
+export const getFileName = track =>
+  `${track.id}-${track.rev}.${track.name.split('.').pop()}`;
 
 export const getFilePath = track =>
   `${FileSystem.documentDirectory}${getFileName(track)}`;
