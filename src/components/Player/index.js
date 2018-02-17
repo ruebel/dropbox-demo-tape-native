@@ -15,8 +15,16 @@ import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
   state = {
+    currentTime: 0,
+    duration: 0,
     fullScreen: false,
-    position: 0
+    isBuffering: false,
+    isPlaying: false,
+    isSeeking: false,
+    position: 0,
+    rate: 1.0,
+    shouldPlay: false,
+    volume: 1.0
   };
 
   componentDidMount() {
@@ -44,17 +52,19 @@ class Player extends React.Component {
   }
 
   handleAudioUpdate = status => {
-    console.log(status.positionMillis / status.durationMillis);
     if (status.isLoaded) {
-      this.setState({
+      this.setState(state => ({
+        currentTime: status.positionMillis,
         duration: status.durationMillis,
         isBuffering: status.isBuffering,
         isPlaying: status.isPlaying,
-        position: status.positionMillis / status.durationMillis,
+        position: state.isSeeking
+          ? state.position
+          : status.positionMillis / status.durationMillis,
         rate: status.rate,
         shouldPlay: status.shouldPlay,
         volume: status.volume
-      });
+      }));
       if (status.didJustFinish) {
         this.props.trackComplete();
       }
@@ -77,9 +87,24 @@ class Player extends React.Component {
     }
   };
 
-  handleSeek = position => {
-    console.log('seek', position);
+  seekEnd = position => {
+    if (this.sound) {
+      const seekTo = position * this.state.duration;
+      if (this.props.isPlaying && !this.props.paused) {
+        this.sound.playFromPositionAsync(seekTo);
+      } else {
+        this.sound.setPositionAsync(seekTo);
+      }
+    }
     this.setState({
+      isSeeking: false,
+      position
+    });
+  };
+
+  seeking = position => {
+    this.setState({
+      isSeeking: true,
       position
     });
   };
@@ -130,14 +155,17 @@ class Player extends React.Component {
         >
           <Full
             canPlay={track.downloadStatus === 100}
+            currentTime={this.state.currentTime}
             downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
+            duration={this.state.duration}
             name={track.name}
             onClose={this.toggleFullScreen}
             onDownload={this.props.downloadTracks}
             onNext={() => changeTrack(true)}
             onPause={pause}
             onPrevious={() => changeTrack(false)}
-            onSeek={this.handleSeek}
+            onSeek={this.seeking}
+            onSeekEnd={this.seekEnd}
             paused={paused}
             position={this.state.position}
           />

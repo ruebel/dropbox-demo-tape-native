@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import IconButton from '../IconButton';
 import Slider from '../Slider';
 
+import { getMMSSFromMs } from './utils';
+
 const ActionWrapper = styled.View`
   align-items: center;
   display: flex;
@@ -20,12 +22,26 @@ const Body = styled.View`
   justify-content: center;
 `;
 
+const TimeWrapper = styled.View`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
 const Title = styled.Text`
   color: ${p => p.theme.color.textExtraLight};
   font-size: 18px;
   margin-bottom: 32px;
   margin-top: 16px;
   text-align: center;
+`;
+
+const Time = styled(Title)`
+  flex: 1;
+  font-size: 16px;
+  margin-top: 0;
+  text-align: left;
 `;
 
 const Top = styled.View`
@@ -41,12 +57,15 @@ const Wrapper = styled.View`
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 16px;
   width: 100%;
 `;
 
 const Full = ({
   canPlay,
+  currentTime = 0,
   downloading,
+  duration = 0,
   name,
   onClose,
   onDownload,
@@ -54,6 +73,7 @@ const Full = ({
   onPause,
   onPrevious,
   onSeek,
+  onSeekEnd,
   paused,
   position = 0
 }) => {
@@ -64,7 +84,16 @@ const Full = ({
       </Top>
       <Body>
         <Title>{name}</Title>
-        <Slider disabled={!canPlay} onChange={onSeek} value={position} />
+        <Slider
+          disabled={!canPlay}
+          onChange={onSeek}
+          onSlidingComplete={onSeekEnd}
+          value={position}
+        />
+        <TimeWrapper>
+          <Time>{getMMSSFromMs(currentTime)}</Time>
+          <Time style={{ textAlign: 'right' }}>{getMMSSFromMs(duration)}</Time>
+        </TimeWrapper>
         <ActionWrapper>
           {!canPlay &&
             !downloading && (
@@ -87,7 +116,9 @@ const Full = ({
 
 Full.propTypes = {
   canPlay: PropTypes.bool,
+  currentTime: PropTypes.number,
   downloading: PropTypes.bool,
+  duration: PropTypes.number,
   name: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   onDownload: PropTypes.func.isRequired,
@@ -95,6 +126,7 @@ Full.propTypes = {
   onPause: PropTypes.func.isRequired,
   onPrevious: PropTypes.func.isRequired,
   onSeek: PropTypes.func.isRequired,
+  onSeekEnd: PropTypes.func.isRequired,
   paused: PropTypes.bool,
   position: PropTypes.number
 };

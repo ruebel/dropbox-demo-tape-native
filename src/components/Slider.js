@@ -1,22 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components/native';
-import BaseSlider from 'react-native-slider';
+import styled, { withTheme } from 'styled-components/native';
 
-const SliderControl = styled(BaseSlider)`
-  width: 90%;
+const SliderControl = styled.Slider`
+  width: 100%;
 `;
 
-const Slider = ({ disabled, onChange, value }) => {
+const Slider = ({ disabled, onChange, onSlidingComplete, theme, value }) => {
   return (
-    <SliderControl disabled={disabled} onValueChange={onChange} value={value} />
+    <SliderControl
+      disabled={disabled}
+      maximumTrackTintColor={theme.color.backgroundPrimary}
+      minimumTrackTintColor={theme.color.secondary}
+      onSlidingComplete={onSlidingComplete}
+      onValueChange={onChange}
+      thumbTintColor={theme.color.secondary}
+      value={value}
+    />
   );
 };
 
 Slider.propTypes = {
   disabled: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
+  onChange: PropTypes.func,
+  onSlidingComplete: PropTypes.func,
+  theme: PropTypes.object,
   value: PropTypes.number
 };
 
-export default Slider;
+export default withTheme(Slider);
