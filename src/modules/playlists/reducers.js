@@ -84,6 +84,15 @@ export default (state = initialState, action) => {
         error: null,
         pending: false
       };
+    case types.UPDATE_TITLE:
+      return updateSelected(state, playlist => ({
+        ...playlist,
+        data: {
+          ...playlist.data,
+          title: action.payload
+        },
+        hasChanges: true
+      }));
     case types.UPDATE_TRACKS:
       return updateSelected(state, playlist => ({
         ...playlist,

@@ -7,9 +7,9 @@ const Input = styled.TextInput`
   border-bottom-color: ${p => p.theme.color.borderPrimary};
   border-bottom-width: ${StyleSheet.hairlineWidth};
   color: ${p => p.theme.color.textPrimary};
+  flex: 1;
   font-size: 17px;
   height: 50px;
-  width: 100%;
 `;
 
 const Title = styled.Text`
@@ -20,7 +20,6 @@ const Title = styled.Text`
 const Wrapper = styled.View`
   margin: 0 16px;
   max-width: 500px;
-  width: 90%;
 `;
 
 const TextInput = ({ onChange, placeholder, theme, title, value }) => {

@@ -17,8 +17,8 @@ const Wrapper = styled.TouchableOpacity`
   margin-right: 8;
   margin-top: 8;
   margin-bottom: 8;
-  width: 48;
-  height: 48;
+  width: ${p => p.size + 16};
+  height: ${p => p.size + 16};
   ${p =>
     p.float &&
     `
@@ -41,7 +41,13 @@ const IconButton = ({
   onPress,
   size = 32
 }) => (
-  <Wrapper bg={background} disabled={disabled} float={float} onPress={onPress}>
+  <Wrapper
+    bg={background}
+    disabled={disabled}
+    float={float}
+    onPress={onPress}
+    size={size}
+  >
     <MaterialIcons color={color} name={icon} size={size} />
   </Wrapper>
 );

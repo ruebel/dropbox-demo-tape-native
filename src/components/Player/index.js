@@ -7,10 +7,10 @@ import { Modal, View } from 'react-native';
 import Control from './Control';
 import Full from './Full';
 
-import { trackType } from '../../types';
+import { playlistType, trackType } from '../../types';
 import { getFilePath } from '../../modules/utils';
 import { actions as audioActions } from '../../modules/audio';
-import { actions as playlistActions } from '../../modules/playlists';
+import * as playlists from '../../modules/playlists';
 import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
@@ -145,7 +145,8 @@ class Player extends React.Component {
   };
 
   render() {
-    const { changeTrack, pause, paused, track } = this.props;
+    const { changeTrack, index, pause, paused, playlist, track } = this.props;
+    const trackName = `${index}. ${track.name}`;
     return (
       <View>
         <Modal
@@ -158,7 +159,7 @@ class Player extends React.Component {
             currentTime={this.state.currentTime}
             downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
             duration={this.state.duration}
-            name={track.name}
+            name={trackName}
             onClose={this.toggleFullScreen}
             onDownload={this.props.downloadTracks}
             onNext={() => changeTrack(true)}
@@ -168,6 +169,7 @@ class Player extends React.Component {
             onSeekEnd={this.seekEnd}
             paused={paused}
             position={this.state.position}
+            title={playlist.data.title}
           />
         </Modal>
         {track &&
@@ -178,7 +180,7 @@ class Player extends React.Component {
               downloading={
                 track.downloadStatus > 0 && track.downloadStatus < 100
               }
-              name={track.name}
+              name={trackName}
               onDownload={this.props.downloadTracks}
               onNext={() => changeTrack(true)}
               onPause={pause}
@@ -195,23 +197,27 @@ class Player extends React.Component {
 Player.propTypes = {
   changeTrack: PropTypes.func.isRequired,
   downloadTracks: PropTypes.func.isRequired,
+  index: PropTypes.number,
   isPlaying: PropTypes.bool,
   pause: PropTypes.func.isRequired,
   paused: PropTypes.bool,
+  playlist: playlistType,
   stop: PropTypes.func.isRequired,
   track: trackType,
   trackComplete: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
+  index: state.audio.index + 1,
   isPlaying: state.audio.isPlaying,
   paused: state.audio.paused,
+  playlist: playlists.selectors.getSelectedPlaylist(state),
   track: getPlayingTrack(state)
 });
 
 export default connect(mapStateToProps, {
   changeTrack: audioActions.changeTrack,
-  downloadTracks: playlistActions.downloadTracks,
+  downloadTracks: playlists.actions.downloadTracks,
   pause: audioActions.pause,
   stop: audioActions.stop,
   trackComplete: audioActions.trackComplete

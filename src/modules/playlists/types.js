@@ -9,5 +9,6 @@ export default {
   SAVE_SUCCESS: `${prefix}/SAVE_SUCCESS`,
   SELECT: `${prefix}/SELECT`,
   SUCCESS: `${prefix}/SUCCESS`,
+  UPDATE_TITLE: `${prefix}/UPDATE_TITLE`,
   UPDATE_TRACKS: `${prefix}/UPDATE_TRACKS`
 };

@@ -24,6 +24,7 @@
     "query-string": "^5.0.1",
     "react": "16.0.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-24.0.0.tar.gz",
+    "react-native-loader": "^1.2.1",
     "react-native-sortable-listview": "^0.2.7",
     "react-native-swipe-list-view": "^1.0.4",
     "react-redux": "^5.0.6",

@@ -1,13 +1,19 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import PropTypes from 'prop-types';
+import styled, { withTheme } from 'styled-components/native';
+import { Bars } from 'react-native-loader';
 
-const Wrapper = styled.Text`
-  height: 5px;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
+const StyledBars = styled(Bars)`
+  text-align: center;
+  margin-right: 4px;
 `;
 
-const Loader = () => <Wrapper>Loading...</Wrapper>;
+const Loader = ({ theme }) => (
+  <StyledBars size={3} color={theme.color.primary} />
+);
 
-export default Loader;
+Loader.propTypes = {
+  theme: PropTypes.object
+};
+
+export default withTheme(Loader);

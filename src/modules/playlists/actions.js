@@ -168,6 +168,11 @@ export const selectPlaylist = id => ({
   type: types.SELECT
 });
 
+export const updateTitle = title => ({
+  payload: title,
+  type: types.UPDATE_TITLE
+});
+
 export const updateTracks = tracks => ({
   payload: {
     hasChanges: true,

@@ -22,6 +22,13 @@ const Body = styled.View`
   justify-content: center;
 `;
 
+const PlaylistTitle = styled.Text`
+  color: ${p => p.theme.color.secondary};
+  font-size: 22px;
+  margin-bottom: 32px;
+  text-align: center;
+`;
+
 const TimeWrapper = styled.View`
   align-items: center;
   display: flex;
@@ -75,7 +82,8 @@ const Full = ({
   onSeek,
   onSeekEnd,
   paused,
-  position = 0
+  position = 0,
+  title
 }) => {
   return (
     <Wrapper>
@@ -83,6 +91,7 @@ const Full = ({
         <IconButton icon={'close'} onPress={onClose} />
       </Top>
       <Body>
+        <PlaylistTitle>{title}</PlaylistTitle>
         <Title>{name}</Title>
         <Slider
           disabled={!canPlay}
@@ -95,6 +104,7 @@ const Full = ({
           <Time style={{ textAlign: 'right' }}>{getMMSSFromMs(duration)}</Time>
         </TimeWrapper>
         <ActionWrapper>
+          <IconButton icon="skip-previous" onPress={onPrevious} />
           {!canPlay &&
             !downloading && (
               <IconButton icon="file-download" onPress={onDownload} />
@@ -104,9 +114,9 @@ const Full = ({
             <IconButton
               icon={paused ? 'play-arrow' : 'pause'}
               onPress={onPause}
+              size={54}
             />
           )}
-          <IconButton icon="skip-previous" onPress={onPrevious} />
           <IconButton icon="skip-next" onPress={onNext} />
         </ActionWrapper>
       </Body>
@@ -128,7 +138,8 @@ Full.propTypes = {
   onSeek: PropTypes.func.isRequired,
   onSeekEnd: PropTypes.func.isRequired,
   paused: PropTypes.bool,
-  position: PropTypes.number
+  position: PropTypes.number,
+  title: PropTypes.string
 };
 
 export default Full;

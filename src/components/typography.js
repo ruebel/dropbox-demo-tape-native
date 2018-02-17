@@ -17,6 +17,8 @@ export const H1 = styled.Text`
 export const H2 = styled.Text`
   font-size: 26px;
   line-height: 30px;
+  margin-left: 8px;
+  margin-right: 8px;
 `;
 
 export const Message = styled.Text`

@@ -12,7 +12,16 @@ import Playlist from './Playlist';
 import Playlists from './Playlists';
 
 const Title = styled(H1)`
+  font-size: 12px;
   text-align: center;
+  margin-right: 4px;
+`;
+
+const TitleWrapper = styled.View`
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 `;
 
 class App extends Component {
@@ -21,9 +30,11 @@ class App extends Component {
       <Container>
         <View>
           <Link to="/">
-            <Title>Demo Tape</Title>
+            <TitleWrapper>
+              <Title>Demo Tape</Title>
+              <Loading />
+            </TitleWrapper>
           </Link>
-          <Loading />
         </View>
         <View style={{ flex: 1 }}>
           <Switch>
