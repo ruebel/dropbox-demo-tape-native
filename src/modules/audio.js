@@ -6,7 +6,7 @@ const initialState = {
   index: 0,
   isPlaying: false,
   loop: false,
-  paused: false
+  paused: true
 };
 
 export const types = {
@@ -86,12 +86,14 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         index: action.payload,
-        isPlaying: true
+        isPlaying: true,
+        paused: false
       };
     case types.STOP:
       return {
         ...state,
-        isPlaying: false
+        isPlaying: false,
+        paused: true
       };
     default:
       return state;

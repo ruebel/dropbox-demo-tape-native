@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Audio } from 'expo';
 import { connect } from 'react-redux';
+import { Modal, View } from 'react-native';
 
 import Control from './Control';
+import Full from './Full';
 
 import { trackType } from '../../types';
 import { getFilePath } from '../../modules/utils';
@@ -12,6 +14,11 @@ import { actions as playlistActions } from '../../modules/playlists';
 import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
+  state = {
+    fullScreen: false,
+    position: 0
+  };
+
   componentDidMount() {
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -37,12 +44,13 @@ class Player extends React.Component {
   }
 
   handleAudioUpdate = status => {
+    console.log(status.positionMillis / status.durationMillis);
     if (status.isLoaded) {
       this.setState({
         duration: status.durationMillis,
         isBuffering: status.isBuffering,
         isPlaying: status.isPlaying,
-        position: status.positionMillis,
+        position: status.positionMillis / status.durationMillis,
         rate: status.rate,
         shouldPlay: status.shouldPlay,
         volume: status.volume
@@ -52,6 +60,7 @@ class Player extends React.Component {
       }
     } else if (status.error) {
       console.error(`PLAYER ERROR: ${status.error}`);
+      this.props.stop();
     }
   };
 
@@ -63,8 +72,16 @@ class Player extends React.Component {
         this.sound.pauseAsync();
       }
     } else {
+      // Sound is not loaded so we cannot play
       this.props.stop();
     }
+  };
+
+  handleSeek = position => {
+    console.log('seek', position);
+    this.setState({
+      position
+    });
   };
 
   initializeSound = async trackOverride => {
@@ -83,7 +100,7 @@ class Player extends React.Component {
 
     const initialStatus = {
       rate: 1.0,
-      shouldPlay: this.props.isPlaying,
+      shouldPlay: this.props.isPlaying && !this.props.paused,
       volume: 1.0
     };
 
@@ -96,20 +113,54 @@ class Player extends React.Component {
     this.sound = sound;
   };
 
+  toggleFullScreen = () => {
+    this.setState(state => ({
+      fullScreen: !state.fullScreen
+    }));
+  };
+
   render() {
     const { changeTrack, pause, paused, track } = this.props;
-    return track && this.props.isPlaying ? (
-      <Control
-        canPlay={track.downloadStatus === 100}
-        downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
-        name={track.name}
-        onDownload={this.props.downloadTracks}
-        onNext={() => changeTrack(true)}
-        onPause={pause}
-        onPrevious={() => changeTrack(false)}
-        paused={paused}
-      />
-    ) : null;
+    return (
+      <View>
+        <Modal
+          animationType="slide"
+          onRequestClose={this.toggleFullScreen}
+          visible={this.state.fullScreen}
+        >
+          <Full
+            canPlay={track.downloadStatus === 100}
+            downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
+            name={track.name}
+            onClose={this.toggleFullScreen}
+            onDownload={this.props.downloadTracks}
+            onNext={() => changeTrack(true)}
+            onPause={pause}
+            onPrevious={() => changeTrack(false)}
+            onSeek={this.handleSeek}
+            paused={paused}
+            position={this.state.position}
+          />
+        </Modal>
+        {track &&
+          this.props.isPlaying &&
+          !this.state.fullScreen && (
+            <Control
+              canPlay={track.downloadStatus === 100}
+              downloading={
+                track.downloadStatus > 0 && track.downloadStatus < 100
+              }
+              name={track.name}
+              onDownload={this.props.downloadTracks}
+              onNext={() => changeTrack(true)}
+              onPause={pause}
+              onPress={this.toggleFullScreen}
+              onPrevious={() => changeTrack(false)}
+              paused={paused}
+            />
+          )}
+      </View>
+    );
   }
 }
 

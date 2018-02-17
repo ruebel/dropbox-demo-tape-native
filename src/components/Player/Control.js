@@ -15,9 +15,12 @@ const Wrapper = styled.View`
 
 const Title = styled.Text`
   color: ${p => p.theme.color.textExtraLight};
-  flex: 1;
   font-size: 14px;
   text-align: center;
+`;
+
+const TitleWrapper = styled.TouchableOpacity`
+  flex: 1;
 `;
 
 const Control = ({
@@ -27,6 +30,7 @@ const Control = ({
   onDownload,
   onNext,
   onPause,
+  onPress,
   onPrevious,
   paused
 }) => {
@@ -40,7 +44,9 @@ const Control = ({
       {canPlay && (
         <IconButton icon={paused ? 'play-arrow' : 'pause'} onPress={onPause} />
       )}
-      <Title numberOfLines={1}>{name}</Title>
+      <TitleWrapper onPress={onPress}>
+        <Title numberOfLines={1}>{name}</Title>
+      </TitleWrapper>
       <IconButton icon="skip-previous" onPress={onPrevious} />
       <IconButton icon="skip-next" onPress={onNext} />
     </Wrapper>
@@ -54,6 +60,7 @@ Control.propTypes = {
   onDownload: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
   onPause: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired,
   onPrevious: PropTypes.func.isRequired,
   paused: PropTypes.bool
 };
