@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
 import styled, { withTheme } from 'styled-components/native';
 
 import DownloadProgress from './DownloadProgress';
@@ -8,6 +7,11 @@ import { Back, Inner, SwipeRow } from '../../SwipeRow';
 import { Subtitle, Title } from '../../typography';
 
 import { getFilePath, getFileName } from '../utils';
+
+const Info = styled.View`
+  flex: 1;
+  overflow: hidden;
+`;
 
 const Position = styled.Text`
   color: ${p => p.theme.color.textPrimary};
@@ -30,10 +34,10 @@ const Track = ({ onRemove, position, sortHandlers, theme, track }) => (
     <Back onPress={() => onRemove(track)} text="Remove" />
     <Inner disabled={!track.downloadStatus || track.downloadStatus < 100}>
       <Position>{position}</Position>
-      <View>
-        <Title>{getFileName(track.path)}</Title>
+      <Info>
+        <Title numberOfLines={1}>{getFileName(track.path)}</Title>
         <Subtitle>{getFilePath(track.path)}</Subtitle>
-      </View>
+      </Info>
       {typeof track.downloadStatus === 'number' &&
         track.downloadStatus < 100 && (
           <DownloadProgress progress={track.downloadStatus} />

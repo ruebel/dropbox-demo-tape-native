@@ -71,7 +71,7 @@ class Playlist extends React.Component {
             color={theme.color.primary}
             icon={editTitle ? 'save' : 'edit'}
             onPress={this.toggleEditTitle}
-            size={editTitle ? 32 : 24}
+            size={editTitle ? 32 : 20}
           />
         </TitleWrapper>
         <Switch>

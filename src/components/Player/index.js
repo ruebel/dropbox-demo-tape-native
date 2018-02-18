@@ -129,13 +129,17 @@ class Player extends React.Component {
       volume: 1.0
     };
 
-    const { sound } = await Audio.Sound.create(
-      source,
-      initialStatus,
-      this.handleAudioUpdate
-    );
+    try {
+      const { sound } = await Audio.Sound.create(
+        source,
+        initialStatus,
+        this.handleAudioUpdate
+      );
 
-    this.sound = sound;
+      this.sound = sound;
+    } catch (error) {
+      this.sound = null;
+    }
   };
 
   toggleFullScreen = () => {
