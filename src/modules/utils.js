@@ -63,8 +63,10 @@ export const getDropboxConnection = state =>
     accessToken: state.auth.user.params.access_token
   });
 
+const getExtension = name => name.split('.').pop();
+
 export const getFileName = track =>
-  `${track.id}-${track.rev}.${track.name.split('.').pop()}`;
+  `${track.id}-${track.rev}.${getExtension(track.name)}`;
 
 export const getFilePath = track =>
   `${FileSystem.documentDirectory}${getFileName(track)}`;
@@ -83,6 +85,10 @@ export const handleError = (error, dispatch, type) => {
   });
 };
 
+const isAudioFile = name => {
+  return ['mp3', 'm4a', 'ovw', 'wav'].includes(getExtension(name));
+};
+
 export const isDownloaded = async track => {
   const info = await FileSystem.getInfoAsync(getFilePath(track));
   return {
@@ -90,6 +96,10 @@ export const isDownloaded = async track => {
     downloadStatus: info.exists ? 100 : null
   };
 };
+
+export const isFolderOrAudioFile = entry =>
+  entry['.tag'] === 'folder' ||
+  (entry['.tag'] === 'file' && isAudioFile(entry.name));
 
 /**
  * Transform dropbox file object shape to shape usable by client

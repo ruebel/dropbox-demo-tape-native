@@ -22,6 +22,7 @@ const TrackList = ({ onRemove, onSortEnd, tracks }) => {
   const order = tracks.map(track => track.id);
   return (
     <List
+      activeOpacity={0.8}
       data={data}
       onRowMoved={onSortEnd}
       order={order}

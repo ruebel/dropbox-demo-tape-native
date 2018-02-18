@@ -22,7 +22,12 @@ export const H2 = styled.Text`
 `;
 
 export const Message = styled.Text`
-  font-size: 24px;
+  color: ${p => p.theme.color.textLight};
+  font-size: 20px;
+  margin-top: 16px;
+  margin-left: 8px;
+  margin-right: 8px;
+  text-align: center;
 `;
 
 export const Subtitle = styled.Text`

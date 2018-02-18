@@ -12,10 +12,15 @@ const Details = styled.View`
   margin-left: 8;
 `;
 
+const Name = styled(Title)`
+  color: ${p =>
+    p.selected ? p.theme.color.textSecondary : p.theme.color.primary};
+`;
+
 const Wrapper = styled.TouchableOpacity`
   align-items: center;
   background: ${p =>
-    p.selected ? p.theme.color.tertiary : p.theme.color.backgroundPrimary};
+    p.selected ? p.theme.color.secondary : p.theme.color.backgroundPrimary};
   border-top-color: ${p => p.theme.color.borderPrimary};
   border-top-width: 1px
   display: flex;
@@ -24,16 +29,16 @@ const Wrapper = styled.TouchableOpacity`
 `;
 
 const Entry = ({ entry, onPress, selected = false }) => {
-  const iconColor = selected ? color.primary : color.textPrimary;
+  const iconColor = selected ? color.textSecondary : color.primary;
   return (
     <Wrapper onPress={() => onPress(entry)} selected={selected}>
       <Icon
         color={iconColor}
-        icon={entry.type === 'file' ? 'insert-drive-file' : 'folder'}
+        icon={entry.type === 'file' ? 'audiotrack' : 'folder'}
         size={24}
       />
       <Details>
-        <Title>{entry.name}</Title>
+        <Name selected={selected}>{entry.name}</Name>
         {entry.type === 'file' && (
           <Subtitle>{moment(entry.server_modified).fromNow()}</Subtitle>
         )}

@@ -50,7 +50,7 @@ class Explorer extends Component {
         <List
           data={files}
           keyExtractor={item => item.id}
-          ListEmptyComponent={<Message>There's nothing here</Message>}
+          ListEmptyComponent={<Message>There Are No Audio Files Here</Message>}
           refreshControl={
             <RefreshControl
               refreshing={this.props.pending}

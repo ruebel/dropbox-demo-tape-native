@@ -1,4 +1,9 @@
-import { getDropboxConnection, handleError, transformFile } from './utils';
+import {
+  getDropboxConnection,
+  handleError,
+  isFolderOrAudioFile,
+  transformFile
+} from './utils';
 
 const prefix = 'FILES';
 
@@ -28,7 +33,7 @@ export const actions = {
       });
       const payload = {
         cursor,
-        data: entries.map(transformFile),
+        data: entries.filter(isFolderOrAudioFile).map(transformFile),
         hasMore,
         path: folder
       };
