@@ -1,5 +1,14 @@
 import { arrayOf, number, shape, string } from 'prop-types';
 
+export const accountType = shape({
+  email: string.isRequired,
+  id: string.isRequired,
+  name: shape({
+    abbreviated: string.isRequired,
+    full: string.isRequired
+  })
+});
+
 export const trackType = shape({
   id: string.isRequired,
   path: string.isRequired

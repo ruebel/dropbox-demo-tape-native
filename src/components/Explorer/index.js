@@ -43,7 +43,7 @@ class Explorer extends Component {
   };
 
   render() {
-    const { files, getFiles, path, selected } = this.props;
+    const { files, getFiles, path, selected, users } = this.props;
     return (
       <Wrapper>
         <BreadcrumbTrail path={path} onPress={getFiles} />
@@ -62,6 +62,7 @@ class Explorer extends Component {
               entry={item}
               onPress={this.handleEntryPress}
               selected={selected.some(e => e.id === item.id)}
+              user={users.find(u => u.id === item.user)}
             />
           )}
         />
@@ -77,7 +78,8 @@ Explorer.propTypes = {
   onSelectionChange: PropTypes.func,
   path: PropTypes.string,
   pending: PropTypes.bool,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  users: PropTypes.array
 };
 
 Explorer.defaultProps = {
@@ -87,7 +89,8 @@ Explorer.defaultProps = {
 const mapStateToProps = state => ({
   files: state.files.data || [],
   path: state.files.path,
-  pending: state.files.pending
+  pending: state.files.pending,
+  users: state.files.users
 });
 
 export default connect(mapStateToProps, {

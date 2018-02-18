@@ -7,9 +7,11 @@ import Icon from '../Icon';
 import { Subtitle, Title } from '../typography';
 
 import { color } from '../../styles/theme';
+import { accountType } from '../../types';
 
 const Details = styled.View`
   margin-left: 8;
+  flex: 1;
 `;
 
 const Name = styled(Title)`
@@ -28,7 +30,7 @@ const Wrapper = styled.TouchableOpacity`
   padding: 12px;
 `;
 
-const Entry = ({ entry, onPress, selected = false }) => {
+const Entry = ({ entry, onPress, selected = false, user }) => {
   const iconColor = selected ? color.textSecondary : color.primary;
   return (
     <Wrapper onPress={() => onPress(entry)} selected={selected}>
@@ -40,7 +42,10 @@ const Entry = ({ entry, onPress, selected = false }) => {
       <Details>
         <Name selected={selected}>{entry.name}</Name>
         {entry.type === 'file' && (
-          <Subtitle>{moment(entry.server_modified).fromNow()}</Subtitle>
+          <Subtitle>
+            {moment(entry.server_modified).fromNow()}
+            {user ? ` by ${user.name.full}` : ''}
+          </Subtitle>
         )}
       </Details>
     </Wrapper>
@@ -50,7 +55,8 @@ const Entry = ({ entry, onPress, selected = false }) => {
 Entry.propTypes = {
   entry: PropTypes.object,
   onPress: PropTypes.func.isRequired,
-  selected: PropTypes.bool
+  selected: PropTypes.bool,
+  user: accountType
 };
 
 export default Entry;

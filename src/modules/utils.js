@@ -85,10 +85,19 @@ export const handleError = (error, dispatch, type) => {
   });
 };
 
+/**
+ * Returns true if file name is an audio file
+ * @param  {String}  name File Name
+ * @return {Boolean}      isAudioFile
+ */
 const isAudioFile = name => {
   return ['mp3', 'm4a', 'ovw', 'wav'].includes(getExtension(name));
 };
 
+/**
+ * Add download status property to track
+ * @param  {Object}  track
+ */
 export const isDownloaded = async track => {
   const info = await FileSystem.getInfoAsync(getFilePath(track));
   return {
@@ -97,9 +106,28 @@ export const isDownloaded = async track => {
   };
 };
 
+/**
+ * Return true if entry is a folder or an audio file
+ * @param  {Object}  entry Dropbox entry
+ * @return {Boolean}       isFolderOrAudioFile
+ */
 export const isFolderOrAudioFile = entry =>
   entry['.tag'] === 'folder' ||
   (entry['.tag'] === 'file' && isAudioFile(entry.name));
+
+/**
+ * Transform dropbox account object to shape usable by client
+ * @param  {Object} account Dropbox account object
+ * @return {Object}         Transformed account object
+ */
+export const transformAccount = account => ({
+  ...account,
+  id: account.account_id,
+  name: {
+    abbreviated: account.name.abbreviated_name,
+    full: account.name.display_name
+  }
+});
 
 /**
  * Transform dropbox file object shape to shape usable by client
@@ -109,5 +137,6 @@ export const isFolderOrAudioFile = entry =>
 export const transformFile = file => ({
   ...file,
   path: file.path_display,
-  type: file['.tag']
+  type: file['.tag'],
+  user: file.sharing_info.modified_by
 });

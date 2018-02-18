@@ -2,6 +2,7 @@ import {
   getDropboxConnection,
   handleError,
   isFolderOrAudioFile,
+  transformAccount,
   transformFile
 } from './utils';
 
@@ -13,13 +14,39 @@ const initialState = {
   error: null,
   hasMore: false,
   path: '',
-  pending: true
+  pending: true,
+  users: []
 };
 
 export const types = {
   FAILED: `${prefix}/FAILED`,
   PENDING: `${prefix}/PENDING`,
-  SUCCESS: `${prefix}/SUCCESS`
+  SUCCESS: `${prefix}/SUCCESS`,
+  USERS_SUCCESS: `${prefix}/USERS_SUCCESS`
+};
+
+const getUsers = (users = []) => async (dispatch, getState) => {
+  const state = getState();
+  const existingUsers = state.files.users;
+  const usersToFetch = users.filter(
+    user => !existingUsers.some(u => u.account_id === user)
+  );
+  if (!usersToFetch.length) {
+    return;
+  }
+  try {
+    const dbx = getDropboxConnection(state);
+    const results = await dbx.usersGetAccountBatch({
+      /* eslint-disable camelcase */
+      account_ids: usersToFetch
+    });
+    dispatch({
+      payload: results.map(transformAccount),
+      type: types.USERS_SUCCESS
+    });
+  } catch (error) {
+    handleError(error, dispatch, types.FAILED);
+  }
 };
 
 export const actions = {
@@ -37,6 +64,10 @@ export const actions = {
         hasMore,
         path: folder
       };
+      const users = [
+        ...new Set(payload.data.map(entry => entry.sharing_info.modified_by))
+      ].filter(u => u);
+      dispatch(getUsers(users));
       dispatch({
         payload,
         type: types.SUCCESS
@@ -44,7 +75,8 @@ export const actions = {
     } catch (error) {
       handleError(error, dispatch, types.FAILED);
     }
-  }
+  },
+  getUsers
 };
 
 export const reducer = (state = initialState, action) => {
@@ -68,6 +100,11 @@ export const reducer = (state = initialState, action) => {
         ...action.payload,
         error: null,
         pending: false
+      };
+    case types.USERS_SUCCESS:
+      return {
+        ...state,
+        users: [...(state.users || []), ...(action.payload || [])]
       };
     default:
       return state;
