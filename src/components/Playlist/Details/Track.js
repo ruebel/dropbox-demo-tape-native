@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { View } from 'react-native';
 import styled, { withTheme } from 'styled-components/native';
 
+import DownloadProgress from './DownloadProgress';
 import { Back, Inner, SwipeRow } from '../../SwipeRow';
 import { Subtitle, Title } from '../../typography';
 
@@ -33,8 +34,10 @@ const Track = ({ onRemove, position, sortHandlers, theme, track }) => (
         <Title>{getFileName(track.path)}</Title>
         <Subtitle>{getFilePath(track.path)}</Subtitle>
       </View>
-      {track.downloadStatus > 0 &&
-        track.downloadStatus < 100 && <Title>{track.downloadStatus}%</Title>}
+      {typeof track.downloadStatus === 'number' &&
+        track.downloadStatus < 100 && (
+          <DownloadProgress progress={track.downloadStatus} />
+        )}
     </Inner>
   </Wrapper>
 );

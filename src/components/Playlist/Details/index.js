@@ -69,6 +69,9 @@ class Details extends React.Component {
           {playlist.data.tracks.some(track => !track.downloadStatus) && (
             <IconButton
               background={color.primary}
+              diabled={playlist.data.tracks.some(
+                track => track.downloadStatus > 0
+              )}
               icon="file-download"
               onPress={downloadTracks}
             />

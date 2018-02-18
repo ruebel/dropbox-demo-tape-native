@@ -1,5 +1,6 @@
 import { FileSystem } from 'expo';
 import throttle from 'lodash.throttle';
+import pLimit from 'p-limit';
 import {
   createDownloader,
   getDropboxConnection,
@@ -11,6 +12,8 @@ import {
 } from '../utils';
 import { getSelectedPlaylist } from './selectors';
 import types from './types';
+
+const limit = pLimit(2);
 
 export const createPlaylist = name => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });
@@ -65,8 +68,17 @@ export const downloadTracks = () => async (dispatch, getState) => {
     // Create downloaders for all fo the tracks
     const trackDownloaders = tracks
       .filter(track => !track.downloadProgress || track.downloadProgress < 100)
-      .map(track =>
-        createDownloader(
+      .map(track => {
+        // Set initial progress to 0
+        dispatch({
+          payload: {
+            id: track.id,
+            progress: 0
+          },
+          type: types.DOWNLOAD_PROGRESS
+        });
+        // Create a downloader
+        return createDownloader(
           getFileName(track),
           track.path_display,
           state,
@@ -75,10 +87,11 @@ export const downloadTracks = () => async (dispatch, getState) => {
             progress => dispatch(downloadProgress(track.id, progress)),
             250
           )
-        )
-      );
+        );
+      });
     // Download the files
-    trackDownloaders.slice(0, 2).map(d => d.downloadAsync());
+    trackDownloaders.map(d => limit(() => d.downloadAsync()));
+    await Promise.all(trackDownloaders);
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }
@@ -98,10 +111,6 @@ const downloadProgress = (id, progress) => (dispatch, getState) => {
     },
     type: types.DOWNLOAD_PROGRESS
   });
-  if (percentComplete === 100) {
-    // After a track has completed download more
-    dispatch(downloadTracks());
-  }
 };
 
 export const findPlaylists = () => async (dispatch, getState) => {
