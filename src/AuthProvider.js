@@ -43,6 +43,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  // push,
   setUser: actions.setUser
 })(AuthProvider);

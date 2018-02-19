@@ -14,10 +14,14 @@ const blacklistTransform = createTransform((state, key) => {
   return key !== 'audio'
     ? {
       ...state,
-      // Don't carry over error or playing states
-      paused: true
+      // Don't carry over error or pending states
+      pending: false
     }
-    : state;
+    : {
+      ...state,
+      // Force pause on audio if it was playing
+      paused: true
+    };
 });
 
 const config = {
