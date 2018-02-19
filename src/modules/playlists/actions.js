@@ -19,7 +19,7 @@ export const createPlaylist = name => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });
   const state = getState();
   const path = state.files.path;
-  const fileName = `${path}${name}.mix`;
+  const fileName = `${path}/${name}.mix`;
   const data = {
     title: name,
     tracks: []
@@ -67,7 +67,7 @@ export const downloadTracks = () => async (dispatch, getState) => {
   try {
     // Create downloaders for all fo the tracks
     const trackDownloaders = tracks
-      .filter(track => !track.downloadProgress || track.downloadProgress < 100)
+      .filter(track => !track.downloadStatus || track.downloadStatus < 100)
       .map(track => {
         // Set initial progress to 0
         dispatch({
@@ -89,9 +89,19 @@ export const downloadTracks = () => async (dispatch, getState) => {
           )
         );
       });
+    if (trackDownloaders.some(t => t)) {
+      dispatch({
+        payload: true,
+        type: types.UPDATE_DOWNLOADING
+      });
+    }
     // Download the files
     trackDownloaders.map(d => limit(() => d.downloadAsync()));
     await Promise.all(trackDownloaders);
+    dispatch({
+      payload: false,
+      type: types.UPDATE_DOWNLOADING
+    });
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }

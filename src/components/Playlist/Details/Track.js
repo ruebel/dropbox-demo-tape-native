@@ -7,6 +7,7 @@ import { Back, Inner, SwipeRow } from '../../SwipeRow';
 import { Subtitle, Title } from '../../typography';
 
 import { getFilePath, getFileName } from '../utils';
+import { accountType } from '../../../types';
 
 const Info = styled.View`
   flex: 1;
@@ -24,7 +25,7 @@ const Wrapper = styled(SwipeRow)`
   border-top-width: 1px;
 `;
 
-const Track = ({ onRemove, position, sortHandlers, theme, track }) => (
+const Track = ({ onRemove, position, sortHandlers, theme, track, user }) => (
   <Wrapper
     underlayColor={theme.color.backgroundDisabled}
     rightOpenValue={-85}
@@ -36,7 +37,10 @@ const Track = ({ onRemove, position, sortHandlers, theme, track }) => (
       <Position>{position}</Position>
       <Info>
         <Title numberOfLines={1}>{getFileName(track.path)}</Title>
-        <Subtitle>{getFilePath(track.path)}</Subtitle>
+        <Subtitle>
+          {getFilePath(track.path)}
+          {user ? ` by ${user.name.full}` : ''}
+        </Subtitle>
       </Info>
       {typeof track.downloadStatus === 'number' &&
         track.downloadStatus < 100 && (
@@ -51,7 +55,8 @@ Track.propTypes = {
   position: PropTypes.number,
   sortHandlers: PropTypes.object,
   theme: PropTypes.object,
-  track: PropTypes.object
+  track: PropTypes.object,
+  user: accountType
 };
 
 export default withTheme(Track);

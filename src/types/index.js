@@ -9,6 +9,8 @@ export const accountType = shape({
   })
 });
 
+export const accountList = arrayOf(accountType);
+
 export const trackType = shape({
   id: string.isRequired,
   path: string.isRequired

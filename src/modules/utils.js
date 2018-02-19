@@ -1,5 +1,6 @@
 import Dropbox from 'dropbox';
 import { FileSystem } from 'expo';
+import { get } from 'dot-prop';
 
 // Dropbox public download API URL
 const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
@@ -13,7 +14,7 @@ const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
  * @return {Object}        Resumable Downloader Object
  */
 export const createDownloader = (local, remote, state, progress) => {
-  const localPath = FileSystem.documentDirectory + local;
+  const localPath = FileSystem.documentDirectory + createValidFileURI(local);
   // Since the dropbox SDK only supports downloading as Blobs and RN
   // doesn't have support for blobs at the moment I am using the
   // Expo FileSystem Resumable Downloader to download the file
@@ -33,6 +34,26 @@ export const createDownloader = (local, remote, state, progress) => {
   );
 };
 
+/**
+ * Remove invalid characters from file path
+ * @param  {String} path File URI
+ * @return {String}      Valid File URI
+ */
+const createValidFileURI = path =>
+  path
+    .split('-')
+    .join('_')
+    .split(' ')
+    .join('_')
+    .trim();
+
+/**
+ * Upload a file to dropbox
+ * @param  {Object}  data  File data to upload
+ * @param  {String}  path  Dropbox path to file
+ * @param  {Object}  state App state
+ * @return {Promise}       Upload result
+ */
 export const uploadFile = async (data, path, state) => {
   const dbx = getDropboxConnection(state);
   // Upload playlist to dropbox (dropbox will return new metadata)
@@ -63,11 +84,26 @@ export const getDropboxConnection = state =>
     accessToken: state.auth.user.params.access_token
   });
 
+/**
+ * Get extension from file name
+ * @param  {String} name File Name
+ * @return {String}      Extension
+ */
 const getExtension = name => name.split('.').pop();
 
+/**
+ * Createa file name from a track
+ * @param  {Object} track Track object
+ * @return {String}       File Name
+ */
 export const getFileName = track =>
   `${track.id}-${track.rev}.${getExtension(track.name)}`;
 
+/**
+ * Get the download file path of a track
+ * @param  {Object} track Track Object
+ * @return {String}       File Path
+ */
 export const getFilePath = track =>
   `${FileSystem.documentDirectory}${getFileName(track)}`;
 
@@ -138,5 +174,5 @@ export const transformFile = file => ({
   ...file,
   path: file.path_display,
   type: file['.tag'],
-  user: file.sharing_info.modified_by
+  user: get(file, 'sharing_info.modified_by')
 });

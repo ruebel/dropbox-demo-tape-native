@@ -150,32 +150,36 @@ class Player extends React.Component {
 
   render() {
     const { changeTrack, index, pause, paused, playlist, track } = this.props;
-    const trackName = `${index}. ${track.name}`;
+    const trackName = track ? `${index}. ${track.name}` : null;
     return (
       <View>
-        <Modal
-          animationType="slide"
-          onRequestClose={this.toggleFullScreen}
-          visible={this.state.fullScreen}
-        >
-          <Full
-            canPlay={track.downloadStatus === 100}
-            currentTime={this.state.currentTime}
-            downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
-            duration={this.state.duration}
-            name={trackName}
-            onClose={this.toggleFullScreen}
-            onDownload={this.props.downloadTracks}
-            onNext={() => changeTrack(true)}
-            onPause={pause}
-            onPrevious={() => changeTrack(false)}
-            onSeek={this.seeking}
-            onSeekEnd={this.seekEnd}
-            paused={paused}
-            position={this.state.position}
-            title={playlist.data.title}
-          />
-        </Modal>
+        {track && (
+          <Modal
+            animationType="slide"
+            onRequestClose={this.toggleFullScreen}
+            visible={this.state.fullScreen}
+          >
+            <Full
+              canPlay={track.downloadStatus === 100}
+              currentTime={this.state.currentTime}
+              downloading={
+                track.downloadStatus > 0 && track.downloadStatus < 100
+              }
+              duration={this.state.duration}
+              name={trackName}
+              onClose={this.toggleFullScreen}
+              onDownload={this.props.downloadTracks}
+              onNext={() => changeTrack(true)}
+              onPause={pause}
+              onPrevious={() => changeTrack(false)}
+              onSeek={this.seeking}
+              onSeekEnd={this.seekEnd}
+              paused={paused}
+              position={this.state.position}
+              title={playlist.data.title}
+            />}
+          </Modal>
+        )}
         {track &&
           this.props.isPlaying &&
           !this.state.fullScreen && (

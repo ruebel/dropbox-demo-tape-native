@@ -1,3 +1,4 @@
+import { get } from 'dot-prop';
 import {
   getDropboxConnection,
   handleError,
@@ -65,7 +66,9 @@ export const actions = {
         path: folder
       };
       const users = [
-        ...new Set(payload.data.map(entry => entry.sharing_info.modified_by))
+        ...new Set(
+          payload.data.map(entry => get(entry, 'sharing_info.modified_by'))
+        )
       ].filter(u => u);
       dispatch(getUsers(users));
       dispatch({

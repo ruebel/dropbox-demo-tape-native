@@ -1,15 +1,20 @@
 import React from 'react';
-import { Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import styled from 'styled-components/native';
 
 import ButtonWrapper from '../ButtonWrapper';
 import Explorer from '../Explorer';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
+import { H2 } from '../typography';
 
 import { color } from '../../styles/theme';
 import { createPlaylist } from '../../modules/playlists/actions';
+
+const Wrapper = styled.View`
+  flex: 1;
+`;
 
 class CreatePlaylist extends React.Component {
   state = {
@@ -31,8 +36,8 @@ class CreatePlaylist extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
-        <Text>Create Playlist</Text>
+      <Wrapper>
+        <H2>Create Playlist</H2>
         <TextInput
           onChange={this.handleNameChange}
           placeholder="Enter Playlist Name"
@@ -53,7 +58,7 @@ class CreatePlaylist extends React.Component {
           />
         </ButtonWrapper>
         <Explorer folder />
-      </View>
+      </Wrapper>
     );
   }
 }

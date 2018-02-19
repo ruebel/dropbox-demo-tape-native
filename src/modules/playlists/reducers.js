@@ -51,7 +51,8 @@ export default (state = initialState, action) => {
               downloadStatus: action.payload.progress
             })
           )
-        }
+        },
+        downloading: true
       }));
     case types.FAILED:
       return {
@@ -84,6 +85,11 @@ export default (state = initialState, action) => {
         error: null,
         pending: false
       };
+    case types.UPDATE_DOWNLOADING:
+      return updateSelected(state, playlist => ({
+        ...playlist,
+        downloading: action.payload
+      }));
     case types.UPDATE_TITLE:
       return updateSelected(state, playlist => ({
         ...playlist,

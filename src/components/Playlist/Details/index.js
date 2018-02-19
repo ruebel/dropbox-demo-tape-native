@@ -14,7 +14,7 @@ import {
   selectors as playlistSelectors
 } from '../../../modules/playlists';
 import { actions as audioActions } from '../../../modules/audio';
-import { playlistType } from '../../../types';
+import { accountList, playlistType } from '../../../types';
 import { color } from '../../../styles/theme';
 
 class Details extends React.Component {
@@ -45,7 +45,8 @@ class Details extends React.Component {
       play,
       playlist,
       savePlaylist,
-      stop
+      stop,
+      users
     } = this.props;
     return (
       <View style={{ flex: 1 }}>
@@ -69,9 +70,7 @@ class Details extends React.Component {
           {playlist.data.tracks.some(track => !track.downloadStatus) && (
             <IconButton
               background={color.primary}
-              disabled={playlist.data.tracks.some(
-                track => track.downloadStatus > 0
-              )}
+              disabled={playlist.downloading}
               icon="file-download"
               onPress={downloadTracks}
             />
@@ -81,6 +80,7 @@ class Details extends React.Component {
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}
           tracks={playlist.data.tracks}
+          users={users}
         />
       </View>
     );
@@ -96,12 +96,14 @@ Details.propTypes = {
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
   stop: PropTypes.func.isRequired,
-  updateTracks: PropTypes.func.isRequired
+  updateTracks: PropTypes.func.isRequired,
+  users: accountList
 };
 
 const mapStateToProps = state => ({
   isPlaying: state.audio.isPlaying,
-  playlist: playlistSelectors.getSelectedPlaylist(state)
+  playlist: playlistSelectors.getSelectedPlaylist(state),
+  users: state.files.users
 });
 
 export default withRouter(
