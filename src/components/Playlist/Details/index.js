@@ -14,7 +14,7 @@ import {
   selectors as playlistSelectors
 } from '../../../modules/playlists';
 import { actions as audioActions } from '../../../modules/audio';
-import { accountList, playlistType } from '../../../types';
+import { accountList, playlistType, trackType } from '../../../types';
 import { color } from '../../../styles/theme';
 
 class Details extends React.Component {
@@ -34,6 +34,10 @@ class Details extends React.Component {
     }
   };
 
+  handleTrackPress = track => {
+    this.props.play(track.id);
+  };
+
   showAdd = () => {
     this.props.history.push(this.props.match.url + '/add');
   };
@@ -43,6 +47,7 @@ class Details extends React.Component {
       downloadTracks,
       isPlaying,
       play,
+      playingTrack,
       playlist,
       savePlaylist,
       stop,
@@ -65,7 +70,7 @@ class Details extends React.Component {
           <IconButton
             background={color.primary}
             icon={isPlaying ? 'stop' : 'play-arrow'}
-            onPress={() => (isPlaying ? stop() : play(0))}
+            onPress={() => (isPlaying ? stop() : play())}
           />
           {playlist.data.tracks.some(track => !track.downloadStatus) && (
             <IconButton
@@ -77,9 +82,18 @@ class Details extends React.Component {
           )}
         </ButtonWrapper>
         <TrackList
+          onPress={this.handleTrackPress}
           onRemove={this.handleRemove}
           onSortEnd={this.handleSortEnd}
-          tracks={playlist.data.tracks}
+          tracks={playlist.data.tracks.map(
+            t =>
+              t === playingTrack
+                ? {
+                  ...t,
+                  playing: true
+                }
+                : t
+          )}
           users={users}
         />
       </View>
@@ -93,6 +107,7 @@ Details.propTypes = {
   isPlaying: PropTypes.bool,
   match: PropTypes.object,
   play: PropTypes.func.isRequired,
+  playingTrack: trackType,
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
   stop: PropTypes.func.isRequired,
@@ -102,6 +117,7 @@ Details.propTypes = {
 
 const mapStateToProps = state => ({
   isPlaying: state.audio.isPlaying,
+  playingTrack: playlistSelectors.getPlayingTrack(state),
   playlist: playlistSelectors.getSelectedPlaylist(state),
   users: state.files.users
 });

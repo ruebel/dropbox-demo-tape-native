@@ -4,11 +4,11 @@ export const getPlayingTrack = state => {
     !playlist ||
     !playlist.data ||
     !playlist.data.tracks ||
-    playlist.data.tracks.length < state.audio.index + 1
+    !playlist.data.tracks.length
   ) {
     return null;
   }
-  return playlist.data.tracks[state.audio.index];
+  return playlist.data.tracks.find(t => t.id === state.audio.id);
 };
 
 export const getSelectedPlaylist = state => {

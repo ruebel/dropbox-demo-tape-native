@@ -41,9 +41,8 @@ class Player extends React.Component {
 
   componentWillReceiveProps(next) {
     if (next.track !== this.props.track) {
-      this.initializeSound(next.track);
-    }
-    if (
+      this.initializeSound(next.track, next.isPlaying && !next.paused);
+    } else if (
       next.isPlaying !== this.props.isPlaying ||
       next.paused !== this.props.paused
     ) {
@@ -69,7 +68,7 @@ class Player extends React.Component {
         this.props.trackComplete();
       }
     } else if (status.error) {
-      console.error(`PLAYER ERROR: ${status.error}`);
+      console.error(`Player Error: ${status.error}`);
       this.props.stop();
     }
   };
@@ -81,9 +80,6 @@ class Player extends React.Component {
       } else {
         this.sound.pauseAsync();
       }
-    } else {
-      // Sound is not loaded so we cannot play
-      this.props.stop();
     }
   };
 
@@ -109,11 +105,15 @@ class Player extends React.Component {
     });
   };
 
-  initializeSound = async trackOverride => {
-    if (this.sound != null) {
-      await this.sound.unloadAsync();
-      this.sound.setOnPlaybackStatusUpdate(null);
-      this.sound = null;
+  initializeSound = async (trackOverride, shouldPlayOverride) => {
+    if (this.sound) {
+      try {
+        await this.sound.unloadAsync();
+        this.sound.setOnPlaybackStatusUpdate(null);
+        this.sound = null;
+      } catch (err) {
+        console.error(err);
+      }
     }
     const track = trackOverride || this.props.track;
 
@@ -121,11 +121,12 @@ class Player extends React.Component {
       return;
     }
 
-    const source = { uri: getFilePath(this.props.track) };
+    const source = { uri: getFilePath(track) };
 
     const initialStatus = {
       rate: 1.0,
-      shouldPlay: this.props.isPlaying && !this.props.paused,
+      shouldPlay:
+        shouldPlayOverride || (this.props.isPlaying && !this.props.paused),
       volume: 1.0
     };
 
@@ -149,8 +150,10 @@ class Player extends React.Component {
   };
 
   render() {
-    const { changeTrack, index, pause, paused, playlist, track } = this.props;
-    const trackName = track ? `${index}. ${track.name}` : null;
+    const { changeTrack, id, pause, paused, playlist, track } = this.props;
+    const trackName = track
+      ? `${playlist.data.tracks.findIndex(t => t.id === id) + 1}. ${track.name}`
+      : null;
     return (
       <View>
         {track && (
@@ -177,7 +180,7 @@ class Player extends React.Component {
               paused={paused}
               position={this.state.position}
               title={playlist.data.title}
-            />}
+            />
           </Modal>
         )}
         {track &&
@@ -205,7 +208,7 @@ class Player extends React.Component {
 Player.propTypes = {
   changeTrack: PropTypes.func.isRequired,
   downloadTracks: PropTypes.func.isRequired,
-  index: PropTypes.number,
+  id: PropTypes.string,
   isPlaying: PropTypes.bool,
   pause: PropTypes.func.isRequired,
   paused: PropTypes.bool,
@@ -216,7 +219,7 @@ Player.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  index: state.audio.index + 1,
+  id: state.audio.id,
   isPlaying: state.audio.isPlaying,
   paused: state.audio.paused,
   playlist: playlists.selectors.getSelectedPlaylist(state),

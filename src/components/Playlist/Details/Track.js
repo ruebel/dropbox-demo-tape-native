@@ -3,11 +3,16 @@ import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components/native';
 
 import DownloadProgress from './DownloadProgress';
+import Icon from '../../Icon';
 import { Back, Inner, SwipeRow } from '../../SwipeRow';
 import { Subtitle, Title } from '../../typography';
 
 import { getFilePath, getFileName } from '../utils';
 import { accountType } from '../../../types';
+
+const IconWrapper = styled.View`
+  width: 31px;
+`;
 
 const Info = styled.View`
   flex: 1;
@@ -25,8 +30,17 @@ const Wrapper = styled(SwipeRow)`
   border-top-width: 1px;
 `;
 
-const Track = ({ onRemove, position, sortHandlers, theme, track, user }) => (
+const Track = ({
+  onPress,
+  onRemove,
+  position,
+  sortHandlers,
+  theme,
+  track,
+  user
+}) => (
   <Wrapper
+    onRowPress={() => (track.playing ? null : onPress(track))}
     underlayColor={theme.color.backgroundDisabled}
     rightOpenValue={-85}
     sortHandlers={sortHandlers}
@@ -34,8 +48,14 @@ const Track = ({ onRemove, position, sortHandlers, theme, track, user }) => (
   >
     <Back onPress={() => onRemove(track)} text="Remove" />
     <Inner disabled={!track.downloadStatus || track.downloadStatus < 100}>
-      <Position>{position}</Position>
-      <Info>
+      {track.playing ? (
+        <IconWrapper>
+          <Icon color="black" icon="play-circle-filled" size={24} />
+        </IconWrapper>
+      ) : (
+        <Position>{position}</Position>
+      )}
+      <Info active={track.playing}>
         <Title numberOfLines={1}>{getFileName(track.path)}</Title>
         <Subtitle>
           {getFilePath(track.path)}
@@ -51,6 +71,7 @@ const Track = ({ onRemove, position, sortHandlers, theme, track, user }) => (
 );
 
 Track.propTypes = {
+  onPress: PropTypes.func,
   onRemove: PropTypes.func.isRequired,
   position: PropTypes.number,
   sortHandlers: PropTypes.object,

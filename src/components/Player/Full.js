@@ -88,7 +88,7 @@ const Full = ({
   return (
     <Wrapper>
       <Top>
-        <IconButton icon={'close'} onPress={onClose} />
+        <IconButton icon="close" onPress={onClose} />
       </Top>
       <Body>
         <PlaylistTitle>{title}</PlaylistTitle>

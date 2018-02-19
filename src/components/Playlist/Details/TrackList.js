@@ -11,7 +11,7 @@ const List = styled(SortableListView)`
   margin-top: 8px;
 `;
 
-const TrackList = ({ onRemove, onSortEnd, tracks, users = [] }) => {
+const TrackList = ({ onPress, onRemove, onSortEnd, tracks, users = [] }) => {
   const data = tracks.reduce(
     (tot, track, i) => ({
       ...tot,
@@ -28,6 +28,7 @@ const TrackList = ({ onRemove, onSortEnd, tracks, users = [] }) => {
       order={order}
       renderRow={row => (
         <Track
+          onPress={onPress}
           onRemove={onRemove}
           position={row.position}
           track={row}
@@ -39,6 +40,7 @@ const TrackList = ({ onRemove, onSortEnd, tracks, users = [] }) => {
 };
 
 TrackList.propTypes = {
+  onPress: PropTypes.func,
   onRemove: PropTypes.func.isRequired,
   onSortEnd: PropTypes.func.isRequired,
   tracks: trackList,

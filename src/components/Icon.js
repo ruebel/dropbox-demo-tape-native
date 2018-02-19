@@ -2,7 +2,7 @@ import React from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
-const Icon = ({ color, icon, size }) => {
+const Icon = ({ color, icon, size = 32 }) => {
   return <MaterialIcons color={color} name={icon} size={size} />;
 };
 

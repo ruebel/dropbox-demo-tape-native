@@ -97,7 +97,7 @@ const getExtension = name => name.split('.').pop();
  * @return {String}       File Name
  */
 export const getFileName = track =>
-  `${track.id}-${track.rev}.${getExtension(track.name)}`;
+  track ? `${track.id}-${track.rev}.${getExtension(track.name)}` : null;
 
 /**
  * Get the download file path of a track
@@ -105,7 +105,9 @@ export const getFileName = track =>
  * @return {String}       File Path
  */
 export const getFilePath = track =>
-  `${FileSystem.documentDirectory}${getFileName(track)}`;
+  track
+    ? `${FileSystem.documentDirectory}${createValidFileURI(getFileName(track))}`
+    : null;
 
 /**
  * Generic error handler

@@ -3,7 +3,7 @@ import { getSelectedPlaylist } from './playlists/selectors';
 const prefix = 'AUDIO';
 
 const initialState = {
-  index: 0,
+  id: null,
   isPlaying: false,
   loop: false,
   paused: true
@@ -28,23 +28,38 @@ export const actions = {
     if (!checkPlaylist(playlist)) {
       return;
     }
-    const nextIndex = state.audio.index + (forward ? 1 : -1);
+    const index = playlist.data.tracks.findIndex(t => t.id === state.audio.id);
+    const nextIndex = index + (forward ? 1 : -1);
     if (nextIndex === playlist.data.tracks.length || nextIndex < 0) {
       return;
     }
     // Go to the next track
     dispatch({
-      payload: nextIndex,
+      payload: playlist.data.tracks[nextIndex].id,
       type: types.PLAY
     });
   },
   pause: () => ({
     type: types.PAUSE
   }),
-  play: (index = 0) => ({
-    payload: index,
-    type: types.PLAY
-  }),
+  play: id => (dispatch, getState) => {
+    if (!id) {
+      const state = getState();
+      const playlist = getSelectedPlaylist(state);
+      if (!checkPlaylist(playlist)) {
+        return;
+      }
+      dispatch({
+        payload: playlist.data.tracks[0].id,
+        type: types.PLAY
+      });
+    } else {
+      dispatch({
+        payload: id,
+        type: types.PLAY
+      });
+    }
+  },
   stop: () => ({
     type: types.STOP
   }),
@@ -54,7 +69,8 @@ export const actions = {
     if (!checkPlaylist(playlist)) {
       return;
     }
-    let nextIndex = state.audio.index + 1;
+    const index = playlist.data.tracks.findIndex(t => t.id === state.audio.id);
+    let nextIndex = index + 1;
     if (nextIndex === playlist.data.tracks.length) {
       // We are at the end of the playlist
       if (state.audio.loop) {
@@ -69,7 +85,7 @@ export const actions = {
     }
     // Go to the next track
     dispatch({
-      payload: nextIndex,
+      payload: playlist.data.tracks[nextIndex].id,
       type: types.PLAY
     });
   }
@@ -85,13 +101,14 @@ export const reducer = (state = initialState, action) => {
     case types.PLAY:
       return {
         ...state,
-        index: action.payload,
+        id: action.payload,
         isPlaying: true,
         paused: false
       };
     case types.STOP:
       return {
         ...state,
+        id: null,
         isPlaying: false,
         paused: true
       };
