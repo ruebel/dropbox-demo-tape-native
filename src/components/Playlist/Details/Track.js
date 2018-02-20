@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled, { withTheme } from 'styled-components/native';
+import moment from 'moment';
 
 import DownloadProgress from './DownloadProgress';
 import Icon from '../../Icon';
@@ -25,6 +26,12 @@ const Position = styled.Text`
   width: 23px;
 `;
 
+const Updated = styled(Subtitle)`
+  color: ${p => p.theme.color.primary};
+  margin-top: 2;
+  margin-bottom: 2;
+`;
+
 const Wrapper = styled(SwipeRow)`
   border-top-color: ${p => p.theme.color.borderPrimary};
   border-top-width: 1px;
@@ -47,7 +54,10 @@ const Track = ({
     {...sortHandlers}
   >
     <Back onPress={() => onRemove(track)} text="Remove" />
-    <Inner disabled={!track.downloadStatus || track.downloadStatus < 100}>
+    <Inner
+      active={track.playing}
+      disabled={!track.downloadStatus || track.downloadStatus < 100}
+    >
       {track.playing ? (
         <IconWrapper>
           <Icon color="black" icon="play-circle-filled" size={24} />
@@ -55,12 +65,13 @@ const Track = ({
       ) : (
         <Position>{position}</Position>
       )}
-      <Info active={track.playing}>
+      <Info>
         <Title numberOfLines={1}>{getFileName(track.path)}</Title>
-        <Subtitle>
-          {getFilePath(track.path)}
+        <Updated>
+          Updated {moment(track.server_modified).fromNow()}
           {user ? ` by ${user.name.full}` : ''}
-        </Subtitle>
+        </Updated>
+        <Subtitle>{getFilePath(track.path)}</Subtitle>
       </Info>
       {typeof track.downloadStatus === 'number' &&
         track.downloadStatus < 100 && (

@@ -149,7 +149,12 @@ export const findPlaylists = () => async (dispatch, getState) => {
         const playlist = JSON.parse(fileString);
         // Combine w/ metadata and return
         return {
-          data: playlist,
+          data: {
+            ...playlist,
+            tracks: await Promise.all(
+              (playlist.tracks || []).map(transformFile).map(isDownloaded)
+            )
+          },
           meta: match.metadata
         };
       })
