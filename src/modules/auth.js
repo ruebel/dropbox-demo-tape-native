@@ -8,11 +8,15 @@ const initialState = {
 
 export const types = {
   FAILED: `${prefix}/FAILED`,
+  LOGOUT: `${prefix}/LOGOUT`,
   PENDING: `${prefix}/PENDING`,
   SUCCESS: `${prefix}/SUCCESS`
 };
 
 export const actions = {
+  logout: () => ({
+    type: types.LOGOUT
+  }),
   setUser: token => ({
     payload: token,
     type: types.SUCCESS
@@ -25,6 +29,13 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         error: action.payload,
+        pending: false,
+        user: null
+      };
+    case types.LOGOUT:
+      return {
+        ...state,
+        error: null,
         pending: false,
         user: null
       };

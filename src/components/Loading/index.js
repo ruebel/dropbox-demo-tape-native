@@ -5,7 +5,7 @@ import Loader from './Loader';
 import Icon from '../Icon';
 
 const Loading = ({ loading }) => {
-  return loading ? <Loader /> : <Icon icon="voicemail" size={12} />;
+  return loading ? <Loader /> : <Icon icon="voicemail" size={28} />;
 };
 
 Loading.propTypes = {

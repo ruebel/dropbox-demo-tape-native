@@ -20,7 +20,9 @@ class AuthProvider extends React.Component {
     const result = await AuthSession.startAsync({
       authUrl
     });
-    this.props.setUser(result);
+    if (result.user && result.user.type !== 'cancel') {
+      this.props.setUser(result);
+    }
   };
 
   render() {

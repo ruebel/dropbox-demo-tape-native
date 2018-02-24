@@ -4,7 +4,7 @@ export default styled.View`
   align-items: center;
   background-color: ${p =>
     p.active
-      ? '#CFFFFF'
+      ? p.theme.color.backgroundSelected
       : p.disabled
         ? p.theme.color.backgroundDisabled
         : p.theme.color.backgroundPrimary};

@@ -4,13 +4,11 @@ import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import { RefreshControl } from 'react-native';
 
-import IconButton from '../IconButton';
 import { Empty, H2 } from '../typography';
 import Playlist from './Playlist';
 
 import { actions as playlistActions } from '../../modules/playlists';
 import { playlistsType } from '../../types';
-import { color } from '../../styles/theme';
 
 const List = styled.FlatList`
   margin-top: 16;
@@ -37,10 +35,6 @@ class Playlists extends React.Component {
       });
     }
   }
-
-  handleAdd = () => {
-    this.props.history.push('/create');
-  };
 
   handlePlaylistPress = playlist => {
     this.props.selectPlaylist(playlist.meta.id);
@@ -76,12 +70,6 @@ class Playlists extends React.Component {
               playlist={item}
             />
           )}
-        />
-        <IconButton
-          background={color.primary}
-          float
-          icon="add"
-          onPress={this.handleAdd}
         />
       </Wrapper>
     );

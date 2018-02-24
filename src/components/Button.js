@@ -1,26 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
+
+import Icon from './Icon';
 
 const ButtonBase = styled.TouchableOpacity`
   align-items: center;
   background: ${p =>
     p.disabled ? p.theme.color.backgroundDisabled : p.theme.color.primary};
-  display: flex;
+  flex-direction: row;
   height: 60px;
   justify-content: center;
   width: 100%;
 `;
 
 const Text = styled.Text`
-  color: ${p => p.theme.color.textLight};
+  color: ${p => p.theme.color.textSecondary};
   font-size: 14px;
   font-weight: 800;
+  margin-left: 8;
 `;
 
-const Button = ({ disabled = false, onPress, text }) => {
+const Button = ({
+  disabled = false,
+  icon,
+  iconFamily,
+  onPress,
+  text,
+  theme
+}) => {
   return (
     <ButtonBase disabled={disabled} onPress={onPress}>
+      {icon && (
+        <Icon
+          color={theme.color.textSecondary}
+          family={iconFamily}
+          icon={icon}
+        />
+      )}
       <Text>{text}</Text>
     </ButtonBase>
   );
@@ -28,8 +45,11 @@ const Button = ({ disabled = false, onPress, text }) => {
 
 Button.propTypes = {
   disabled: PropTypes.bool,
+  icon: PropTypes.string,
+  iconFamily: PropTypes.string,
   onPress: PropTypes.func.isRequired,
-  text: PropTypes.string
+  text: PropTypes.string,
+  theme: PropTypes.object
 };
 
-export default Button;
+export default withTheme(Button);

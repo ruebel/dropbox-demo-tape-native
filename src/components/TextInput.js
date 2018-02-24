@@ -4,22 +4,23 @@ import { StyleSheet } from 'react-native';
 import styled, { withTheme } from 'styled-components/native';
 
 const Input = styled.TextInput`
-  border-bottom-color: ${p => p.theme.color.borderPrimary};
-  border-bottom-width: ${StyleSheet.hairlineWidth};
+  border-color: ${p => p.theme.color.borderPrimary};
+  border-width: ${StyleSheet.hairlineWidth};
   color: ${p => p.theme.color.textPrimary};
   font-size: 17px;
   height: 50px;
+  padding: 0 16px;
 `;
 
 const Title = styled.Text`
   color: ${p => p.theme.color.textLight};
   font-size: 16px;
+  margin-left: 8px;
 `;
 
 const Wrapper = styled.View`
   align-items: stretch;
   display: flex;
-  margin: 0 16px;
   max-width: 500px;
   flex-direction: column;
 `;
