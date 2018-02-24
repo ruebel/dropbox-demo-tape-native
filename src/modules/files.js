@@ -16,12 +16,14 @@ const initialState = {
   hasMore: false,
   path: '',
   pending: true,
+  sortBy: 'modified',
   users: []
 };
 
 export const types = {
   FAILED: `${prefix}/FAILED`,
   PENDING: `${prefix}/PENDING`,
+  SORT_BY: `${prefix}/SORT_BY`,
   SUCCESS: `${prefix}/SUCCESS`,
   USERS_SUCCESS: `${prefix}/USERS_SUCCESS`
 };
@@ -79,7 +81,11 @@ export const actions = {
       handleError(error, dispatch, types.FAILED);
     }
   },
-  getUsers
+  getUsers,
+  setSortBy: sortBy => ({
+    payload: sortBy,
+    type: types.SORT_BY
+  })
 };
 
 export const reducer = (state = initialState, action) => {
@@ -97,6 +103,11 @@ export const reducer = (state = initialState, action) => {
         error: null,
         pending: true
       };
+    case types.SORT_BY:
+      return {
+        ...state,
+        sortBy: action.payload
+      };
     case types.SUCCESS:
       return {
         ...state,
@@ -111,5 +122,27 @@ export const reducer = (state = initialState, action) => {
       };
     default:
       return state;
+  }
+};
+
+const sortByTypeAndName = (a, b) =>
+  a.type !== b.type && (a.type === 'folder' || b.type === 'folder')
+    ? b.type === 'folder' ? 1 : -1
+    : a.name.localeCompare(b.name);
+
+const sortByTypeAndModified = (a, b) =>
+  a.type !== b.type && (a.type === 'folder' || b.type === 'folder')
+    ? b.type === 'folder' ? 1 : -1
+    : new Date(b.server_modified) - new Date(a.server_modified);
+
+export const selectors = {
+  getSortedFiles: state => {
+    switch (state.files.sortBy) {
+      case 'modified':
+      default:
+        return state.files.data.sort(sortByTypeAndModified);
+      case 'name':
+        return state.files.data.sort(sortByTypeAndName);
+    }
   }
 };

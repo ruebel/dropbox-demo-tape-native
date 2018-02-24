@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import styled from 'styled-components/native';
 import { RefreshControl } from 'react-native';
+import { connectActionSheet } from '@expo/react-native-action-sheet';
 
 import BreadcrumbTrail from './BreadcrumbTrail';
 import Container from '../Container';
 import Entry from './Entry';
 import { Message } from '../typography';
 
-import { actions as fileActions } from '../../modules/files';
+import * as files from '../../modules/files';
 
 const List = styled.FlatList`
   flex: 1;
@@ -28,6 +29,23 @@ class Explorer extends Component {
     }
   };
 
+  handleSort = () => {
+    const options = ['Modified', 'Name', 'Cancel'];
+    const cancelButtonIndex = 2;
+
+    this.props.showActionSheetWithOptions(
+      {
+        cancelButtonIndex,
+        options
+      },
+      buttonIndex => {
+        if (buttonIndex < 2) {
+          this.props.setSortBy(buttonIndex === 0 ? 'modified' : 'name');
+        }
+      }
+    );
+  };
+
   toggleSelected = entry => {
     const { onSelectionChange, selected } = this.props;
     if (onSelectionChange) {
@@ -43,7 +61,11 @@ class Explorer extends Component {
     const { files, folder, getFiles, path, selected, users } = this.props;
     return (
       <Container>
-        <BreadcrumbTrail path={path} onPress={getFiles} />
+        <BreadcrumbTrail
+          onPress={getFiles}
+          onSort={this.handleSort}
+          path={path}
+        />
         <List
           data={folder ? files.filter(f => f.type === 'folder') : files}
           keyExtractor={item => item.id}
@@ -52,8 +74,8 @@ class Explorer extends Component {
           }
           refreshControl={
             <RefreshControl
-              refreshing={this.props.pending}
               onRefresh={() => getFiles(this.props.path)}
+              refreshing={false}
             />
           }
           renderItem={({ item }) => (
@@ -76,8 +98,9 @@ Explorer.propTypes = {
   getFiles: PropTypes.func.isRequired,
   onSelectionChange: PropTypes.func,
   path: PropTypes.string,
-  pending: PropTypes.bool,
   selected: PropTypes.array,
+  setSortBy: PropTypes.func.isRequired,
+  showActionSheetWithOptions: PropTypes.func.isRequired,
   users: PropTypes.array
 };
 
@@ -86,12 +109,14 @@ Explorer.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  files: state.files.data || [],
+  files: files.selectors.getSortedFiles(state),
   path: state.files.path,
-  pending: state.files.pending,
   users: state.files.users
 });
 
-export default connect(mapStateToProps, {
-  getFiles: fileActions.getFiles
-})(Explorer);
+export default connectActionSheet(
+  connect(mapStateToProps, {
+    getFiles: files.actions.getFiles,
+    setSortBy: files.actions.setSortBy
+  })(Explorer)
+);

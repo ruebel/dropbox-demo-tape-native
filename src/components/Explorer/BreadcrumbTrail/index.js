@@ -22,7 +22,7 @@ const Wrapper = styled.View`
   justify-content: space-between;
 `;
 
-const BreadcrumbTrail = ({ onPress, path, theme }) => {
+const BreadcrumbTrail = ({ onPress, onSort, path, theme }) => {
   const trail = path.split('/').map((folder, i, pathArray) => {
     const subPath = pathArray.slice(0, i + 1).join('/');
     return (
@@ -40,7 +40,7 @@ const BreadcrumbTrail = ({ onPress, path, theme }) => {
       <Sort
         color={theme.color.primary}
         icon="sort"
-        onPress={() => 1}
+        onPress={onSort}
         size={18}
       />
     </Wrapper>
@@ -49,6 +49,7 @@ const BreadcrumbTrail = ({ onPress, path, theme }) => {
 
 BreadcrumbTrail.propTypes = {
   onPress: PropTypes.func.isRequired,
+  onSort: PropTypes.func.isRequired,
   path: PropTypes.string,
   theme: PropTypes.object
 };

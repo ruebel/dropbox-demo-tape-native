@@ -3,6 +3,7 @@ import { ThemeProvider } from 'styled-components/native';
 import { Provider as StoreProvider } from 'react-redux';
 import { NativeRouter } from 'react-router-native';
 import { PersistGate } from 'redux-persist/es/integration/react';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 import App from './components/App';
 import AuthProvider from './AuthProvider';
@@ -18,7 +19,9 @@ export default () => (
       <PersistGate persistor={persistor}>
         <AuthProvider>
           <NativeRouter>
-            <App />
+            <ActionSheetProvider>
+              <App />
+            </ActionSheetProvider>
           </NativeRouter>
         </AuthProvider>
       </PersistGate>
