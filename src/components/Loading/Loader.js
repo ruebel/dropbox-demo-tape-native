@@ -1,19 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components/native';
+import styled from 'styled-components/native';
 import { Bars } from 'react-native-loader';
 
 const StyledBars = styled(Bars)`
   text-align: center;
-  margin-right: 4px;
 `;
 
-const Loader = ({ theme }) => (
-  <StyledBars size={3} color={theme.color.primary} />
-);
+const Loader = ({ color }) => <StyledBars size={6} color={color} />;
 
 Loader.propTypes = {
-  theme: PropTypes.object
+  color: PropTypes.string
 };
 
-export default withTheme(Loader);
+export default Loader;

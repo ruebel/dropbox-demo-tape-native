@@ -4,11 +4,16 @@ import { connect } from 'react-redux';
 import Loader from './Loader';
 import Icon from '../Icon';
 
-const Loading = ({ loading }) => {
-  return loading ? <Loader /> : <Icon icon="voicemail" size={28} />;
+const Loading = ({ color, loading }) => {
+  return loading ? (
+    <Loader color={color} />
+  ) : (
+    <Icon color={color} icon="voicemail" size={28} />
+  );
 };
 
 Loading.propTypes = {
+  color: PropTypes.string,
   loading: PropTypes.bool
 };
 

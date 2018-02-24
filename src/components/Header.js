@@ -23,6 +23,7 @@ const Wrapper = styled.View`
 `;
 
 const Header = ({ theme }) => {
+  const iconColor = theme.color.textSecondary;
   return (
     <Wrapper>
       <Switch>
@@ -31,7 +32,7 @@ const Header = ({ theme }) => {
           path="/"
           render={({ match, history, location }) => (
             <IconButton
-              color={theme.color.primary}
+              color={iconColor}
               icon="add"
               onPress={() => history.push('/create')}
             />
@@ -40,7 +41,7 @@ const Header = ({ theme }) => {
         <Route
           render={({ match, history, location }) => (
             <IconButton
-              color={theme.color.primary}
+              color={iconColor}
               icon="chevron-left"
               onPress={history.goBack}
             />
@@ -48,7 +49,7 @@ const Header = ({ theme }) => {
         />
       </Switch>
       <TitleWrapper>
-        <Loading />
+        <Loading color={iconColor} />
       </TitleWrapper>
       <Switch>
         <Route
@@ -56,7 +57,7 @@ const Header = ({ theme }) => {
           path="/menu"
           render={({ match, history, location }) => (
             <IconButton
-              color={theme.color.primary}
+              color={iconColor}
               icon="close"
               onPress={history.goBack}
             />
@@ -65,7 +66,7 @@ const Header = ({ theme }) => {
         <Route
           render={({ match, history, location }) => (
             <IconButton
-              color={theme.color.primary}
+              color={iconColor}
               icon="menu"
               onPress={() => history.push('/menu')}
             />

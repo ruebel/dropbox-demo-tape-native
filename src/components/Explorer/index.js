@@ -5,16 +5,13 @@ import styled from 'styled-components/native';
 import { RefreshControl } from 'react-native';
 
 import BreadcrumbTrail from './BreadcrumbTrail';
+import Container from '../Container';
 import Entry from './Entry';
 import { Message } from '../typography';
 
 import { actions as fileActions } from '../../modules/files';
 
 const List = styled.FlatList`
-  flex: 1;
-`;
-
-const Wrapper = styled.View`
   flex: 1;
 `;
 
@@ -43,14 +40,16 @@ class Explorer extends Component {
   };
 
   render() {
-    const { files, getFiles, path, selected, users } = this.props;
+    const { files, folder, getFiles, path, selected, users } = this.props;
     return (
-      <Wrapper>
+      <Container>
         <BreadcrumbTrail path={path} onPress={getFiles} />
         <List
-          data={files}
+          data={folder ? files.filter(f => f.type === 'folder') : files}
           keyExtractor={item => item.id}
-          ListEmptyComponent={<Message>There Are No Audio Files Here</Message>}
+          ListEmptyComponent={
+            <Message>{folder ? '' : 'There Are No Audio Files Here'}</Message>
+          }
           refreshControl={
             <RefreshControl
               refreshing={this.props.pending}
@@ -66,7 +65,7 @@ class Explorer extends Component {
             />
           )}
         />
-      </Wrapper>
+      </Container>
     );
   }
 }

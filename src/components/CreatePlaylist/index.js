@@ -20,9 +20,7 @@ const Text = styled.Text`
 `;
 
 const TitleWrapper = styled.View`
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
+  margin-bottom: 32;
 `;
 
 const Wrapper = styled.View`
@@ -48,12 +46,6 @@ class CreatePlaylist extends React.Component {
       <Wrapper>
         <TitleWrapper>
           <H2>Create Playlist</H2>
-          <IconButton
-            background={color.primary}
-            disabled={!this.state.name.length}
-            icon="save"
-            onPress={this.handleSave}
-          />
         </TitleWrapper>
         <TextInput
           onChange={this.handleNameChange}
@@ -63,6 +55,14 @@ class CreatePlaylist extends React.Component {
         />
         <Text>Choose Location</Text>
         <Explorer folder />
+        <IconButton
+          background={color.primary}
+          disabled={!this.state.name.length}
+          float
+          icon="save"
+          onPress={this.handleSave}
+          size={42}
+        />
       </Wrapper>
     );
   }

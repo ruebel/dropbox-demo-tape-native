@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Audio } from 'expo';
+import { Audio, KeepAwake } from 'expo';
 import { connect } from 'react-redux';
 import { Modal, View } from 'react-native';
 
@@ -150,12 +150,22 @@ class Player extends React.Component {
   };
 
   render() {
-    const { changeTrack, id, pause, paused, playlist, track } = this.props;
+    const {
+      changeTrack,
+      id,
+      isPlaying,
+      pause,
+      paused,
+      playlist,
+      track
+    } = this.props;
     const trackName = track
       ? `${playlist.data.tracks.findIndex(t => t.id === id) + 1}. ${track.name}`
       : null;
     return (
       <View>
+        {/* Using keep awake since expo does not support background audio */}
+        {track && isPlaying && !paused && <KeepAwake />}
         {track && (
           <Modal
             animationType="slide"

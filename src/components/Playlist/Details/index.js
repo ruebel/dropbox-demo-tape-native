@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View } from 'react-native';
 import { withRouter } from 'react-router-native';
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
+import { get } from 'dot-prop';
 
 import ButtonWrapper from '../../ButtonWrapper';
+import Container from '../../Container';
 import IconButton from '../../IconButton';
+import TitleEdit from './TitleEdit';
 import TrackList from './TrackList';
 
 import {
@@ -18,6 +20,20 @@ import { accountList, playlistType, trackType } from '../../../types';
 import { color } from '../../../styles/theme';
 
 class Details extends React.Component {
+  state = {
+    editTitle: false,
+    title: ''
+  };
+
+  componentWillReceiveProps(next) {
+    if (next.playlist !== this.props.playlist) {
+      this.setState({
+        editTitle: false,
+        title: get(next, 'playlist.data.title')
+      });
+    }
+  }
+
   handleRemove = track => {
     if (track) {
       this.props.updateTracks(
@@ -34,12 +50,27 @@ class Details extends React.Component {
     }
   };
 
+  handleTitleChange = title => this.setState({ title });
+
   handleTrackPress = track => {
     this.props.play(track.id);
   };
 
   showAdd = () => {
     this.props.history.push(this.props.match.url + '/add');
+  };
+
+  toggleEditTitle = () => {
+    if (
+      this.state.editTitle &&
+      this.state.title !== this.props.playlist.data.title
+    ) {
+      this.props.updateTitle(this.state.title);
+    }
+    this.setState(state => ({
+      editTitle: !state.editTitle,
+      title: !state.editTitle ? this.props.playlist.data.title : state.title
+    }));
   };
 
   render() {
@@ -53,8 +84,15 @@ class Details extends React.Component {
       stop,
       users
     } = this.props;
+    const { editTitle, title } = this.state;
     return (
-      <View style={{ flex: 1 }}>
+      <Container>
+        <TitleEdit
+          editTitle={editTitle}
+          onTitleChange={this.handleTitleChange}
+          title={editTitle ? title : playlist.data.title}
+          toggleEditTitle={this.toggleEditTitle}
+        />
         <ButtonWrapper>
           <IconButton
             background={color.primary}
@@ -96,7 +134,7 @@ class Details extends React.Component {
           )}
           users={users}
         />
-      </View>
+      </Container>
     );
   }
 }
@@ -111,6 +149,7 @@ Details.propTypes = {
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
   stop: PropTypes.func.isRequired,
+  updateTitle: PropTypes.func.isRequired,
   updateTracks: PropTypes.func.isRequired,
   users: accountList
 };
@@ -128,6 +167,7 @@ export default withRouter(
     play: audioActions.play,
     savePlaylist: playlistActions.savePlaylist,
     stop: audioActions.stop,
+    updateTitle: playlistActions.updateTitle,
     updateTracks: playlistActions.updateTracks
   })(Details)
 );

@@ -1,15 +1,19 @@
 import React from 'react';
-import { View } from 'react-native';
-import { withTheme } from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import ButtonWrapper from '../ButtonWrapper';
+import Container from '../Container';
 import Explorer from '../Explorer';
 import IconButton from '../IconButton';
+import { H2 } from '../typography';
 
 import { playlistType } from '../../types';
 import * as playlists from '../../modules/playlists';
+
+const Title = styled(H2)`
+  margin-bottom: 24;
+`;
 
 class EditTracks extends React.Component {
   state = {
@@ -28,13 +32,9 @@ class EditTracks extends React.Component {
     }
   }
 
-  handleCancel = () => {
-    this.props.history.goBack();
-  };
-
   handleSave = () => {
     this.props.updateTracks(this.state.selected);
-    this.handleCancel();
+    this.props.history.goBack();
   };
 
   handleSelectionChange = selected => {
@@ -44,24 +44,20 @@ class EditTracks extends React.Component {
   render() {
     const { theme } = this.props;
     return (
-      <View style={{ flex: 1 }}>
-        <ButtonWrapper>
-          <IconButton
-            background={theme.color.primary}
-            icon="undo"
-            onPress={this.handleCancel}
-          />
-          <IconButton
-            background={theme.color.primary}
-            icon="save"
-            onPress={this.handleSave}
-          />
-        </ButtonWrapper>
+      <Container>
+        <Title>Edit Tracks</Title>
         <Explorer
           onSelectionChange={this.handleSelectionChange}
           selected={this.state.selected}
         />
-      </View>
+        <IconButton
+          background={theme.color.primary}
+          float
+          icon="save"
+          onPress={this.handleSave}
+          size={42}
+        />
+      </Container>
     );
   }
 }
