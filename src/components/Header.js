@@ -6,6 +6,19 @@ import { Switch, Route } from 'react-router-native';
 import IconButton from './IconButton';
 import Loading from './Loading';
 
+const Left = styled.View`
+  position: absolute;
+  left: 0;
+  top: ${p => p.theme.size.statusBarHeight};
+  z-index: 1;
+`;
+
+const Right = styled.View`
+  position: absolute;
+  right: 0;
+  top: ${p => p.theme.size.statusBarHeight};
+`;
+
 const TitleWrapper = styled.View`
   align-items: center;
   display: flex;
@@ -19,60 +32,79 @@ const Wrapper = styled.View`
   background-color: ${p => p.theme.color.secondary};
   flex-direction: row;
   justify-content: center;
+  height: 84px;
   padding-top: ${p => p.theme.size.statusBarHeight};
+  position: relative;
 `;
 
 const Header = ({ theme }) => {
   const iconColor = theme.color.textSecondary;
   return (
     <Wrapper>
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={({ match, history, location }) => (
-            <IconButton
-              color={iconColor}
-              icon="add"
-              onPress={() => history.push('/create')}
-            />
-          )}
-        />
-        <Route
-          render={({ match, history, location }) => (
-            <IconButton
-              color={iconColor}
-              icon="chevron-left"
-              onPress={history.goBack}
-            />
-          )}
-        />
-      </Switch>
+      <Left>
+        <Switch>
+          <Route
+            exact
+            path="/menu"
+            render={({ history }) => (
+              <IconButton
+                color={iconColor}
+                icon="close"
+                onPress={history.goBack}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/"
+            render={({ history }) => (
+              <IconButton
+                color={iconColor}
+                icon="menu"
+                onPress={() => history.push('/menu')}
+              />
+            )}
+          />
+          <Route
+            render={({ history }) => (
+              <IconButton
+                color={iconColor}
+                icon="chevron-left"
+                onPress={history.goBack}
+              />
+            )}
+          />
+        </Switch>
+      </Left>
       <TitleWrapper>
         <Loading color={iconColor} />
       </TitleWrapper>
-      <Switch>
-        <Route
-          exact
-          path="/menu"
-          render={({ match, history, location }) => (
-            <IconButton
-              color={iconColor}
-              icon="close"
-              onPress={history.goBack}
-            />
-          )}
-        />
-        <Route
-          render={({ match, history, location }) => (
-            <IconButton
-              color={iconColor}
-              icon="menu"
-              onPress={() => history.push('/menu')}
-            />
-          )}
-        />
-      </Switch>
+      <Right>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={({ history }) => (
+              <IconButton
+                color={iconColor}
+                icon="add"
+                onPress={() => history.push('/create')}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/playlist"
+            render={({ history }) => (
+              <IconButton
+                color={iconColor}
+                icon="add"
+                onPress={() => history.push('/playlist/add')}
+              />
+            )}
+          />
+        </Switch>
+      </Right>
     </Wrapper>
   );
 };

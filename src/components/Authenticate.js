@@ -36,9 +36,6 @@ class Authenticate extends React.Component {
             color={this.props.theme.color.textSecondary}
             icon="voicemail"
             size={48}
-            style={{
-              transform: [{ translateY: -6 }, { rotate: '180deg' }]
-            }}
           />
           <Icon
             color={this.props.theme.color.textSecondary}

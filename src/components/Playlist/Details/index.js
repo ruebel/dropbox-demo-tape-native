@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-native';
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
 import { get } from 'dot-prop';
@@ -56,10 +55,6 @@ class Details extends React.Component {
     this.props.play(track.id);
   };
 
-  showAdd = () => {
-    this.props.history.push(this.props.match.url + '/add');
-  };
-
   toggleEditTitle = () => {
     if (
       this.state.editTitle &&
@@ -94,11 +89,6 @@ class Details extends React.Component {
           toggleEditTitle={this.toggleEditTitle}
         />
         <ButtonWrapper>
-          <IconButton
-            background={color.primary}
-            icon="add"
-            onPress={this.showAdd}
-          />
           <IconButton
             background={color.primary}
             disabled={!playlist.hasChanges}
@@ -141,9 +131,7 @@ class Details extends React.Component {
 
 Details.propTypes = {
   downloadTracks: PropTypes.func.isRequired,
-  history: PropTypes.object,
   isPlaying: PropTypes.bool,
-  match: PropTypes.object,
   play: PropTypes.func.isRequired,
   playingTrack: trackType,
   playlist: playlistType,
@@ -161,13 +149,11 @@ const mapStateToProps = state => ({
   users: state.files.users
 });
 
-export default withRouter(
-  connect(mapStateToProps, {
-    downloadTracks: playlistActions.downloadTracks,
-    play: audioActions.play,
-    savePlaylist: playlistActions.savePlaylist,
-    stop: audioActions.stop,
-    updateTitle: playlistActions.updateTitle,
-    updateTracks: playlistActions.updateTracks
-  })(Details)
-);
+export default connect(mapStateToProps, {
+  downloadTracks: playlistActions.downloadTracks,
+  play: audioActions.play,
+  savePlaylist: playlistActions.savePlaylist,
+  stop: audioActions.stop,
+  updateTitle: playlistActions.updateTitle,
+  updateTracks: playlistActions.updateTracks
+})(Details);

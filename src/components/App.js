@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route } from 'react-router-native';
+import { StatusBar } from 'react-native';
 import styled from 'styled-components/native';
 
 import Container from './Container';
@@ -19,6 +20,7 @@ class App extends Component {
   render() {
     return (
       <Container>
+        <StatusBar barStyle="light-content" />
         <Header />
         <Body>
           <Switch>
