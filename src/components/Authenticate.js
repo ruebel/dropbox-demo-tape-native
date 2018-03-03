@@ -21,7 +21,7 @@ const Subtitle = styled(Title)`
 
 const Wrapper = styled.TouchableOpacity`
   align-items: center;
-  background-color: ${p => p.theme.color.primary};
+  background-color: ${p => p.theme.color.secondary};
   flex: 1;
   justify-content: center;
 `;
@@ -30,12 +30,15 @@ class Authenticate extends React.Component {
   render() {
     return (
       <Wrapper onPress={this.props.onLoginPress}>
-        <Title>Demo Tape</Title>
+        <Title>demo tape</Title>
         <IconWrapper>
           <Icon
             color={this.props.theme.color.textSecondary}
             icon="voicemail"
             size={48}
+            style={{
+              transform: [{ translateY: -6 }, { rotate: '180deg' }]
+            }}
           />
           <Icon
             color={this.props.theme.color.textSecondary}
@@ -49,7 +52,7 @@ class Authenticate extends React.Component {
             size={48}
           />
         </IconWrapper>
-        <Subtitle>Log In to Dropbox</Subtitle>
+        <Subtitle>log in to dropbox</Subtitle>
       </Wrapper>
     );
   }

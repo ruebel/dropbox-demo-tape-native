@@ -2,6 +2,7 @@ import { FileSystem } from 'expo';
 import throttle from 'lodash.throttle';
 import pLimit from 'p-limit';
 import {
+  cleanFiles,
   createDownloader,
   getDropboxConnection,
   getFileName,
@@ -52,6 +53,8 @@ export const deletePlaylist = playlist => async (dispatch, getState) => {
       payload: playlist.meta.id,
       type: types.DELETE_SUCCESS
     });
+    // Remove local playlist file
+    cleanFiles(getState);
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }
@@ -237,6 +240,8 @@ export const updateTrackInfo = () => async (dispatch, getState) => {
       },
       type: types.UPDATE_TRACKS
     });
+    // Remove old tracks if the list changed
+    cleanFiles(getState);
   } catch (error) {
     handleError(error, dispatch, types.FAILED);
   }

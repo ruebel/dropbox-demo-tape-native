@@ -6,6 +6,32 @@ import { get } from 'dot-prop';
 const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
 
 /**
+ * Deletes files that are no longer in active use by app
+ * @param  {Func}  getState Func that returns current app state
+ */
+export const cleanFiles = async getState => {
+  const docPath = FileSystem.documentDirectory;
+  // Get all files in the doc directory
+  const files = await FileSystem.readDirectoryAsync(docPath);
+  // Get current app state / playlist data
+  const state = getState();
+  const playlists = state.playlists.data;
+  // Create a list of active files (playlists and their track files)
+  const activeFiles = playlists.reduce(
+    (all, p) => [
+      ...all,
+      createValidFileURI(p.meta.name),
+      ...p.data.tracks.map(getFileName)
+    ],
+    []
+  );
+  // Delete inactive files
+  files
+    .filter(f => (isPlaylist(f) || isAudioFile(f)) && !activeFiles.includes(f))
+    .map(f => FileSystem.deleteAsync(docPath + f));
+};
+
+/**
  * Create a resumable downloader with proper headers
  * @param  {String} local  Local path to save file
  * @param  {String} remote Remote location to download from
@@ -152,6 +178,15 @@ export const isDownloaded = async track => {
 export const isFolderOrAudioFile = entry =>
   entry['.tag'] === 'folder' ||
   (entry['.tag'] === 'file' && isAudioFile(entry.name));
+
+/**
+ * Returns true if file name is a demo tape playlist
+ * @param  {String}  name File Name
+ * @return {Boolean}      is playlist
+ */
+const isPlaylist = name => {
+  return getExtension(name) === 'mix';
+};
 
 /**
  * Transform dropbox account object to shape usable by client
