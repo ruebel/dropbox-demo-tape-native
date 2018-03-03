@@ -26,9 +26,10 @@ export const cleanFiles = async getState => {
     []
   );
   // Delete inactive files
-  files
-    .filter(f => (isPlaylist(f) || isAudioFile(f)) && !activeFiles.includes(f))
-    .map(f => FileSystem.deleteAsync(docPath + f));
+  const inactiveFiles = files.filter(
+    f => (isPlaylist(f) || isAudioFile(f)) && !activeFiles.includes(f)
+  );
+  inactiveFiles.map(f => FileSystem.deleteAsync(docPath + f));
 };
 
 /**
@@ -123,7 +124,9 @@ const getExtension = name => name.split('.').pop();
  * @return {String}       File Name
  */
 export const getFileName = track =>
-  track ? `${track.id}-${track.rev}.${getExtension(track.name)}` : null;
+  track
+    ? createValidFileURI(`${track.id}_${track.rev}.${getExtension(track.name)}`)
+    : null;
 
 /**
  * Get the download file path of a track
@@ -131,9 +134,7 @@ export const getFileName = track =>
  * @return {String}       File Path
  */
 export const getFilePath = track =>
-  track
-    ? `${FileSystem.documentDirectory}${createValidFileURI(getFileName(track))}`
-    : null;
+  track ? `${FileSystem.documentDirectory}${getFileName(track)}` : null;
 
 /**
  * Generic error handler
