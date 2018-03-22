@@ -227,7 +227,7 @@ export const updateTrackInfo = () => async (dispatch, getState) => {
     const results = await Promise.all(
       playlist.data.tracks.map(track =>
         dbx.filesGetMetadata({
-          path: track.id
+          path: track.path_lower
         })
       )
     );
