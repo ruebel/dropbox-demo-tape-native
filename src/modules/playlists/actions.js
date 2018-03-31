@@ -148,6 +148,9 @@ export const findPlaylists = () => async (dispatch, getState) => {
         const result = await downloader.downloadAsync();
         // Read it back from storage as a string
         const fileString = await FileSystem.readAsStringAsync(result.uri);
+        if (result.status !== 200) {
+          console.error('Error downloading file: ' + fileString);
+        }
         // Parse to JSON
         const playlist = JSON.parse(fileString);
         // Combine w/ metadata and return

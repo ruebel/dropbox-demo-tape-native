@@ -33,6 +33,17 @@ export const cleanFiles = async getState => {
 };
 
 /**
+ * Encode invalid header characters
+ * @param  {object} header HTML Header
+ * @return {String}        Encoded header string
+ */
+const cleanHeader = header =>
+  JSON.stringify(header).replace(
+    /[\u007f-\uffff]/g,
+    char => '\\u' + ('000' + char.charCodeAt(0).toString(16)).slice(-4)
+  );
+
+/**
  * Create a resumable downloader with proper headers
  * @param  {String} local  Local path to save file
  * @param  {String} remote Remote location to download from
@@ -46,15 +57,14 @@ export const createDownloader = (local, remote, state, progress) => {
   // doesn't have support for blobs at the moment I am using the
   // Expo FileSystem Resumable Downloader to download the file
   // (the regular downloader doesn't support headers)
+  const apiArg = cleanHeader({ path: remote });
   return FileSystem.createDownloadResumable(
     dropBoxDownloadUrl,
     localPath,
     {
       headers: {
         Authorization: 'Bearer ' + state.auth.user.params.access_token,
-        'Dropbox-API-Arg': JSON.stringify({
-          path: remote
-        })
+        'Dropbox-API-Arg': apiArg
       }
     },
     progress
@@ -69,6 +79,8 @@ export const createDownloader = (local, remote, state, progress) => {
 const createValidFileURI = path =>
   path
     .split('-')
+    .join('_')
+    .split('—')
     .join('_')
     .split(' ')
     .join('_')
