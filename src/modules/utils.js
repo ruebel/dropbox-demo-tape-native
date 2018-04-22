@@ -1,4 +1,4 @@
-import Dropbox from 'dropbox';
+import { Dropbox } from 'dropbox';
 import { FileSystem } from 'expo';
 import { get } from 'dot-prop';
 
