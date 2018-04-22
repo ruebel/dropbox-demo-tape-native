@@ -5,6 +5,7 @@ import { Switch, Route } from 'react-router-native';
 
 import IconButton from './IconButton';
 import Loading from './Loading';
+import PlaylistTitle from './PlaylistTitle';
 
 const Left = styled.View`
   position: absolute;
@@ -77,7 +78,10 @@ const Header = ({ theme }) => {
         </Switch>
       </Left>
       <TitleWrapper>
-        <Loading color={iconColor} />
+        <Switch>
+          <Route path="/playlist" component={PlaylistTitle} />
+          <Route render={() => <Loading color={iconColor} />} />
+        </Switch>
       </TitleWrapper>
       <Right>
         <Switch>

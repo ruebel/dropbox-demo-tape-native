@@ -2,18 +2,34 @@ import React from 'react';
 import styled from 'styled-components/native';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-import { actions as authActions } from '../../modules/auth';
+import { Constants } from 'expo';
+import * as auth from '../../modules/auth';
+import { accountType } from '../../types';
 
 import Button from '../Button';
+import { H1, Message } from '../typography';
+
+const Line = styled(Message)`
+  margin-bottom: 20px;
+  margin-top: 10px;
+`;
+
+const Title = styled(H1)`
+  margin-bottom: 10;
+  margin-top: 20;
+`;
 
 const Wrapper = styled.View`
+  align-items: center;
   flex: 1;
 `;
 
-const Menu = ({ logout }) => {
+const Menu = ({ logout, user }) => {
   return (
     <Wrapper>
+      <Title>Demo Tape ({Constants.manifest.version})</Title>
+      <Line>{user.name.full}</Line>
+      <Line>{user.email}</Line>
       <Button
         iconFamily="Entypo"
         icon="dropbox"
@@ -25,9 +41,14 @@ const Menu = ({ logout }) => {
 };
 
 Menu.propTypes = {
-  logout: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  user: accountType
 };
 
-export default connect(null, {
-  logout: authActions.logout
+const mapStateToProps = state => ({
+  user: auth.selectors.getCurrentUser(state)
+});
+
+export default connect(mapStateToProps, {
+  logout: auth.actions.logout
 })(Menu);

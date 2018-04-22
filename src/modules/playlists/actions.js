@@ -3,6 +3,7 @@ import throttle from 'lodash.throttle';
 import pLimit from 'p-limit';
 import {
   cleanFiles,
+  checkTimeout,
   createDownloader,
   getDropboxConnection,
   getFileName,
@@ -126,9 +127,13 @@ const downloadProgress = (id, progress) => (dispatch, getState) => {
   });
 };
 
-export const findPlaylists = () => async (dispatch, getState) => {
-  dispatch({ type: types.PENDING });
+export const findPlaylists = force => async (dispatch, getState) => {
   const state = getState();
+  // Only allow refetch once every 5 minutes
+  if (!force && checkTimeout(state.playlists.lastFetch, 5)) {
+    return;
+  }
+  dispatch({ type: types.PENDING });
   try {
     const dbx = getDropboxConnection(state);
     // Search for playlist files
@@ -211,15 +216,17 @@ export const updateTracks = tracks => ({
   type: types.UPDATE_TRACKS
 });
 
-export const updateTrackInfo = () => async (dispatch, getState) => {
+export const updateTrackInfo = force => async (dispatch, getState) => {
   const state = getState();
   const playlist = getSelectedPlaylist(state);
-  // If there aren't any tracks there's nothing to update so exit
   if (
+    // If there aren't any tracks there's nothing to update so exit
     !playlist ||
     !playlist.data ||
     !playlist.data.tracks ||
-    playlist.data.tracks.length === 0
+    playlist.data.tracks.length === 0 ||
+    // Ony allow update to happen (unless force) if it's been over 5 minutes
+    (!force && checkTimeout(playlist.lastFetch, 5))
   ) {
     return;
   }

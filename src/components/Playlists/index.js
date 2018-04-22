@@ -45,7 +45,7 @@ class Playlists extends React.Component {
     this.setState({
       refreshing: true
     });
-    this.props.findPlaylists();
+    this.props.findPlaylists(true);
   };
 
   render() {

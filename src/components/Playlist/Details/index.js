@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
-import { get } from 'dot-prop';
+import throttle from 'lodash.throttle';
 
 import ButtonWrapper from '../../ButtonWrapper';
 import Container from '../../Container';
 import IconButton from '../../IconButton';
-import TitleEdit from './TitleEdit';
 import TrackList from './TrackList';
 
 import {
@@ -19,25 +18,12 @@ import { accountList, playlistType, trackType } from '../../../types';
 import { color } from '../../../styles/theme';
 
 class Details extends React.Component {
-  state = {
-    editTitle: false,
-    title: ''
-  };
-
-  componentWillReceiveProps(next) {
-    if (next.playlist !== this.props.playlist) {
-      this.setState({
-        editTitle: false,
-        title: get(next, 'playlist.data.title')
-      });
-    }
-  }
-
   handleRemove = track => {
     if (track) {
       this.props.updateTracks(
         this.props.playlist.data.tracks.filter(t => t.id !== track.id)
       );
+      this.savePlaylist();
     }
   };
 
@@ -46,55 +32,32 @@ class Details extends React.Component {
       this.props.updateTracks(
         arrayMove(this.props.playlist.data.tracks, from, to)
       );
+      this.savePlaylist();
     }
   };
-
-  handleTitleChange = title => this.setState({ title });
 
   handleTrackPress = track => {
     this.props.play(track.id);
   };
 
-  toggleEditTitle = () => {
-    if (
-      this.state.editTitle &&
-      this.state.title !== this.props.playlist.data.title
-    ) {
-      this.props.updateTitle(this.state.title);
-    }
-    this.setState(state => ({
-      editTitle: !state.editTitle,
-      title: !state.editTitle ? this.props.playlist.data.title : state.title
-    }));
-  };
+  savePlaylist = throttle(this.props.savePlaylist, 5000, {
+    leading: false
+  });
 
   render() {
     const {
       downloadTracks,
+      history,
       isPlaying,
       play,
       playingTrack,
       playlist,
-      savePlaylist,
       stop,
       users
     } = this.props;
-    const { editTitle, title } = this.state;
     return (
       <Container>
-        <TitleEdit
-          editTitle={editTitle}
-          onTitleChange={this.handleTitleChange}
-          title={editTitle ? title : playlist.data.title}
-          toggleEditTitle={this.toggleEditTitle}
-        />
         <ButtonWrapper>
-          <IconButton
-            background={color.primary}
-            disabled={!playlist.hasChanges}
-            icon="save"
-            onPress={savePlaylist}
-          />
           <IconButton
             background={color.primary}
             icon={isPlaying ? 'stop' : 'play-arrow'}
@@ -108,6 +71,11 @@ class Details extends React.Component {
               onPress={downloadTracks}
             />
           )}
+          <IconButton
+            background={color.primary}
+            icon="edit"
+            onPress={() => history.push('/playlist/settings')}
+          />
         </ButtonWrapper>
         <TrackList
           onPress={this.handleTrackPress}
@@ -131,13 +99,13 @@ class Details extends React.Component {
 
 Details.propTypes = {
   downloadTracks: PropTypes.func.isRequired,
+  history: PropTypes.object.isRequired,
   isPlaying: PropTypes.bool,
   play: PropTypes.func.isRequired,
   playingTrack: trackType,
   playlist: playlistType,
   savePlaylist: PropTypes.func.isRequired,
   stop: PropTypes.func.isRequired,
-  updateTitle: PropTypes.func.isRequired,
   updateTracks: PropTypes.func.isRequired,
   users: accountList
 };
@@ -154,6 +122,5 @@ export default connect(mapStateToProps, {
   play: audioActions.play,
   savePlaylist: playlistActions.savePlaylist,
   stop: audioActions.stop,
-  updateTitle: playlistActions.updateTitle,
   updateTracks: playlistActions.updateTracks
 })(Details);

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import styled, { withTheme } from 'styled-components/native';
 import { MaterialIcons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
@@ -9,10 +9,7 @@ const Wrapper = styled.TouchableOpacity`
       ? p.bg
       : p.theme.color.backgroundDisabled};
   border-radius: ${p => (p.bg === 'transparent' ? 0 : 50)};
-  padding-left: 8;
-  padding-bottom: 8;
-  padding-top: 8;
-  padding-right: 8;
+  padding: 8px;
   margin-left: 8;
   margin-right: 8;
   margin-top: 8;
@@ -39,16 +36,21 @@ const IconButton = ({
   float,
   icon,
   onPress,
-  size = 32
+  size = 32,
+  theme
 }) => (
   <Wrapper
-    bg={background}
+    bg={theme.color[background] || background}
     disabled={disabled}
     float={float}
     onPress={onPress}
     size={size}
   >
-    <MaterialIcons color={color} name={icon} size={size} />
+    <MaterialIcons
+      color={theme.color[color] || color}
+      name={icon}
+      size={size}
+    />
   </Wrapper>
 );
 
@@ -59,7 +61,8 @@ IconButton.propTypes = {
   float: PropTypes.bool,
   icon: PropTypes.string,
   onPress: PropTypes.func.isRequired,
-  size: PropTypes.number
+  size: PropTypes.number,
+  theme: PropTypes.object.isRequired
 };
 
-export default IconButton;
+export default withTheme(IconButton);

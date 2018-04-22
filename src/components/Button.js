@@ -26,11 +26,12 @@ const Button = ({
   icon,
   iconFamily,
   onPress,
+  style,
   text,
   theme
 }) => {
   return (
-    <ButtonBase disabled={disabled} onPress={onPress}>
+    <ButtonBase disabled={disabled} onPress={onPress} style={style}>
       {icon && (
         <Icon
           color={theme.color.textSecondary}
@@ -48,6 +49,7 @@ Button.propTypes = {
   icon: PropTypes.string,
   iconFamily: PropTypes.string,
   onPress: PropTypes.func.isRequired,
+  style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   text: PropTypes.string,
   theme: PropTypes.object
 };

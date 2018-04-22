@@ -1,3 +1,4 @@
+import { get } from 'dot-prop';
 const prefix = 'AUTH';
 
 const initialState = {
@@ -54,5 +55,15 @@ export const reducer = (state = initialState, action) => {
       };
     default:
       return state;
+  }
+};
+
+export const selectors = {
+  getCurrentUser: state => {
+    const userId = get(state, 'auth.user.params.account_id');
+    if (userId) {
+      return state.files.users.find(u => u.account_id === userId);
+    }
+    return null;
   }
 };

@@ -3,6 +3,7 @@ import types from './types';
 const initialState = {
   data: [],
   error: null,
+  lastFetch: null,
   pending: false,
   selectedId: null
 };
@@ -83,6 +84,7 @@ export default (state = initialState, action) => {
         ...state,
         data: action.payload,
         error: null,
+        lastFetch: new Date(),
         pending: false
       };
     case types.UPDATE_DOWNLOADING:
@@ -107,6 +109,7 @@ export default (state = initialState, action) => {
           tracks: action.payload.tracks
         },
         hasChanges: action.payload.hasChanges || playlist.hasChanges,
+        lastFetch: new Date(),
         pending: false
       }));
     default:

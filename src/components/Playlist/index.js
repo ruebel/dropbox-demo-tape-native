@@ -7,6 +7,7 @@ import { Route, Switch } from 'react-router-native';
 import Container from '../Container';
 import Details from './Details';
 import EditTracks from './EditTracks';
+import Settings from './Settings';
 
 import * as playlists from '../../modules/playlists';
 import { playlistType } from '../../types';
@@ -23,6 +24,7 @@ class Playlist extends React.Component {
       <Container>
         <Switch>
           <Route path={`${match.url}/add`} component={EditTracks} />
+          <Route path={`${match.url}/settings`} component={Settings} />
           <Route path={match.url} component={Details} />
         </Switch>
       </Container>

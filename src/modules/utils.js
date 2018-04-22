@@ -1,9 +1,20 @@
 import { Dropbox } from 'dropbox';
 import { FileSystem } from 'expo';
 import { get } from 'dot-prop';
+import moment from 'moment';
 
 // Dropbox public download API URL
 const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
+
+/**
+ * Ensures timestamp is less than timeout minutes old
+ * @param  {Date} timestamp     Date to check
+ * @param  {Number} [timeout=5] Minimum number of minutes
+ * @return {Boolean}            timestamp less than timeout minutes old
+ */
+export const checkTimeout = (timestamp, timeout = 5) => {
+  return !timestamp || moment().diff(timestamp, 'minutes') < timeout;
+};
 
 /**
  * Deletes files that are no longer in active use by app
