@@ -38,3 +38,11 @@ export const Subtitle = styled.Text`
 export const Title = styled.Text`
   color: ${p => p.theme.color.textPrimary};
 `;
+
+export const TopTitle = styled.Text`
+  color: ${p => p.theme.color.textSecondary};
+  font-size: 20px;
+  margin-left: 8px;
+  margin-right: 8px;
+  text-align: center;
+`;

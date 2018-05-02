@@ -6,7 +6,6 @@ import styled from 'styled-components/native';
 import Explorer from '../Explorer';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
-import { H2 } from '../typography';
 
 import { color } from '../../styles/theme';
 import { createPlaylist } from '../../modules/playlists/actions';
@@ -17,10 +16,6 @@ const Text = styled.Text`
   margin-bottom: 8;
   margin-left: 8
   margin-top: 32;
-`;
-
-const TitleWrapper = styled.View`
-  margin-bottom: 32;
 `;
 
 const Wrapper = styled.View`
@@ -44,9 +39,6 @@ class CreatePlaylist extends React.Component {
   render() {
     return (
       <Wrapper>
-        <TitleWrapper>
-          <H2>Create Playlist</H2>
-        </TitleWrapper>
         <TextInput
           onChange={this.handleNameChange}
           placeholder="Enter Playlist Name"
@@ -55,14 +47,16 @@ class CreatePlaylist extends React.Component {
         />
         <Text>Choose Location</Text>
         <Explorer folder />
-        <IconButton
-          background={color.primary}
-          disabled={!this.state.name.length}
-          float
-          icon="save"
-          onPress={this.handleSave}
-          size={42}
-        />
+        {this.state.name.length > 0 && (
+          <IconButton
+            background={color.primary}
+            disabled={!this.state.name.length}
+            float
+            icon="save"
+            onPress={this.handleSave}
+            size={42}
+          />
+        )}
       </Wrapper>
     );
   }

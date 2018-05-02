@@ -80,6 +80,10 @@ const Header = ({ theme }) => {
       <TitleWrapper>
         <Switch>
           <Route path="/playlist" component={PlaylistTitle} />
+          <Route
+            path="/create"
+            render={() => <Loading color={iconColor} title="New Playlist" />}
+          />
           <Route render={() => <Loading color={iconColor} />} />
         </Switch>
       </TitleWrapper>
