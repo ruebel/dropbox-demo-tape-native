@@ -13,7 +13,7 @@ const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
  * @return {Boolean}            timestamp less than timeout minutes old
  */
 export const checkTimeout = (timestamp, timeout = 5) => {
-  return !timestamp || moment().diff(timestamp, 'minutes') < timeout;
+  return timestamp != null && moment().diff(timestamp, 'minutes') < timeout;
 };
 
 /**

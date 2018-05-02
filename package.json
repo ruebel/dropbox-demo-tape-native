@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "debugger": "rndebugger-open --expo",
+    "prestart": "yarn debugger",
     "start": "exp start"
   },
   "eslintConfig": {
@@ -17,7 +18,7 @@
     "array-move": "^1.0.0",
     "dot-prop": "^4.2.0",
     "dropbox": "^4.0.3",
-    "expo": "^26.0.0",
+    "expo": "^27.0.0",
     "history": "^4.7.2",
     "lodash.throttle": "^4.1.1",
     "moment": "^2.22.1",
@@ -25,9 +26,9 @@
     "promise-file-reader": "^1.0.2",
     "prop-types": "^15.6.1",
     "query-string": "^6.0.0",
-    "react": "16.3.2",
+    "react": "16.3.1",
     "react-native":
-      "https://github.com/expo/react-native/archive/sdk-26.0.0.tar.gz",
+      "https://github.com/expo/react-native/archive/sdk-27.0.0.tar.gz",
     "react-native-loader": "^1.2.1",
     "react-native-progress": "^3.4.0",
     "react-native-sortable-listview": "^0.2.8",

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Dropbox from 'dropbox';
+import { Dropbox } from 'dropbox';
 import { AuthSession, Constants } from 'expo';
 
 import Authenticate from './components/Authenticate';
