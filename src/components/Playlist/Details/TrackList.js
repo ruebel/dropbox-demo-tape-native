@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import SortableListView from 'react-native-sortable-listview';
 import styled from 'styled-components/native';
 import Track from './Track';
+import { Empty } from '../../typography';
 
 import { accountList, trackList } from '../../../types';
 
@@ -20,7 +21,7 @@ const TrackList = ({ onPress, onRemove, onSortEnd, tracks, users = [] }) => {
     {}
   );
   const order = tracks.map(track => track.id);
-  return (
+  return tracks.length > 0 ? (
     <List
       activeOpacity={0.8}
       data={data}
@@ -36,6 +37,8 @@ const TrackList = ({ onPress, onRemove, onSortEnd, tracks, users = [] }) => {
         />
       )}
     />
+  ) : (
+    <Empty>No Tracks</Empty>
   );
 };
 

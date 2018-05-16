@@ -76,6 +76,12 @@ class Details extends React.Component {
             icon="edit"
             onPress={() => history.push('/playlist/settings')}
           />
+          <IconButton
+            background={color.primary}
+            disabled={!playlist.hasChanges}
+            icon="save"
+            onPress={this.savePlaylist}
+          />
         </ButtonWrapper>
         <TrackList
           onPress={this.handleTrackPress}
