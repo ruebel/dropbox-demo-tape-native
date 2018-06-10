@@ -17,6 +17,10 @@ import types from './types';
 
 const limit = pLimit(2);
 
+/**
+ * Create a new playlist
+ * @param  {String} name Playlist name
+ */
 export const createPlaylist = name => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });
   const state = getState();
@@ -44,6 +48,10 @@ export const createPlaylist = name => async (dispatch, getState) => {
   }
 };
 
+/**
+ * Delete an existing playlist
+ * @param  {Object} playlist Playlist obj to delete
+ */
 export const deletePlaylist = playlist => async (dispatch, getState) => {
   dispatch({ type: types.PENDING });
   try {
@@ -61,6 +69,9 @@ export const deletePlaylist = playlist => async (dispatch, getState) => {
   }
 };
 
+/**
+ * Download tracks in selected playlist
+ */
 export const downloadTracks = () => async (dispatch, getState) => {
   const state = getState();
   const playlist = getSelectedPlaylist(state);
@@ -127,6 +138,10 @@ const downloadProgress = (id, progress) => (dispatch, getState) => {
   });
 };
 
+/**
+ * Find all playlists in a user's dropbox
+ * @param  {Boolean} force Force refresh
+ */
 export const findPlaylists = force => async (dispatch, getState) => {
   const state = getState();
   // Only allow refetch once every 5 minutes
@@ -179,6 +194,9 @@ export const findPlaylists = force => async (dispatch, getState) => {
   }
 };
 
+/**
+ * Save changes to a playlist
+ */
 export const savePlaylist = () => async (dispatch, getState) => {
   const state = getState();
   const playlist = getSelectedPlaylist(state);
@@ -216,6 +234,10 @@ export const updateTracks = tracks => ({
   type: types.UPDATE_TRACKS
 });
 
+/**
+ * Update track info for all tracks in selected playlist
+ * @param  {Boolean} force force update
+ */
 export const updateTrackInfo = force => async (dispatch, getState) => {
   const state = getState();
   const playlist = getSelectedPlaylist(state);

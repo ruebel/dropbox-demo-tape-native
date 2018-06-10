@@ -14,13 +14,18 @@ class AuthProvider extends React.Component {
   };
 
   handleLogin = async () => {
+    // Create dropbox client
     const dbx = new Dropbox({ clientId: Constants.manifest.extra.dbClientId });
+    // Get a redirect URL back to this app
     const redirectUrl = AuthSession.getRedirectUrl();
+    // Get an auth URL for OAuth
     const authUrl = dbx.getAuthenticationUrl(redirectUrl);
+    // Authenticate the user using Dropbox OAuth
     const result = await AuthSession.startAsync({
       authUrl
     });
     if (result && result.type === 'success') {
+      // Success 🎉
       this.props.setUser(result);
     }
   };

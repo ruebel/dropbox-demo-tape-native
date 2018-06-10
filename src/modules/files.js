@@ -28,17 +28,25 @@ export const types = {
   USERS_SUCCESS: `${prefix}/USERS_SUCCESS`
 };
 
+/**
+ * Gets user info (from cache or dropbox) of users in array
+ * @param  {Array}  [users=[]] Users to get info on
+ */
 const getUsers = (users = []) => async (dispatch, getState) => {
   const state = getState();
+  // These are users we already have info on
   const existingUsers = state.files.users;
+  // Filter users down to users we don't already have info on
   const usersToFetch = users.filter(
     user => !existingUsers.some(u => u.account_id === user)
   );
+  // If we already have everybody's info return
   if (!usersToFetch.length) {
     return;
   }
   try {
     const dbx = getDropboxConnection(state);
+    // Get user info of all unknown users
     const results = await dbx.usersGetAccountBatch({
       /* eslint-disable camelcase */
       account_ids: usersToFetch
@@ -53,11 +61,16 @@ const getUsers = (users = []) => async (dispatch, getState) => {
 };
 
 export const actions = {
+  /**
+   * Get file listing for dropbox folder
+   * @param  {String} [folder=''] Folder path
+   */
   getFiles: (folder = '') => async (dispatch, getState) => {
     dispatch({ type: types.PENDING });
     const state = getState();
     try {
       const dbx = getDropboxConnection(state);
+      // Get folder listing
       const { cursor, entries, hasMore } = await dbx.filesListFolder({
         path: folder
       });
@@ -67,11 +80,13 @@ export const actions = {
         hasMore,
         path: folder
       };
+      // Get all user ids of users who have modified listed files
       const users = [
         ...new Set(
           payload.data.map(entry => get(entry, 'sharing_info.modified_by'))
         )
       ].filter(u => u);
+      // Get user info for all users that have modified files
       dispatch(getUsers(users));
       dispatch({
         payload,

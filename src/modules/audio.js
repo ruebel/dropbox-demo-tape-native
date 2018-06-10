@@ -15,22 +15,35 @@ export const types = {
   STOP: `${prefix}/STOP`
 };
 
-const checkPlaylist = playlist =>
+/**
+ * Ensures playlist has tracks associated with it
+ * @param  {Object} playlist Playlist object
+ * @return {Boolean}          Has Tracks
+ */
+const playlistHasTracks = playlist =>
   playlist &&
   playlist.data &&
   playlist.data.tracks &&
   playlist.data.tracks.length;
 
 export const actions = {
+  /**
+   * Play next / previous track
+   * @param  {Boolean} [forward=true] Next if true (previous is false)
+   */
   changeTrack: (forward = true) => (dispatch, getState) => {
     const state = getState();
     const playlist = getSelectedPlaylist(state);
-    if (!checkPlaylist(playlist)) {
+    if (!playlistHasTracks(playlist)) {
+      // This playlist doesn't have tracks to return
       return;
     }
+    // Get current track index
     const index = playlist.data.tracks.findIndex(t => t.id === state.audio.id);
+    // Calcualte next index
     const nextIndex = index + (forward ? 1 : -1);
     if (nextIndex === playlist.data.tracks.length || nextIndex < 0) {
+      // Next track would be past the end or before the 1st track so bail
       return;
     }
     // Go to the next track
@@ -39,14 +52,21 @@ export const actions = {
       type: types.PLAY
     });
   },
+  /**
+   * Pause playback
+   */
   pause: () => ({
     type: types.PAUSE
   }),
+  /**
+   * Start playback
+   * @param  {String} id Playlist id
+   */
   play: id => (dispatch, getState) => {
     if (!id) {
       const state = getState();
       const playlist = getSelectedPlaylist(state);
-      if (!checkPlaylist(playlist)) {
+      if (!playlistHasTracks(playlist)) {
         return;
       }
       dispatch({
@@ -60,15 +80,22 @@ export const actions = {
       });
     }
   },
+  /**
+   * Stop playback
+   */
   stop: () => ({
     type: types.STOP
   }),
+  /**
+   * Handle when a track has completed playing
+   */
   trackComplete: () => (dispatch, getState) => {
     const state = getState();
     const playlist = getSelectedPlaylist(state);
-    if (!checkPlaylist(playlist)) {
+    if (!playlistHasTracks(playlist)) {
       return;
     }
+    // Get index of current track
     const index = playlist.data.tracks.findIndex(t => t.id === state.audio.id);
     let nextIndex = index + 1;
     if (nextIndex === playlist.data.tracks.length) {
