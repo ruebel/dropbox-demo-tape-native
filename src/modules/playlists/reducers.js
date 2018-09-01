@@ -58,7 +58,6 @@ export default (state = initialState, action) => {
     case types.FAILED:
       return {
         ...state,
-        data: [],
         error: action.payload,
         pending: false
       };

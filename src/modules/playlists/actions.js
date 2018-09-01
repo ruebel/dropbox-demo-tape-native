@@ -256,25 +256,34 @@ export const updateTrackInfo = force => async (dispatch, getState) => {
   try {
     // Connect to dropbox and update the track information
     const dbx = getDropboxConnection(state);
-    const results = await Promise.all(
-      playlist.data.tracks.map(track =>
-        dbx.filesGetMetadata({
-          path: track.path_lower
-        })
-      )
-    );
     const tracks = await Promise.all(
-      results.map(transformFile).map(isDownloaded)
+      playlist.data.tracks.map(async track => {
+        try {
+          const meta = await dbx.filesGetMetadata({
+            path: track.path_lower
+          });
+          return isDownloaded(transformFile(meta));
+        } catch (error) {
+          // One of the files errored out so we are going to skip it
+          // TODO: add error message to single file so user can see that it
+          // no longer exists
+          console.log(error.message);
+          return null;
+        }
+      })
     );
+
     dispatch({
       payload: {
-        tracks
+        tracks: tracks.filter(t => t)
       },
       type: types.UPDATE_TRACKS
     });
     // Remove old tracks if the list changed
     cleanFiles(getState);
   } catch (error) {
+    // eslint-disable-next-line
+    debugger;
     handleError(error, dispatch, types.FAILED);
   }
 };
