@@ -8,6 +8,7 @@ import { get } from 'dot-prop';
 import Container from '../Container';
 import Details from './Details';
 import EditTracks from './EditTracks';
+import Loader from '../Loader';
 import Settings from './Settings';
 
 import * as playlists from '../../modules/playlists';
@@ -64,7 +65,9 @@ class Playlist extends React.Component {
       </Container>
     ) : !playlist && !loading ? (
       <Text>Playlist Not Found</Text>
-    ) : null;
+    ) : (
+      <Loader color="secondary" size={24} />
+    );
   }
 }
 

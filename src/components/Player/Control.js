@@ -8,7 +8,7 @@ const Wrapper = styled.View`
   background: ${p => p.theme.color.primary};
   display: flex;
   flex-direction: row;
-  height: 50;
+  height: 60;
   justify-content: center;
   width: 100%;
 `;
@@ -21,6 +21,7 @@ const Title = styled.Text`
 
 const TitleWrapper = styled.TouchableOpacity`
   flex: 1;
+  padding: 20px 0;
 `;
 
 const Control = ({
@@ -38,8 +39,8 @@ const Control = ({
     <Wrapper>
       {!canPlay &&
         !downloading && (
-          <IconButton icon="file-download" onPress={onDownload} />
-        )}
+        <IconButton icon="file-download" onPress={onDownload} />
+      )}
       {downloading && <IconButton icon="timelapse" onPress={() => 1} />}
       {canPlay && (
         <IconButton icon={paused ? 'play-arrow' : 'pause'} onPress={onPause} />

@@ -14,6 +14,19 @@ import * as playlists from '../../modules/playlists';
 import { getPlayingTrack } from '../../modules/playlists/selectors';
 
 class Player extends React.Component {
+  static propTypes = {
+    changeTrack: PropTypes.func.isRequired,
+    downloadTracks: PropTypes.func.isRequired,
+    id: PropTypes.string,
+    isPlaying: PropTypes.bool,
+    pause: PropTypes.func.isRequired,
+    paused: PropTypes.bool,
+    playlist: playlistType,
+    stop: PropTypes.func.isRequired,
+    track: trackType,
+    trackComplete: PropTypes.func.isRequired
+  };
+
   state = {
     currentTime: 0,
     duration: 0,
@@ -196,37 +209,24 @@ class Player extends React.Component {
         {track &&
           this.props.isPlaying &&
           !this.state.fullScreen && (
-            <Control
-              canPlay={track.downloadStatus === 100}
-              downloading={
-                track.downloadStatus > 0 && track.downloadStatus < 100
-              }
-              name={trackName}
-              onDownload={this.props.downloadTracks}
-              onNext={() => changeTrack(true)}
-              onPause={pause}
-              onPress={this.toggleFullScreen}
-              onPrevious={() => changeTrack(false)}
-              paused={paused}
-            />
-          )}
+          <Control
+            canPlay={track.downloadStatus === 100}
+            downloading={
+              track.downloadStatus > 0 && track.downloadStatus < 100
+            }
+            name={trackName}
+            onDownload={this.props.downloadTracks}
+            onNext={() => changeTrack(true)}
+            onPause={pause}
+            onPress={this.toggleFullScreen}
+            onPrevious={() => changeTrack(false)}
+            paused={paused}
+          />
+        )}
       </View>
     );
   }
 }
-
-Player.propTypes = {
-  changeTrack: PropTypes.func.isRequired,
-  downloadTracks: PropTypes.func.isRequired,
-  id: PropTypes.string,
-  isPlaying: PropTypes.bool,
-  pause: PropTypes.func.isRequired,
-  paused: PropTypes.bool,
-  playlist: playlistType,
-  stop: PropTypes.func.isRequired,
-  track: trackType,
-  trackComplete: PropTypes.func.isRequired
-};
 
 const mapStateToProps = state => ({
   id: state.audio.id,
@@ -236,10 +236,13 @@ const mapStateToProps = state => ({
   track: getPlayingTrack(state)
 });
 
-export default connect(mapStateToProps, {
-  changeTrack: audioActions.changeTrack,
-  downloadTracks: playlists.actions.downloadTracks,
-  pause: audioActions.pause,
-  stop: audioActions.stop,
-  trackComplete: audioActions.trackComplete
-})(Player);
+export default connect(
+  mapStateToProps,
+  {
+    changeTrack: audioActions.changeTrack,
+    downloadTracks: playlists.actions.downloadTracks,
+    pause: audioActions.pause,
+    stop: audioActions.stop,
+    trackComplete: audioActions.trackComplete
+  }
+)(Player);
