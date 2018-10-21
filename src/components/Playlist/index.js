@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
+import { createStackNavigator } from 'react-navigation';
 
 import Container from '../Container';
 import Details from './Details';
@@ -11,21 +12,34 @@ import Settings from './Settings';
 import * as playlists from '../../modules/playlists';
 import { playlistType } from '../../types';
 
+const PlaylistStack = createStackNavigator(
+  {
+    Details: {
+      screen: Details
+    },
+    EditTracks: {
+      screen: EditTracks
+    },
+    PlaylistSettings: {
+      screen: Settings
+    }
+  },
+  {
+    initialRouteName: 'Details'
+  }
+);
+
 class Playlist extends React.Component {
   componentDidMount() {
     this.props.updateTrackInfo();
   }
 
   render() {
-    const { loading, match, playlist } = this.props;
+    const { loading, playlist } = this.props;
 
     return playlist && !loading ? (
       <Container>
-        <Switch>
-          <Route path={`${match.url}/add`} component={EditTracks} />
-          <Route path={`${match.url}/settings`} component={Settings} />
-          <Route path={match.url} component={Details} />
-        </Switch>
+        <PlaylistStack />
       </Container>
     ) : !playlist && !loading ? (
       <Text>Playlist Not Found</Text>
@@ -35,7 +49,6 @@ class Playlist extends React.Component {
 
 Playlist.propTypes = {
   loading: PropTypes.bool,
-  match: PropTypes.object,
   playlist: playlistType,
   updateTrackInfo: PropTypes.func.isRequired
 };

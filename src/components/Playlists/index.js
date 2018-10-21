@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RefreshControl } from 'react-native';
 
-import { Empty, H2 } from '../typography';
+import { Empty } from '../typography';
+import NavButton from '../NavButton';
 import Playlist from './Playlist';
 
 import { actions as playlistActions } from '../../modules/playlists';
 import { playlistsType } from '../../types';
 
 const List = styled.FlatList`
-  margin-top: 16;
   margin-bottom: 16;
 `;
 
@@ -20,6 +20,11 @@ const Wrapper = styled.View`
 `;
 
 class Playlists extends React.Component {
+  static navigationOptions = ({ navigation }) => ({
+    headerRight: <NavButton icon="menu" route="Menu" />,
+    headerTitle: 'Playlists'
+  });
+
   state = {
     refreshing: false
   };
@@ -37,8 +42,9 @@ class Playlists extends React.Component {
   }
 
   handlePlaylistPress = playlist => {
+    console.log({ props: this.props });
     this.props.selectPlaylist(playlist.meta.id);
-    this.props.history.push('/playlist');
+    this.props.navigation.navigate('Playlist');
   };
 
   refresh = () => {
@@ -52,7 +58,6 @@ class Playlists extends React.Component {
     const { deletePlaylist, playlists } = this.props;
     return (
       <Wrapper>
-        <H2>Playlists</H2>
         <List
           data={playlists}
           keyExtractor={item => item.meta.id}
@@ -79,7 +84,7 @@ class Playlists extends React.Component {
 Playlists.propTypes = {
   deletePlaylist: PropTypes.func.isRequired,
   findPlaylists: PropTypes.func.isRequired,
-  history: PropTypes.object,
+  navigation: PropTypes.object,
   pending: PropTypes.bool,
   playlists: playlistsType,
   selectPlaylist: PropTypes.func.isRequired
@@ -90,8 +95,11 @@ const mapStateToProps = state => ({
   playlists: state.playlists.data
 });
 
-export default connect(mapStateToProps, {
-  deletePlaylist: playlistActions.deletePlaylist,
-  findPlaylists: playlistActions.findPlaylists,
-  selectPlaylist: playlistActions.selectPlaylist
-})(Playlists);
+export default connect(
+  mapStateToProps,
+  {
+    deletePlaylist: playlistActions.deletePlaylist,
+    findPlaylists: playlistActions.findPlaylists,
+    selectPlaylist: playlistActions.selectPlaylist
+  }
+)(Playlists);

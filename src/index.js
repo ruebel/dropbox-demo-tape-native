@@ -1,8 +1,9 @@
 import React from 'react';
-import { ThemeProvider } from 'styled-components/native';
+import { ThemeProvider } from 'styled-components';
 import { Provider as StoreProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/es/integration/react';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
+import { StatusBar } from 'react-native';
 
 import App from './components/App';
 import AuthProvider from './AuthProvider';
@@ -17,6 +18,7 @@ export default () => (
     <StoreProvider store={store}>
       <PersistGate persistor={persistor}>
         <AuthProvider>
+          <StatusBar barStyle="light-content" />
           <ActionSheetProvider>
             <App />
           </ActionSheetProvider>
