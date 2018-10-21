@@ -5,15 +5,20 @@ import { color } from '../styles/theme';
 
 import Container from './Container';
 import CreatePlaylist from './CreatePlaylist';
+import EditTracks from './EditTracks';
 import Menu from './Menu';
 import Player from './Player';
 import Playlist from './Playlist';
 import Playlists from './Playlists';
+import PlaylistSettings from './PlaylistSettings';
 
 const RootStack = createStackNavigator(
   {
     CreatePlaylist: {
       screen: CreatePlaylist
+    },
+    EditTracks: {
+      screen: EditTracks
     },
     Menu: {
       screen: Menu
@@ -23,6 +28,9 @@ const RootStack = createStackNavigator(
     },
     Playlists: {
       screen: Playlists
+    },
+    PlaylistSettings: {
+      screen: PlaylistSettings
     }
   },
   {

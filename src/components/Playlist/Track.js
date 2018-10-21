@@ -4,12 +4,12 @@ import styled, { withTheme } from 'styled-components';
 import moment from 'moment';
 
 import DownloadProgress from './DownloadProgress';
-import Icon from '../../Icon';
-import { Back, Inner, SwipeRow } from '../../SwipeRow';
-import { Subtitle, Title } from '../../typography';
+import Icon from '../Icon';
+import { Back, Inner, SwipeRow } from '../SwipeRow';
+import { Subtitle, Title } from '../typography';
 
-import { getFilePath, getFileName } from '../utils';
-import { accountType } from '../../../types';
+import { getFilePath, getFileName } from './utils';
+import { accountType } from '../../types';
 
 const IconWrapper = styled.View`
   width: 31px;

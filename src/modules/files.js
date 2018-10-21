@@ -142,12 +142,16 @@ export const reducer = (state = initialState, action) => {
 
 const sortByTypeAndName = (a, b) =>
   a.type !== b.type && (a.type === 'folder' || b.type === 'folder')
-    ? b.type === 'folder' ? 1 : -1
+    ? b.type === 'folder'
+      ? 1
+      : -1
     : a.name.localeCompare(b.name);
 
 const sortByTypeAndModified = (a, b) =>
   a.type !== b.type && (a.type === 'folder' || b.type === 'folder')
-    ? b.type === 'folder' ? 1 : -1
+    ? b.type === 'folder'
+      ? 1
+      : -1
     : new Date(b.server_modified) - new Date(a.server_modified);
 
 export const selectors = {

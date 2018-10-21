@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import SortableListView from 'react-native-sortable-listview';
 import styled from 'styled-components';
 import Track from './Track';
-import { Empty } from '../../typography';
+import { Empty } from '../typography';
 
-import { accountList, trackList } from '../../../types';
+import { accountList, trackList } from '../../types';
 
 const List = styled(SortableListView)`
   flex: 1;
