@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import { RefreshControl } from 'react-native';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 

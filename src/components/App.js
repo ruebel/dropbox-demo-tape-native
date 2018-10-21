@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
-import { Switch, Route } from 'react-router-native';
 import { StatusBar } from 'react-native';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
+import { createStackNavigator } from 'react-navigation';
+
+import { color } from '../styles/theme';
 
 import Container from './Container';
-import CreatePlaylist from './CreatePlaylist';
-import Header from './Header';
+// import CreatePlaylist from './CreatePlaylist';
 import Menu from './Menu';
 import Player from './Player';
-import Playlist from './Playlist';
+// import Playlist from './Playlist';
 import Playlists from './Playlists';
 
 const Body = styled.View`
@@ -16,19 +17,42 @@ const Body = styled.View`
   padding-top: 8px;
 `;
 
+const RootStack = createStackNavigator(
+  {
+    // CreatePlaylist: {
+    //   screen: CreatePlaylist
+    // },
+    Menu: {
+      screen: Menu
+    },
+    // PlayList: {
+    //   screen: Playlist
+    // },
+    Playlists: {
+      screen: Playlists
+    }
+  },
+  {
+    initialRouteName: 'Playlists',
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: color.secondary
+      },
+      headerTintColor: color.textExtraLight,
+      headerTitleStyle: {
+        fontWeight: 'bold'
+      }
+    }
+  }
+);
+
 class App extends Component {
   render() {
     return (
       <Container>
         <StatusBar barStyle="light-content" />
-        <Header />
         <Body>
-          <Switch>
-            <Route exact path="/" component={Playlists} />
-            <Route path="/create" component={CreatePlaylist} />
-            <Route path="/menu" component={Menu} />
-            <Route path="/playlist" component={Playlist} />
-          </Switch>
+          <RootStack />
         </Body>
         <Player />
       </Container>

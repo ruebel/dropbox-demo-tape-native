@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
-import { Route, Switch } from 'react-router-native';
 
 import Container from '../Container';
 import Details from './Details';
@@ -46,6 +45,9 @@ const mapStateToProps = state => ({
   playlist: playlists.selectors.getSelectedPlaylist(state)
 });
 
-export default connect(mapStateToProps, {
-  updateTrackInfo: playlists.actions.updateTrackInfo
-})(Playlist);
+export default connect(
+  mapStateToProps,
+  {
+    updateTrackInfo: playlists.actions.updateTrackInfo
+  }
+)(Playlist);

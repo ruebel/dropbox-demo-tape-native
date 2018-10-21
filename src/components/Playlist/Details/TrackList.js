@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SortableListView from 'react-native-sortable-listview';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import Track from './Track';
 import { Empty } from '../../typography';
 

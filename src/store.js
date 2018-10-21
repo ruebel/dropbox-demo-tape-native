@@ -6,8 +6,6 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/es/storage';
 import thunkMiddleware from 'redux-thunk';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
-import createHistory from 'history/createMemoryHistory';
 import { reducers } from './modules';
 
 const blacklistTransform = createTransform((state, key) => {
@@ -30,21 +28,15 @@ const config = {
   transforms: [blacklistTransform]
 };
 
-const rootReducer = persistCombineReducers(config, {
-  ...reducers,
-  routing: routerReducer
-});
+const rootReducer = persistCombineReducers(config, reducers);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const configureStore = state => {
-  const history = createHistory();
   const store = createStore(
     rootReducer,
     state,
-    composeEnhancers(
-      applyMiddleware(thunkMiddleware, routerMiddleware(history))
-    )
+    composeEnhancers(applyMiddleware(thunkMiddleware))
   );
 
   if (process.env.NODE_ENV !== 'production') {
@@ -57,7 +49,7 @@ const configureStore = state => {
 
   const persistor = persistStore(store);
 
-  return { history, persistor, store };
+  return { persistor, store };
 };
 
 export default configureStore;

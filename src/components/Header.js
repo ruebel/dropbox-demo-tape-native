@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components/native';
-import { Switch, Route } from 'react-router-native';
+import styled, { withTheme } from 'styled-components';
 
 import IconButton from './IconButton';
 import Loading from './Loading';
