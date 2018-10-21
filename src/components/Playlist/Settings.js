@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'dot-prop';
 import styled from 'styled-components';
+
 import { playlistType } from '../../types';
 import * as playlists from '../../modules/playlists';
 
@@ -18,7 +19,7 @@ const Button = styled(ButtonBase)`
 class Settings extends React.Component {
   static propTypes = {
     deletePlaylist: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired,
+    navigation: PropTypes.object.isRequired,
     playlist: playlistType,
     updateTitle: PropTypes.func.isRequired
   };
@@ -38,7 +39,7 @@ class Settings extends React.Component {
 
   handleDelete = () => {
     this.props.deletePlaylist(this.props.playlist);
-    this.props.history.push('/');
+    this.props.navigation.navigate('Playlists');
   };
 
   handleTitleChange = title => this.setState({ hasChange: true, title });
@@ -54,7 +55,7 @@ class Settings extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container padTop>
         <TextInput
           onChange={this.handleTitleChange}
           placeholder="Enter Playlist Name"
@@ -80,7 +81,10 @@ const mapStateToProps = state => ({
   playlist: playlists.selectors.getSelectedPlaylist(state)
 });
 
-export default connect(mapStateToProps, {
-  deletePlaylist: playlists.actions.deletePlaylist,
-  updateTitle: playlists.actions.updateTitle
-})(Settings);
+export default connect(
+  mapStateToProps,
+  {
+    deletePlaylist: playlists.actions.deletePlaylist,
+    updateTitle: playlists.actions.updateTitle
+  }
+)(Settings);

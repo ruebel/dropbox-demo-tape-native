@@ -18,7 +18,7 @@ const RootStack = createStackNavigator(
     Menu: {
       screen: Menu
     },
-    PlayList: {
+    Playlist: {
       screen: Playlist
     },
     Playlists: {

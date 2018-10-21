@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
 import { createStackNavigator } from 'react-navigation';
+import { get } from 'dot-prop';
 
 import Container from '../Container';
 import Details from './Details';
@@ -25,21 +26,41 @@ const PlaylistStack = createStackNavigator(
     }
   },
   {
+    headerMode: 'none',
     initialRouteName: 'Details'
   }
 );
 
 class Playlist extends React.Component {
+  static router = PlaylistStack.router;
+
+  static navigationOptions = ({ navigation }) => {
+    return { headerTitle: navigation.getParam('name') };
+  };
+
   componentDidMount() {
     this.props.updateTrackInfo();
+    this.setName();
   }
 
+  componentDidUpdate() {
+    this.setName();
+  }
+
+  setName = () => {
+    const { navigation, playlist } = this.props;
+    const name = get(playlist, 'data.title');
+    if (navigation.getParam('name') !== name) {
+      navigation.setParams({ name });
+    }
+  };
+
   render() {
-    const { loading, playlist } = this.props;
+    const { loading, navigation, playlist } = this.props;
 
     return playlist && !loading ? (
       <Container>
-        <PlaylistStack />
+        <PlaylistStack navigation={navigation} />
       </Container>
     ) : !playlist && !loading ? (
       <Text>Playlist Not Found</Text>
@@ -49,6 +70,7 @@ class Playlist extends React.Component {
 
 Playlist.propTypes = {
   loading: PropTypes.bool,
+  navigation: PropTypes.object,
   playlist: playlistType,
   updateTrackInfo: PropTypes.func.isRequired
 };

@@ -18,6 +18,19 @@ import { accountList, playlistType, trackType } from '../../../types';
 import { color } from '../../../styles/theme';
 
 class Details extends React.Component {
+  static propTypes = {
+    downloadTracks: PropTypes.func.isRequired,
+    isPlaying: PropTypes.bool,
+    navigation: PropTypes.object.isRequired,
+    play: PropTypes.func.isRequired,
+    playingTrack: trackType,
+    playlist: playlistType,
+    savePlaylist: PropTypes.func.isRequired,
+    stop: PropTypes.func.isRequired,
+    updateTracks: PropTypes.func.isRequired,
+    users: accountList
+  };
+
   handleRemove = track => {
     if (track) {
       this.props.updateTracks(
@@ -47,8 +60,8 @@ class Details extends React.Component {
   render() {
     const {
       downloadTracks,
-      history,
       isPlaying,
+      navigation,
       play,
       playingTrack,
       playlist,
@@ -74,7 +87,7 @@ class Details extends React.Component {
           <IconButton
             background={color.primary}
             icon="edit"
-            onPress={() => history.push('/playlist/settings')}
+            onPress={() => navigation.navigate('PlaylistSettings')}
           />
           <IconButton
             background={color.primary}
@@ -103,19 +116,6 @@ class Details extends React.Component {
   }
 }
 
-Details.propTypes = {
-  downloadTracks: PropTypes.func.isRequired,
-  history: PropTypes.object.isRequired,
-  isPlaying: PropTypes.bool,
-  play: PropTypes.func.isRequired,
-  playingTrack: trackType,
-  playlist: playlistType,
-  savePlaylist: PropTypes.func.isRequired,
-  stop: PropTypes.func.isRequired,
-  updateTracks: PropTypes.func.isRequired,
-  users: accountList
-};
-
 const mapStateToProps = state => ({
   isPlaying: state.audio.isPlaying,
   playingTrack: playlistSelectors.getPlayingTrack(state),
@@ -123,10 +123,13 @@ const mapStateToProps = state => ({
   users: state.files.users
 });
 
-export default connect(mapStateToProps, {
-  downloadTracks: playlistActions.downloadTracks,
-  play: audioActions.play,
-  savePlaylist: playlistActions.savePlaylist,
-  stop: audioActions.stop,
-  updateTracks: playlistActions.updateTracks
-})(Details);
+export default connect(
+  mapStateToProps,
+  {
+    downloadTracks: playlistActions.downloadTracks,
+    play: audioActions.play,
+    savePlaylist: playlistActions.savePlaylist,
+    stop: audioActions.stop,
+    updateTracks: playlistActions.updateTracks
+  }
+)(Details);

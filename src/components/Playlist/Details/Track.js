@@ -75,8 +75,8 @@ const Track = ({
       </Info>
       {typeof track.downloadStatus === 'number' &&
         track.downloadStatus < 100 && (
-          <DownloadProgress progress={track.downloadStatus} />
-        )}
+        <DownloadProgress progress={track.downloadStatus} />
+      )}
     </Inner>
   </Wrapper>
 );

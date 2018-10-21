@@ -21,6 +21,7 @@ const Wrapper = styled.View`
 
 class Playlists extends React.Component {
   static navigationOptions = ({ navigation }) => ({
+    headerLeft: <NavButton icon="add" route="CreatePlaylist" />,
     headerRight: <NavButton icon="menu" route="Menu" />,
     headerTitle: 'Playlists'
   });
@@ -42,7 +43,6 @@ class Playlists extends React.Component {
   }
 
   handlePlaylistPress = playlist => {
-    console.log({ props: this.props });
     this.props.selectPlaylist(playlist.meta.id);
     this.props.navigation.navigate('Playlist');
   };

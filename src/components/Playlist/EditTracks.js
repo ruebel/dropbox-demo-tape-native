@@ -16,6 +16,13 @@ const Title = styled(H2)`
 `;
 
 class EditTracks extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    playlist: playlistType,
+    theme: PropTypes.object,
+    updateTracks: PropTypes.func.isRequired
+  };
+
   state = {
     selected: [...this.props.playlist.data.tracks]
   };
@@ -34,7 +41,7 @@ class EditTracks extends React.Component {
 
   handleSave = () => {
     this.props.updateTracks(this.state.selected);
-    this.props.history.goBack();
+    this.props.navigation.goBack();
   };
 
   handleSelectionChange = selected => {
@@ -62,19 +69,15 @@ class EditTracks extends React.Component {
   }
 }
 
-EditTracks.propTypes = {
-  history: PropTypes.object,
-  playlist: playlistType,
-  theme: PropTypes.object,
-  updateTracks: PropTypes.func.isRequired
-};
-
 const mapStateToProps = state => ({
   playlist: playlists.selectors.getSelectedPlaylist(state)
 });
 
 export default withTheme(
-  connect(mapStateToProps, {
-    updateTracks: playlists.actions.updateTracks
-  })(EditTracks)
+  connect(
+    mapStateToProps,
+    {
+      updateTracks: playlists.actions.updateTracks
+    }
+  )(EditTracks)
 );
