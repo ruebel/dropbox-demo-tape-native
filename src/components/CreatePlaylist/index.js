@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 
+import Container from '../Container';
 import Explorer from '../Explorer';
 import IconButton from '../IconButton';
 import TextInput from '../TextInput';
@@ -18,11 +19,11 @@ const Text = styled.Text`
   margin-top: 32;
 `;
 
-const Wrapper = styled.View`
-  flex: 1;
-`;
-
 class CreatePlaylist extends React.Component {
+  static navigationOptions = {
+    headerTitle: 'New Playlist'
+  };
+
   state = {
     name: ''
   };
@@ -33,12 +34,12 @@ class CreatePlaylist extends React.Component {
 
   handleSave = async () => {
     await this.props.createPlaylist(this.state.name);
-    this.props.history.push('/playlist');
+    this.props.navigation.navigate('Playlist');
   };
 
   render() {
     return (
-      <Wrapper>
+      <Container padTop>
         <TextInput
           onChange={this.handleNameChange}
           placeholder="Enter Playlist Name"
@@ -57,16 +58,19 @@ class CreatePlaylist extends React.Component {
             size={42}
           />
         )}
-      </Wrapper>
+      </Container>
     );
   }
 }
 
 CreatePlaylist.propTypes = {
   createPlaylist: PropTypes.func.isRequired,
-  history: PropTypes.object
+  navigation: PropTypes.object
 };
 
-export default connect(null, {
-  createPlaylist
-})(CreatePlaylist);
+export default connect(
+  null,
+  {
+    createPlaylist
+  }
+)(CreatePlaylist);

@@ -1,4 +1,4 @@
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 
 export const Empty = styled.Text`
   color: ${p => p.theme.color.textLight};

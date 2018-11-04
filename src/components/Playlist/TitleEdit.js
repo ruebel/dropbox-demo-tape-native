@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components/native';
+import styled, { withTheme } from 'styled-components';
 
-import { H2 } from '../../typography';
-import IconButton from '../../IconButton';
-import TextInput from '../../TextInput';
+import { H2 } from '../typography';
+import IconButton from '../IconButton';
+import TextInput from '../TextInput';
 
 const TitleWrapper = styled.View`
   align-items: center;

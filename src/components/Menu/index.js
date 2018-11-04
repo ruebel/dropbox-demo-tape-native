@@ -1,8 +1,10 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Constants } from 'expo';
+import { get } from 'dot-prop';
+
 import * as auth from '../../modules/auth';
 import { accountType } from '../../types';
 
@@ -28,8 +30,8 @@ const Menu = ({ logout, user }) => {
   return (
     <Wrapper>
       <Title>Demo Tape ({Constants.manifest.version})</Title>
-      <Line>{user.name.full}</Line>
-      <Line>{user.email}</Line>
+      <Line>{get(user, 'name.full')}</Line>
+      <Line>{get(user, 'email')}</Line>
       <Button
         iconFamily="Entypo"
         icon="dropbox"
@@ -45,10 +47,17 @@ Menu.propTypes = {
   user: accountType
 };
 
+Menu.navigationOptions = {
+  headerTitle: 'Settings'
+};
+
 const mapStateToProps = state => ({
   user: auth.selectors.getCurrentUser(state)
 });
 
-export default connect(mapStateToProps, {
-  logout: auth.actions.logout
-})(Menu);
+export default connect(
+  mapStateToProps,
+  {
+    logout: auth.actions.logout
+  }
+)(Menu);

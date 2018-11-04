@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 import IconButton from '../IconButton';
@@ -55,6 +55,7 @@ const Top = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+  padding-top: 10px;
   width: 100%;
 `;
 
@@ -107,8 +108,8 @@ const Full = ({
           <IconButton icon="skip-previous" onPress={onPrevious} />
           {!canPlay &&
             !downloading && (
-              <IconButton icon="file-download" onPress={onDownload} />
-            )}
+            <IconButton icon="file-download" onPress={onDownload} />
+          )}
           {downloading && <IconButton icon="timelapse" onPress={() => 1} />}
           {canPlay && (
             <IconButton

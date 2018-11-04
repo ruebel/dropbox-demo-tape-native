@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PCircle from 'react-native-progress/Circle';
-import styled, { withTheme } from 'styled-components/native';
+import styled, { withTheme } from 'styled-components';
 
 const Wrapper = styled.View`
   align-items: center;

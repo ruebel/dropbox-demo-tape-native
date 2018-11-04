@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import styled from 'styled-components/native';
+import styled from 'styled-components';
 import { RefreshControl } from 'react-native';
 import { connectActionSheet } from '@expo/react-native-action-sheet';
 
@@ -17,6 +17,22 @@ const List = styled.FlatList`
 `;
 
 class Explorer extends Component {
+  static propTypes = {
+    files: PropTypes.arrayOf(PropTypes.object),
+    folder: PropTypes.bool,
+    getFiles: PropTypes.func.isRequired,
+    onSelectionChange: PropTypes.func,
+    path: PropTypes.string,
+    selected: PropTypes.array,
+    setSortBy: PropTypes.func.isRequired,
+    showActionSheetWithOptions: PropTypes.func.isRequired,
+    users: PropTypes.array
+  };
+
+  static defaultProps = {
+    selected: []
+  };
+
   async componentDidMount() {
     this.props.getFiles(this.props.path);
   }
@@ -92,22 +108,6 @@ class Explorer extends Component {
   }
 }
 
-Explorer.propTypes = {
-  files: PropTypes.arrayOf(PropTypes.object),
-  folder: PropTypes.bool,
-  getFiles: PropTypes.func.isRequired,
-  onSelectionChange: PropTypes.func,
-  path: PropTypes.string,
-  selected: PropTypes.array,
-  setSortBy: PropTypes.func.isRequired,
-  showActionSheetWithOptions: PropTypes.func.isRequired,
-  users: PropTypes.array
-};
-
-Explorer.defaultProps = {
-  selected: []
-};
-
 const mapStateToProps = state => ({
   files: files.selectors.getSortedFiles(state),
   path: state.files.path,
@@ -115,8 +115,11 @@ const mapStateToProps = state => ({
 });
 
 export default connectActionSheet(
-  connect(mapStateToProps, {
-    getFiles: files.actions.getFiles,
-    setSortBy: files.actions.setSortBy
-  })(Explorer)
+  connect(
+    mapStateToProps,
+    {
+      getFiles: files.actions.getFiles,
+      setSortBy: files.actions.setSortBy
+    }
+  )(Explorer)
 );

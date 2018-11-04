@@ -1,15 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled, { withTheme } from 'styled-components/native';
+import styled, { withTheme } from 'styled-components';
 import moment from 'moment';
 
 import DownloadProgress from './DownloadProgress';
-import Icon from '../../Icon';
-import { Back, Inner, SwipeRow } from '../../SwipeRow';
-import { Subtitle, Title } from '../../typography';
+import Icon from '../Icon';
+import { Back, Inner, SwipeRow } from '../SwipeRow';
+import { Subtitle, Title } from '../typography';
 
-import { getFilePath, getFileName } from '../utils';
-import { accountType } from '../../../types';
+import { getFilePath, getFileName } from './utils';
+import { accountType } from '../../types';
 
 const IconWrapper = styled.View`
   width: 31px;
@@ -75,8 +75,8 @@ const Track = ({
       </Info>
       {typeof track.downloadStatus === 'number' &&
         track.downloadStatus < 100 && (
-          <DownloadProgress progress={track.downloadStatus} />
-        )}
+        <DownloadProgress progress={track.downloadStatus} />
+      )}
     </Inner>
   </Wrapper>
 );
