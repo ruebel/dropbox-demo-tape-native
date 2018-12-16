@@ -4,9 +4,9 @@ const prefix = 'AUDIO';
 
 const initialState = {
   id: null,
+  isPaused: true,
   isPlaying: false,
-  loop: false,
-  paused: true
+  loop: false
 };
 
 export const types = {
@@ -123,21 +123,21 @@ export const reducer = (state = initialState, action) => {
     case types.PAUSE:
       return {
         ...state,
-        paused: !state.paused
+        isPaused: !state.isPaused
       };
     case types.PLAY:
       return {
         ...state,
         id: action.payload,
-        isPlaying: true,
-        paused: false
+        isPaused: false,
+        isPlaying: true
       };
     case types.STOP:
       return {
         ...state,
         id: null,
-        isPlaying: false,
-        paused: true
+        isPaused: true,
+        isPlaying: false
       };
     default:
       return state;

@@ -33,17 +33,19 @@ const Control = ({
   onPause,
   onPress,
   onPrevious,
-  paused
+  isPaused
 }) => {
   return (
     <Wrapper>
-      {!canPlay &&
-        !downloading && (
+      {!canPlay && !downloading && (
         <IconButton icon="file-download" onPress={onDownload} />
       )}
       {downloading && <IconButton icon="timelapse" onPress={() => 1} />}
       {canPlay && (
-        <IconButton icon={paused ? 'play-arrow' : 'pause'} onPress={onPause} />
+        <IconButton
+          icon={isPaused ? 'play-arrow' : 'pause'}
+          onPress={onPause}
+        />
       )}
       <TitleWrapper onPress={onPress}>
         <Title numberOfLines={1}>{name}</Title>
@@ -57,13 +59,13 @@ const Control = ({
 Control.propTypes = {
   canPlay: PropTypes.bool,
   downloading: PropTypes.bool,
+  isPaused: PropTypes.bool,
   name: PropTypes.string,
   onDownload: PropTypes.func.isRequired,
   onNext: PropTypes.func.isRequired,
   onPause: PropTypes.func.isRequired,
   onPress: PropTypes.func.isRequired,
-  onPrevious: PropTypes.func.isRequired,
-  paused: PropTypes.bool
+  onPrevious: PropTypes.func.isRequired
 };
 
 export default Control;

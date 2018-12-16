@@ -82,7 +82,7 @@ const Full = ({
   onPrevious,
   onSeek,
   onSeekEnd,
-  paused,
+  isPaused,
   position = 0,
   title
 }) => {
@@ -113,7 +113,7 @@ const Full = ({
           {downloading && <IconButton icon="timelapse" onPress={() => 1} />}
           {canPlay && (
             <IconButton
-              icon={paused ? 'play-arrow' : 'pause'}
+              icon={isPaused ? 'play-arrow' : 'pause'}
               onPress={onPause}
               size={54}
             />
@@ -138,7 +138,7 @@ Full.propTypes = {
   onPrevious: PropTypes.func.isRequired,
   onSeek: PropTypes.func.isRequired,
   onSeekEnd: PropTypes.func.isRequired,
-  paused: PropTypes.bool,
+  isPaused: PropTypes.bool,
   position: PropTypes.number,
   title: PropTypes.string
 };

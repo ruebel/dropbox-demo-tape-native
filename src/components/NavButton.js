@@ -2,14 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withNavigation } from 'react-navigation';
 
+import Button from './Button';
 import IconButton from './IconButton';
 
-const NavButton = ({ icon, navigation, route }) => {
-  return <IconButton icon={icon} onPress={() => navigation.navigate(route)} />;
+const NavButton = ({ navigation, route, isButton = false, ...rest }) => {
+  const handlePress = () => navigation.navigate(route);
+  return isButton ? (
+    <Button onPress={handlePress} {...rest} />
+  ) : (
+    <IconButton onPress={handlePress} {...rest} />
+  );
 };
 
 NavButton.propTypes = {
-  icon: PropTypes.string,
+  isButton: PropTypes.bool,
   navigation: PropTypes.object,
   route: PropTypes.string
 };

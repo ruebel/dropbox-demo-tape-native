@@ -38,6 +38,7 @@ const Wrapper = styled(SwipeRow)`
 `;
 
 const Track = ({
+  isPaused,
   onPress,
   onRemove,
   position,
@@ -45,43 +46,55 @@ const Track = ({
   theme,
   track,
   user
-}) => (
-  <Wrapper
-    onRowPress={() => (track.playing ? null : onPress(track))}
-    underlayColor={theme.color.backgroundDisabled}
-    rightOpenValue={-85}
-    sortHandlers={sortHandlers}
-    {...sortHandlers}
-  >
-    <Back onPress={() => onRemove(track)} text="Remove" />
-    <Inner
-      active={track.playing}
-      disabled={!track.downloadStatus || track.downloadStatus < 100}
+}) => {
+  const hasDownloadStatus = typeof track.downloadStatus === 'number';
+  const rightIcon = hasDownloadStatus ? (
+    track.downloadStatus < 100 ? (
+      <DownloadProgress progress={track.downloadStatus} />
+    ) : null
+  ) : (
+    <Icon icon="file-download" />
+  );
+  return (
+    <Wrapper
+      onRowPress={() => onPress(track)}
+      underlayColor={theme.color.backgroundDisabled}
+      rightOpenValue={-85}
+      sortHandlers={sortHandlers}
+      {...sortHandlers}
     >
-      {track.playing ? (
-        <IconWrapper>
-          <Icon color="black" icon="play-circle-filled" size={24} />
-        </IconWrapper>
-      ) : (
-        <Position>{position}</Position>
-      )}
-      <Info>
-        <Title numberOfLines={1}>{getFileName(track.path)}</Title>
-        <Updated>
-          Updated {moment(track.server_modified).fromNow()}
-          {user ? ` by ${user.name.full}` : ''}
-        </Updated>
-        <Subtitle>{getFilePath(track.path)}</Subtitle>
-      </Info>
-      {typeof track.downloadStatus === 'number' &&
-        track.downloadStatus < 100 && (
-        <DownloadProgress progress={track.downloadStatus} />
-      )}
-    </Inner>
-  </Wrapper>
-);
+      <Back onPress={() => onRemove(track)} text="Remove" />
+      <Inner
+        active={track.playing}
+        disabled={!track.downloadStatus || track.downloadStatus < 100}
+      >
+        {track.playing ? (
+          <IconWrapper>
+            <Icon
+              color="black"
+              icon={isPaused ? 'play-circle-filled' : 'pause-circle-filled'}
+              size={24}
+            />
+          </IconWrapper>
+        ) : (
+          <Position>{position}</Position>
+        )}
+        <Info>
+          <Title numberOfLines={1}>{getFileName(track.path)}</Title>
+          <Updated>
+            Updated {moment(track.server_modified).fromNow()}
+            {user ? ` by ${user.name.full}` : ''}
+          </Updated>
+          <Subtitle>{getFilePath(track.path)}</Subtitle>
+        </Info>
+        {rightIcon}
+      </Inner>
+    </Wrapper>
+  );
+};
 
 Track.propTypes = {
+  isPaused: PropTypes.bool,
   onPress: PropTypes.func,
   onRemove: PropTypes.func.isRequired,
   position: PropTypes.number,

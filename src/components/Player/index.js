@@ -20,7 +20,7 @@ class Player extends React.Component {
     id: PropTypes.string,
     isPlaying: PropTypes.bool,
     pause: PropTypes.func.isRequired,
-    paused: PropTypes.bool,
+    isPaused: PropTypes.bool,
     playlist: playlistType,
     stop: PropTypes.func.isRequired,
     track: trackType,
@@ -46,6 +46,7 @@ class Player extends React.Component {
       interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DO_NOT_MIX,
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
       playsInSilentModeIOS: true,
+      playThroughEarpieceAndroid: false,
       shouldDuckAndroid: true
     });
 
@@ -54,12 +55,12 @@ class Player extends React.Component {
 
   componentWillReceiveProps(next) {
     if (next.track !== this.props.track) {
-      this.initializeSound(next.track, next.isPlaying && !next.paused);
+      this.initializeSound(next.track, next.isPlaying && !next.isPaused);
     } else if (
       next.isPlaying !== this.props.isPlaying ||
-      next.paused !== this.props.paused
+      next.isPaused !== this.props.isPaused
     ) {
-      this.handlePause(next.isPlaying && !next.paused);
+      this.handlePause(next.isPlaying && !next.isPaused);
     }
   }
 
@@ -99,7 +100,7 @@ class Player extends React.Component {
   seekEnd = position => {
     if (this.sound) {
       const seekTo = position * this.state.duration;
-      if (this.props.isPlaying && !this.props.paused) {
+      if (this.props.isPlaying && !this.props.isPaused) {
         this.sound.playFromPositionAsync(seekTo);
       } else {
         this.sound.setPositionAsync(seekTo);
@@ -139,7 +140,7 @@ class Player extends React.Component {
     const initialStatus = {
       rate: 1.0,
       shouldPlay:
-        shouldPlayOverride || (this.props.isPlaying && !this.props.paused),
+        shouldPlayOverride || (this.props.isPlaying && !this.props.isPaused),
       volume: 1.0
     };
 
@@ -168,7 +169,7 @@ class Player extends React.Component {
       id,
       isPlaying,
       pause,
-      paused,
+      isPaused,
       playlist,
       track
     } = this.props;
@@ -178,7 +179,7 @@ class Player extends React.Component {
     return (
       <View>
         {/* Using keep awake since expo does not support background audio */}
-        {track && isPlaying && !paused && <KeepAwake />}
+        {track && isPlaying && !isPaused && <KeepAwake />}
         {track && (
           <Modal
             animationType="slide"
@@ -200,27 +201,23 @@ class Player extends React.Component {
               onPrevious={() => changeTrack(false)}
               onSeek={this.seeking}
               onSeekEnd={this.seekEnd}
-              paused={paused}
+              isPaused={isPaused}
               position={this.state.position}
               title={playlist.data.title}
             />
           </Modal>
         )}
-        {track &&
-          this.props.isPlaying &&
-          !this.state.fullScreen && (
+        {track && this.props.isPlaying && !this.state.fullScreen && (
           <Control
             canPlay={track.downloadStatus === 100}
-            downloading={
-              track.downloadStatus > 0 && track.downloadStatus < 100
-            }
+            downloading={track.downloadStatus > 0 && track.downloadStatus < 100}
             name={trackName}
             onDownload={this.props.downloadTracks}
             onNext={() => changeTrack(true)}
             onPause={pause}
             onPress={this.toggleFullScreen}
             onPrevious={() => changeTrack(false)}
-            paused={paused}
+            isPaused={isPaused}
           />
         )}
       </View>
@@ -231,7 +228,7 @@ class Player extends React.Component {
 const mapStateToProps = state => ({
   id: state.audio.id,
   isPlaying: state.audio.isPlaying,
-  paused: state.audio.paused,
+  isPaused: state.audio.isPaused,
   playlist: playlists.selectors.getSelectedPlaylist(state),
   track: getPlayingTrack(state)
 });

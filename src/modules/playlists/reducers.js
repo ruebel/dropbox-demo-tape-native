@@ -108,7 +108,6 @@ export default (state = initialState, action) => {
           tracks: action.payload.tracks
         },
         hasChanges: action.payload.hasChanges || playlist.hasChanges,
-        lastFetch: new Date(),
         pending: false
       }));
     default:

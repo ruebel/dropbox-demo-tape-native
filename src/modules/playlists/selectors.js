@@ -1,3 +1,5 @@
+import { get } from 'dot-prop';
+
 export const getPlayingTrack = state => {
   const playlist = getSelectedPlaylist(state);
   if (
@@ -19,3 +21,6 @@ export const getSelectedPlaylist = state => {
     playlist => playlist.meta.id === state.playlists.selectedId
   );
 };
+
+export const getPlaylistsWithPendingChanges = state =>
+  get(state.playlists, 'data', []).filter(p => p.hasChanges);

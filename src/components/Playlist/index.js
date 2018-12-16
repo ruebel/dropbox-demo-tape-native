@@ -2,12 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import arrayMove from 'array-move';
-import throttle from 'lodash.throttle';
 import { get } from 'dot-prop';
 
-import ButtonWrapper from '../ButtonWrapper';
 import Container from '../Container';
-import IconButton from '../IconButton';
 import LoadingOrContent from '../LoadingOrContent';
 import NavButton from '../NavButton';
 import TrackList from './TrackList';
@@ -18,19 +15,18 @@ import {
 } from '../../modules/playlists';
 import { actions as audioActions } from '../../modules/audio';
 import { accountList, playlistType, trackType } from '../../types';
-import { color } from '../../styles/theme';
 
 class Details extends React.Component {
   static propTypes = {
     downloadTracks: PropTypes.func.isRequired,
+    isPaused: PropTypes.bool,
     isPlaying: PropTypes.bool,
     loading: PropTypes.bool,
     navigation: PropTypes.object.isRequired,
+    pause: PropTypes.func.isRequired,
     play: PropTypes.func.isRequired,
     playingTrack: trackType,
     playlist: playlistType,
-    savePlaylist: PropTypes.func.isRequired,
-    stop: PropTypes.func.isRequired,
     updateTrackInfo: PropTypes.func.isRequired,
     updateTracks: PropTypes.func.isRequired,
     users: accountList
@@ -71,12 +67,19 @@ class Details extends React.Component {
   };
 
   handleTrackPress = track => {
-    this.props.play(track.id);
+    if (!track.downloadStatus) {
+      this.props.downloadTracks();
+    } else {
+      this.isTrackPlaying(track)
+        ? this.props.pause()
+        : this.props.play(track.id);
+    }
   };
 
-  savePlaylist = throttle(this.props.savePlaylist, 5000, {
-    leading: false
-  });
+  isTrackPlaying = track => {
+    const { isPlaying, playingTrack } = this.props;
+    return isPlaying && track.id === get(playingTrack, 'id');
+  };
 
   setNavName = () => {
     const { navigation, playlist } = this.props;
@@ -87,53 +90,23 @@ class Details extends React.Component {
   };
 
   render() {
-    const {
-      downloadTracks,
-      isPlaying,
-      loading,
-      play,
-      playingTrack,
-      playlist,
-      stop,
-      users
-    } = this.props;
+    const { isPaused, loading, playingTrack, playlist, users } = this.props;
 
     return (
       <Container>
         <LoadingOrContent data={playlist} loading={loading}>
-          <ButtonWrapper>
-            <IconButton
-              background={color.primary}
-              icon={isPlaying ? 'stop' : 'play-arrow'}
-              onPress={() => (isPlaying ? stop() : play())}
-            />
-            {playlist.data.tracks.some(track => !track.downloadStatus) && (
-              <IconButton
-                background={color.primary}
-                disabled={playlist.downloading}
-                icon="file-download"
-                onPress={downloadTracks}
-              />
-            )}
-            <IconButton
-              background={color.primary}
-              disabled={!playlist.hasChanges}
-              icon="save"
-              onPress={this.savePlaylist}
-            />
-          </ButtonWrapper>
           <TrackList
+            isPaused={isPaused}
             onPress={this.handleTrackPress}
             onRemove={this.handleRemove}
             onSortEnd={this.handleSortEnd}
-            tracks={playlist.data.tracks.map(
-              t =>
-                t === playingTrack
-                  ? {
-                    ...t,
-                    playing: true
-                  }
-                  : t
+            tracks={playlist.data.tracks.map(t =>
+              t === playingTrack
+                ? {
+                  ...t,
+                  playing: true
+                }
+                : t
             )}
             users={users}
           />
@@ -144,6 +117,7 @@ class Details extends React.Component {
 }
 
 const mapStateToProps = state => ({
+  isPaused: state.audio.isPaused,
   isPlaying: state.audio.isPlaying,
   loading: state.playlists.loading,
   playingTrack: playlistSelectors.getPlayingTrack(state),
@@ -155,9 +129,9 @@ export default connect(
   mapStateToProps,
   {
     downloadTracks: playlistActions.downloadTracks,
+    pause: audioActions.pause,
     play: audioActions.play,
     savePlaylist: playlistActions.savePlaylist,
-    stop: audioActions.stop,
     updateTrackInfo: playlistActions.updateTrackInfo,
     updateTracks: playlistActions.updateTracks
   }

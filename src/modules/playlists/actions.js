@@ -111,8 +111,8 @@ export const downloadTracks = () => async (dispatch, getState) => {
       });
     }
     // Download the files
-    trackDownloaders.map(d => limit(() => d.downloadAsync()));
-    await Promise.all(trackDownloaders);
+    const promises = trackDownloaders.map(d => limit(() => d.downloadAsync()));
+    await Promise.all(promises);
     dispatch({
       payload: false,
       type: types.UPDATE_DOWNLOADING
@@ -126,7 +126,7 @@ const downloadProgress = (id, progress) => (dispatch, getState) => {
   const percentComplete = Math.min(
     100,
     Math.ceil(
-      progress.totalBytesWritten / progress.totalBytesExpectedToWrite * 100
+      (progress.totalBytesWritten / progress.totalBytesExpectedToWrite) * 100
     )
   );
   dispatch({

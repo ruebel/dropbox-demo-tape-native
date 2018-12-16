@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'dot-prop';
+import moment from 'moment';
 import styled from 'styled-components';
 
 import { playlistType } from '../types';
@@ -12,6 +13,7 @@ import Container from './Container';
 import IconButton from './IconButton';
 import LoadingOrContent from './LoadingOrContent';
 import TextInput from './TextInput';
+import { Message } from './typography';
 
 const Button = styled(ButtonBase)`
   margin-top: 40;
@@ -90,20 +92,31 @@ class Settings extends React.Component {
   };
 
   render() {
+    const { navigation, playlist } = this.props;
+    const { title } = this.state;
+
     return (
       <Container padTop>
-        <LoadingOrContent data={this.props.playlist}>
+        <LoadingOrContent data={playlist}>
           <TextInput
             onChange={this.handleTitleChange}
             placeholder="Enter Playlist Name"
             title="Name"
-            value={this.state.title}
+            value={title}
           />
+          <Message>{playlist.meta.path_display}</Message>
+          <Message>
+            Last updated {moment(playlist.data.server_modified).fromNow()}
+          </Message>
           <Button
-            onPress={() => this.props.navigation.navigate('EditTracks')}
+            onPress={() => navigation.navigate('EditTracks')}
             text="Edit Tracks"
           />
-          <Button onPress={this.handleDelete} text="Delete Playlist" />
+          <Button
+            onPress={this.handleDelete}
+            text="Delete Playlist"
+            type="error"
+          />
         </LoadingOrContent>
       </Container>
     );

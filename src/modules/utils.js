@@ -59,7 +59,7 @@ const cleanHeader = header =>
  * @param  {String} local  Local path to save file
  * @param  {String} remote Remote location to download from
  * @param  {Object} state  Current app state
- * @param  {Func} progress  Current app state
+ * @param  {Func} progress  progress callback
  * @return {Object}        Resumable Downloader Object
  */
 export const createDownloader = (local, remote, state, progress) => {
@@ -74,7 +74,7 @@ export const createDownloader = (local, remote, state, progress) => {
     localPath,
     {
       headers: {
-        Authorization: 'Bearer ' + state.auth.user.params.access_token,
+        Authorization: 'Bearer ' + getAccessToken(state),
         'Dropbox-API-Arg': apiArg
       }
     },
@@ -124,6 +124,8 @@ export const uploadFile = async (data, path, state) => {
   return meta;
 };
 
+export const getAccessToken = state => state.auth.user.params.access_token;
+
 /**
  * Returns a dropbox sdk instance using state credentials
  * @param  {Object} state App state
@@ -131,7 +133,8 @@ export const uploadFile = async (data, path, state) => {
  */
 export const getDropboxConnection = state =>
   new Dropbox({
-    accessToken: state.auth.user.params.access_token
+    accessToken: getAccessToken(state),
+    fetch
   });
 
 /**

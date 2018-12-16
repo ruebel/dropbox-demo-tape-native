@@ -7,6 +7,7 @@ import {
 import storage from 'redux-persist/es/storage';
 import thunkMiddleware from 'redux-thunk';
 import { reducers } from './modules';
+import autoSave from './middleware/autoSave';
 
 const blacklistTransform = createTransform((state, key) => {
   return key !== 'audio'
@@ -18,7 +19,7 @@ const blacklistTransform = createTransform((state, key) => {
     : {
       ...state,
       // Force pause on audio if it was playing
-      paused: true
+      isPaused: true
     };
 });
 
@@ -36,7 +37,7 @@ const configureStore = state => {
   const store = createStore(
     rootReducer,
     state,
-    composeEnhancers(applyMiddleware(thunkMiddleware))
+    composeEnhancers(applyMiddleware(autoSave, thunkMiddleware))
   );
 
   if (process.env.NODE_ENV !== 'production') {

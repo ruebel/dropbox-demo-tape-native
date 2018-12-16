@@ -1,18 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { View } from 'react-native';
 import SortableListView from 'react-native-sortable-listview';
 import styled from 'styled-components';
-import Track from './Track';
+
 import { Empty } from '../typography';
+import NavButtonBase from '../NavButton';
+import Track from './Track';
 
 import { accountList, trackList } from '../../types';
 
 const List = styled(SortableListView)`
   flex: 1;
-  margin-top: 8px;
 `;
 
-const TrackList = ({ onPress, onRemove, onSortEnd, tracks, users = [] }) => {
+const NavButton = styled(NavButtonBase)`
+  margin-top: 12px;
+`;
+
+const TrackList = ({
+  isPaused,
+  onPress,
+  onRemove,
+  onSortEnd,
+  tracks,
+  users = []
+}) => {
   const data = tracks.reduce(
     (tot, track, i) => ({
       ...tot,
@@ -29,6 +42,7 @@ const TrackList = ({ onPress, onRemove, onSortEnd, tracks, users = [] }) => {
       order={order}
       renderRow={row => (
         <Track
+          isPaused={isPaused}
           onPress={onPress}
           onRemove={onRemove}
           position={row.position}
@@ -38,11 +52,15 @@ const TrackList = ({ onPress, onRemove, onSortEnd, tracks, users = [] }) => {
       )}
     />
   ) : (
-    <Empty>No Tracks</Empty>
+    <View>
+      <Empty>No Tracks</Empty>
+      <NavButton isButton route="EditTracks" text="Add Tracks" />
+    </View>
   );
 };
 
 TrackList.propTypes = {
+  isPaused: PropTypes.bool,
   onPress: PropTypes.func,
   onRemove: PropTypes.func.isRequired,
   onSortEnd: PropTypes.func.isRequired,

@@ -7,7 +7,7 @@ import Icon from './Icon';
 const ButtonBase = styled.TouchableOpacity`
   align-items: center;
   background: ${p =>
-    p.disabled ? p.theme.color.backgroundDisabled : p.theme.color.primary};
+    p.disabled ? p.theme.color.backgroundDisabled : p.theme.color[p.type]};
   flex-direction: row;
   height: 60px;
   justify-content: center;
@@ -28,10 +28,11 @@ const Button = ({
   onPress,
   style,
   text,
-  theme
+  theme,
+  type = 'primary'
 }) => {
   return (
-    <ButtonBase disabled={disabled} onPress={onPress} style={style}>
+    <ButtonBase disabled={disabled} onPress={onPress} style={style} type={type}>
       {icon && (
         <Icon
           color={theme.color.textSecondary}
@@ -51,7 +52,8 @@ Button.propTypes = {
   onPress: PropTypes.func.isRequired,
   style: PropTypes.oneOfType([PropTypes.object, PropTypes.array]),
   text: PropTypes.string,
-  theme: PropTypes.object
+  theme: PropTypes.object,
+  type: PropTypes.string
 };
 
 export default withTheme(Button);
