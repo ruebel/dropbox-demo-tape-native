@@ -9,36 +9,29 @@ import * as auth from '../../modules/auth';
 import { accountType } from '../../types';
 
 import Button from '../Button';
-import { H1, Message } from '../typography';
-
-const Line = styled(Message)`
-  margin-bottom: 20px;
-  margin-top: 10px;
-`;
+import Container from '../Container';
+import Field from '../Field';
+import { H1 } from '../typography';
 
 const Title = styled(H1)`
-  margin-bottom: 10;
+  margin-bottom: 32;
   margin-top: 20;
-`;
-
-const Wrapper = styled.View`
-  align-items: center;
-  flex: 1;
 `;
 
 const Menu = ({ logout, user }) => {
   return (
-    <Wrapper>
-      <Title>Demo Tape ({Constants.manifest.version})</Title>
-      <Line>{get(user, 'name.full')}</Line>
-      <Line>{get(user, 'email')}</Line>
+    <Container pad>
+      <Title>Demo Tape</Title>
+      <Field title="Version" value={Constants.manifest.version} />
+      <Field title="User" value={get(user, 'name.full')} />
+      <Field title="Email" value={get(user, 'email')} />
       <Button
         iconFamily="Entypo"
         icon="dropbox"
         onPress={logout}
         text="Logout"
       />
-    </Wrapper>
+    </Container>
   );
 };
 

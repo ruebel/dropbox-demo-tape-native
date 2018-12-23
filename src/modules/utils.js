@@ -176,6 +176,16 @@ export const handleError = (error, dispatch, type) => {
   });
 };
 
+export const getModifiedBy = entry => get(entry, 'sharing_info.modified_by');
+
+/**
+ * Get the modified_by user ids from a list of entries
+ * @param  {Array<Object>} entries
+ * @return {Array<string>} ids
+ */
+export const getModifiedUsersFromEntries = entries =>
+  [...new Set(entries.map(getModifiedBy))].filter(Boolean);
+
 /**
  * Returns true if file name is an audio file
  * @param  {String}  name File Name

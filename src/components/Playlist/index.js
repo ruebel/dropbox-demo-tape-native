@@ -34,7 +34,7 @@ class Details extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerRight: <NavButton icon="menu" route="PlaylistSettings" />,
+      headerRight: <NavButton icon="edit" route="PlaylistSettings" />,
       headerTitle: navigation.getParam('name')
     };
   };

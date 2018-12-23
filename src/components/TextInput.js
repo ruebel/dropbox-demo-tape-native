@@ -4,11 +4,12 @@ import { StyleSheet } from 'react-native';
 import styled, { withTheme } from 'styled-components';
 
 const Input = styled.TextInput`
-  border-color: ${p => p.theme.color.borderPrimary};
+  border-color: ${p => p.theme.color.borderSecondary};
   border-width: ${StyleSheet.hairlineWidth};
   color: ${p => p.theme.color.textPrimary};
   font-size: 17px;
-  height: 50px;
+  height: 46px;
+  margin-bottom: 16px;
   padding: 0 16px;
 `;
 
@@ -25,11 +26,19 @@ const Wrapper = styled.View`
   flex-direction: column;
 `;
 
-const TextInput = ({ onChange, placeholder, theme, title, value }) => {
+const TextInput = ({
+  disabled,
+  onChange,
+  placeholder,
+  theme,
+  title,
+  value
+}) => {
   return (
     <Wrapper>
       <Title>{title}</Title>
       <Input
+        disabled={disabled}
         onChangeText={onChange}
         placeholder={placeholder}
         placeholderTextColor={theme.color.textLight}
@@ -40,6 +49,7 @@ const TextInput = ({ onChange, placeholder, theme, title, value }) => {
 };
 
 TextInput.propTypes = {
+  disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   theme: PropTypes.object,

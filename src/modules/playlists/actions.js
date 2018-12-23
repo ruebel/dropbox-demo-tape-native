@@ -1,12 +1,14 @@
 import { FileSystem } from 'expo';
 import throttle from 'lodash.throttle';
 import pLimit from 'p-limit';
+
 import {
   cleanFiles,
   checkTimeout,
   createDownloader,
   getDropboxConnection,
   getFileName,
+  getModifiedUsersFromEntries,
   handleError,
   isDownloaded,
   transformFile,
@@ -14,6 +16,7 @@ import {
 } from '../utils';
 import { getSelectedPlaylist } from './selectors';
 import types from './types';
+import { actions as fileActions } from '../files';
 
 const limit = pLimit(2);
 
@@ -273,9 +276,13 @@ export const updateTrackInfo = force => async (dispatch, getState) => {
       })
     );
 
+    // Get the modified-by user info
+    const users = getModifiedUsersFromEntries(tracks);
+    dispatch(fileActions.getUsers(users));
+
     dispatch({
       payload: {
-        tracks: tracks.filter(t => t)
+        tracks: tracks.filter(Boolean)
       },
       type: types.UPDATE_TRACKS
     });

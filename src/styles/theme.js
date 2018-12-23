@@ -4,6 +4,7 @@ export const color = {
   backgroundPrimary: '#fff',
   backgroundSelected: '#cee7eb',
   borderPrimary: '#ececec',
+  borderSecondary: '#646464',
   error: '#bf6c5e',
   primary: '#122326',
   secondary: '#5EB1BF',

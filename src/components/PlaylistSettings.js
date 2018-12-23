@@ -5,15 +5,16 @@ import { get } from 'dot-prop';
 import moment from 'moment';
 import styled from 'styled-components';
 
-import { playlistType } from '../types';
+import { accountType, playlistType } from '../types';
+import * as files from '../modules/files';
 import * as playlists from '../modules/playlists';
 
 import ButtonBase from './Button';
 import Container from './Container';
+import Field from './Field';
 import IconButton from './IconButton';
 import LoadingOrContent from './LoadingOrContent';
 import TextInput from './TextInput';
-import { Message } from './typography';
 
 const Button = styled(ButtonBase)`
   margin-top: 40;
@@ -24,7 +25,8 @@ class Settings extends React.Component {
     deletePlaylist: PropTypes.func.isRequired,
     navigation: PropTypes.object.isRequired,
     playlist: playlistType,
-    updateTitle: PropTypes.func.isRequired
+    updateTitle: PropTypes.func.isRequired,
+    user: accountType
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -92,11 +94,11 @@ class Settings extends React.Component {
   };
 
   render() {
-    const { navigation, playlist } = this.props;
+    const { navigation, playlist, user } = this.props;
     const { title } = this.state;
 
     return (
-      <Container padTop>
+      <Container pad>
         <LoadingOrContent data={playlist}>
           <TextInput
             onChange={this.handleTitleChange}
@@ -104,10 +106,12 @@ class Settings extends React.Component {
             title="Name"
             value={title}
           />
-          <Message>{playlist.meta.path_display}</Message>
-          <Message>
-            Last updated {moment(playlist.data.server_modified).fromNow()}
-          </Message>
+          <Field title="Path" value={playlist.meta.path_display} />
+          <Field
+            title="Last Updated"
+            value={moment(playlist.meta.server_modified).fromNow()}
+          />
+          {user && <Field title="Updated By" value={user.name.full} />}
           <Button
             onPress={() => navigation.navigate('EditTracks')}
             text="Edit Tracks"
@@ -124,7 +128,8 @@ class Settings extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  playlist: playlists.selectors.getSelectedPlaylist(state)
+  playlist: playlists.selectors.getSelectedPlaylist(state),
+  user: files.selectors.getCurrentPlaylistModifiedUser(state)
 });
 
 export default connect(

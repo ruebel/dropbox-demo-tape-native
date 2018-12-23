@@ -1,11 +1,14 @@
-import { get } from 'dot-prop';
 import {
   getDropboxConnection,
+  getModifiedBy,
+  getModifiedUsersFromEntries,
   handleError,
   isFolderOrAudioFile,
   transformAccount,
   transformFile
 } from './utils';
+
+import { selectors as playlistSelectors } from './playlists';
 
 const prefix = 'FILES';
 
@@ -81,11 +84,7 @@ export const actions = {
         path: folder
       };
       // Get all user ids of users who have modified listed files
-      const users = [
-        ...new Set(
-          payload.data.map(entry => get(entry, 'sharing_info.modified_by'))
-        )
-      ].filter(u => u);
+      const users = getModifiedUsersFromEntries(payload.data);
       // Get user info for all users that have modified files
       dispatch(getUsers(users));
       dispatch({
@@ -155,6 +154,19 @@ const sortByTypeAndModified = (a, b) =>
     : new Date(b.server_modified) - new Date(a.server_modified);
 
 export const selectors = {
+  getCurrentPlaylistModifiedUser: state => {
+    const playlist = playlistSelectors.getSelectedPlaylist(state);
+    const users = state.files.users;
+
+    // eslint-disable-next-line
+    console.log(playlist, users);
+
+    if (playlist && users.length > 0) {
+      const modifiedById = getModifiedBy(playlist.meta);
+      return users.find(user => user.id === modifiedById);
+    }
+    return null;
+  },
   getSortedFiles: state => {
     switch (state.files.sortBy) {
       case 'modified':
