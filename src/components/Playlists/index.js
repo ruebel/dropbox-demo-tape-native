@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 import { RefreshControl } from 'react-native';
 
+import Container from '../Container';
 import { Empty } from '../typography';
 import NavButton from '../NavButton';
 import Playlist from './Playlist';
@@ -61,7 +62,12 @@ class Playlists extends React.Component {
         <List
           data={playlists}
           keyExtractor={item => item.meta.id}
-          ListEmptyComponent={<Empty>No Playlists</Empty>}
+          ListEmptyComponent={
+            <Container clear pad>
+              <Empty>No Playlists</Empty>
+              <NavButton isButton route="CreatePlaylist" text="Add Playlist" />
+            </Container>
+          }
           refreshControl={
             <RefreshControl
               refreshing={this.state.refreshing}

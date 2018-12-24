@@ -3,7 +3,7 @@ import {
   getModifiedBy,
   getModifiedUsersFromEntries,
   handleError,
-  isFolderOrAudioFile,
+  isFileOrFolder,
   transformAccount,
   transformFile
 } from './utils';
@@ -79,7 +79,7 @@ export const actions = {
       });
       const payload = {
         cursor,
-        data: entries.filter(isFolderOrAudioFile).map(transformFile),
+        data: entries.filter(isFileOrFolder).map(transformFile),
         hasMore,
         path: folder
       };
@@ -157,9 +157,6 @@ export const selectors = {
   getCurrentPlaylistModifiedUser: state => {
     const playlist = playlistSelectors.getSelectedPlaylist(state);
     const users = state.files.users;
-
-    // eslint-disable-next-line
-    console.log(playlist, users);
 
     if (playlist && users.length > 0) {
       const modifiedById = getModifiedBy(playlist.meta);

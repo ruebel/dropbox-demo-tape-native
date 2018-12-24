@@ -176,6 +176,7 @@ export const findPlaylists = force => async (dispatch, getState) => {
         }
         // Parse to JSON
         const playlist = JSON.parse(fileString);
+
         // Combine w/ metadata and return
         return {
           data: {

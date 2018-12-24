@@ -83,10 +83,15 @@ class Explorer extends Component {
           path={path}
         />
         <List
-          data={folder ? files.filter(f => f.type === 'folder') : files}
+          data={files.filter(
+            file =>
+              file.isFolder || ((folder && file.isPlaylist) || file.isAudioFile)
+          )}
           keyExtractor={item => item.id}
           ListEmptyComponent={
-            <Message>{folder ? '' : 'There Are No Audio Files Here'}</Message>
+            <Message>
+              {folder ? 'Empty Folder' : 'There Are No Audio Files Here'}
+            </Message>
           }
           refreshControl={
             <RefreshControl

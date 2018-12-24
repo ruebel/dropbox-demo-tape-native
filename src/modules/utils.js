@@ -142,7 +142,7 @@ export const getDropboxConnection = state =>
  * @param  {String} name File Name
  * @return {String}      Extension
  */
-const getExtension = name => name.split('.').pop();
+const getExtension = (name = '') => name.split('.').pop();
 
 /**
  * Createa file name from a track
@@ -207,6 +207,9 @@ export const isDownloaded = async track => {
   };
 };
 
+export const isFileOrFolder = entry =>
+  ['file', 'folder'].includes(entry['.tag']);
+
 /**
  * Return true if entry is a folder or an audio file
  * @param  {Object}  entry Dropbox entry
@@ -215,6 +218,15 @@ export const isDownloaded = async track => {
 export const isFolderOrAudioFile = entry =>
   entry['.tag'] === 'folder' ||
   (entry['.tag'] === 'file' && isAudioFile(entry.name));
+
+/**
+ * Return true if entry is a folder or an playlist file
+ * @param  {Object}  entry Dropbox entry
+ * @return {Boolean}       isFolderOrPlaylist
+ */
+export const isFolderOrPlaylist = entry =>
+  entry['.tag'] === 'folder' ||
+  (entry['.tag'] === 'file' && isPlaylist(entry.name));
 
 /**
  * Returns true if file name is a demo tape playlist
@@ -246,6 +258,9 @@ export const transformAccount = account => ({
  */
 export const transformFile = file => ({
   ...file,
+  isAudioFile: isAudioFile(file.name),
+  isFolder: file['.tag'] === 'folder',
+  isPlaylist: isPlaylist(file.name),
   path: file.path_display,
   type: file['.tag'],
   user: get(file, 'sharing_info.modified_by')

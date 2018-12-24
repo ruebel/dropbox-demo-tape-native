@@ -39,7 +39,7 @@ class CreatePlaylist extends React.Component {
 
   render() {
     return (
-      <Container padTop>
+      <Container pad>
         <TextInput
           onChange={this.handleNameChange}
           placeholder="Enter Playlist Name"
