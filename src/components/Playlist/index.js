@@ -34,7 +34,9 @@ class Details extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      headerRight: <NavButton icon="edit" route="PlaylistSettings" />,
+      headerRight: (
+        <NavButton color="primary" icon="edit" route="PlaylistSettings" />
+      ),
       headerTitle: navigation.getParam('name')
     };
   };
@@ -53,7 +55,6 @@ class Details extends React.Component {
       this.props.updateTracks(
         this.props.playlist.data.tracks.filter(t => t.id !== track.id)
       );
-      this.savePlaylist();
     }
   };
 
@@ -62,7 +63,6 @@ class Details extends React.Component {
       this.props.updateTracks(
         arrayMove(this.props.playlist.data.tracks, from, to)
       );
-      this.savePlaylist();
     }
   };
 

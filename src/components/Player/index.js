@@ -145,7 +145,7 @@ class Player extends React.Component {
     };
 
     try {
-      const { sound } = await Audio.Sound.create(
+      const { sound } = await Audio.Sound.createAsync(
         source,
         initialStatus,
         this.handleAudioUpdate

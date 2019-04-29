@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { createStackNavigator } from 'react-navigation';
+import { createAppContainer, createStackNavigator } from 'react-navigation';
 
 import { color } from '../styles/theme';
 
@@ -47,11 +47,13 @@ const RootStack = createStackNavigator(
   }
 );
 
+const AppContainer = createAppContainer(RootStack);
+
 class App extends Component {
   render() {
     return (
       <Container>
-        <RootStack />
+        <AppContainer />
         <Player />
       </Container>
     );

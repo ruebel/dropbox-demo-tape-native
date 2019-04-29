@@ -30,6 +30,7 @@ export default (state = initialState, action) => {
         pending: false,
         selectedId: action.payload.meta.id
       };
+
     case types.DELETE_SUCCESS:
       return {
         ...state,
@@ -39,6 +40,7 @@ export default (state = initialState, action) => {
         selectedId:
           state.selectedId === action.payload ? null : state.selectedId
       };
+
     case types.DOWNLOAD_PROGRESS:
       return updateSelected(state, playlist => ({
         ...playlist,
@@ -55,29 +57,34 @@ export default (state = initialState, action) => {
         },
         downloading: true
       }));
+
     case types.FAILED:
       return {
         ...state,
         error: action.payload,
         pending: false
       };
+
     case types.PENDING:
       return {
         ...state,
         error: null,
         pending: true
       };
+
     case types.SAVE_SUCCESS:
       return updateSelected(state, playlist => ({
         ...playlist,
         hasChanges: false,
         meta: action.payload
       }));
+
     case types.SELECT:
       return {
         ...state,
         selectedId: action.payload
       };
+
     case types.SUCCESS:
       return {
         ...state,
@@ -86,11 +93,13 @@ export default (state = initialState, action) => {
         lastFetch: new Date(),
         pending: false
       };
+
     case types.UPDATE_DOWNLOADING:
       return updateSelected(state, playlist => ({
         ...playlist,
         downloading: action.payload
       }));
+
     case types.UPDATE_TITLE:
       return updateSelected(state, playlist => ({
         ...playlist,
@@ -100,6 +109,7 @@ export default (state = initialState, action) => {
         },
         hasChanges: true
       }));
+
     case types.UPDATE_TRACKS:
       return updateSelected(state, playlist => ({
         ...playlist,
@@ -110,6 +120,7 @@ export default (state = initialState, action) => {
         hasChanges: action.payload.hasChanges || playlist.hasChanges,
         pending: false
       }));
+
     default:
       return state;
   }
