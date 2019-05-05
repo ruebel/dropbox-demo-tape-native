@@ -2524,10 +2524,10 @@ dot-prop@^4.2.0:
   dependencies:
     is-obj "^1.0.0"
 
-dropbox@^4.0.3:
-  version "4.0.14"
-  resolved "https://registry.yarnpkg.com/dropbox/-/dropbox-4.0.14.tgz#417f2c3d1dd17f600145b74d0d374691cf21db49"
-  integrity sha512-Tqiy5xSDWm7aPNMDdse/7504E9iQvYXd+1YBGNSvgeWuucPlBqVGev62ORluv1UqDWQtlwxcuqJcaN96l/sbgQ==
+dropbox@^4.0.17:
+  version "4.0.17"
+  resolved "https://registry.yarnpkg.com/dropbox/-/dropbox-4.0.17.tgz#f21ec9087cf16de57290d4e55a12e3c0a1f138e3"
+  integrity sha512-j95CmoOJFxtqXw3hWy2+1ySyKrlsjbDvceNo2SCk6ls2wLem0m9HqgyGtDdYrXfeGd0PsV3Az4Q+xmO0+/bKhg==
   dependencies:
     buffer "^5.0.8"
     moment "^2.19.3"
@@ -2556,6 +2556,11 @@ electron-to-chromium@^1.3.124:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.127.tgz#9b34d3d63ee0f3747967205b953b25fe7feb0e10"
   integrity sha512-1o25iFRf/dbgauTWalEzmD1EmRN3a2CzP/K7UVpYLEBduk96LF0FyUdCcf4Ry2mAWJ1VxyblFjC93q6qlLwA2A==
 
+emitter-component@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
+  integrity sha1-Bl4tvtaVm/RwZ57avq95gdEAOrY=
+
 emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
@@ -2566,7 +2571,7 @@ encodeurl@~1.0.1, encodeurl@~1.0.2:
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
 
-encoding@^0.1.11:
+encoding@^0.1.11, encoding@^0.1.12:
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
   integrity sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
@@ -6472,6 +6477,13 @@ stream-buffers@~2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/stream-buffers/-/stream-buffers-2.2.0.tgz#91d5f5130d1cef96dcfa7f726945188741d09ee4"
   integrity sha1-kdX1Ew0c75bc+n9yaUUYh0HQnuQ=
+
+stream@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/stream/-/stream-0.0.2.tgz#7f5363f057f6592c5595f00bc80a27f5cec1f0ef"
+  integrity sha1-f1Nj8Ff2WSxVlfALyAon9c7B8O8=
+  dependencies:
+    emitter-component "^1.1.1"
 
 strict-uri-encode@^2.0.0:
   version "2.0.0"

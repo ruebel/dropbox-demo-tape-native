@@ -2,6 +2,7 @@ import { Dropbox } from 'dropbox';
 import { FileSystem } from 'expo';
 import { get } from 'dot-prop';
 import moment from 'moment';
+import encoding from 'encoding';
 
 // Dropbox public download API URL
 const dropBoxDownloadUrl = 'https://content.dropboxapi.com/2/files/download';
@@ -111,7 +112,8 @@ export const uploadFile = async (data, path, state) => {
     // Do not rename on conflict
     autorename: false,
     // File data to upload
-    contents: JSON.stringify(data),
+    // contents: JSON.stringify(data),
+    contents: encoding.convert(JSON.stringify(data), 'ISO-8859-1'),
     // Overwrite previous version of file (if exists)
     mode: {
       '.tag': 'overwrite'
