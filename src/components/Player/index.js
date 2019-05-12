@@ -18,9 +18,9 @@ class Player extends React.Component {
     changeTrack: PropTypes.func.isRequired,
     downloadTracks: PropTypes.func.isRequired,
     id: PropTypes.string,
+    isPaused: PropTypes.bool,
     isPlaying: PropTypes.bool,
     pause: PropTypes.func.isRequired,
-    isPaused: PropTypes.bool,
     playlist: playlistType,
     stop: PropTypes.func.isRequired,
     track: trackType,
@@ -122,8 +122,8 @@ class Player extends React.Component {
   initializeSound = async (trackOverride, shouldPlayOverride) => {
     if (this.sound) {
       try {
-        await this.sound.unloadAsync();
         this.sound.setOnPlaybackStatusUpdate(null);
+        await this.sound.unloadAsync();
         this.sound = null;
       } catch (err) {
         console.error(err);
@@ -227,8 +227,8 @@ class Player extends React.Component {
 
 const mapStateToProps = state => ({
   id: state.audio.id,
-  isPlaying: state.audio.isPlaying,
   isPaused: state.audio.isPaused,
+  isPlaying: state.audio.isPlaying,
   playlist: playlists.selectors.getSelectedPlaylist(state),
   track: getPlayingTrack(state)
 });

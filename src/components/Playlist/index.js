@@ -131,7 +131,6 @@ export default connect(
     downloadTracks: playlistActions.downloadTracks,
     pause: audioActions.pause,
     play: audioActions.play,
-    savePlaylist: playlistActions.savePlaylist,
     updateTrackInfo: playlistActions.updateTrackInfo,
     updateTracks: playlistActions.updateTracks
   }
