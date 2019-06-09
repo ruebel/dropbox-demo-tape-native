@@ -1,5 +1,5 @@
 import React from 'react';
-import Icons from '@expo/vector-icons';
+import * as Icons from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
 const Icon = ({ color, family = 'MaterialIcons', icon, size = 32 }) => {
