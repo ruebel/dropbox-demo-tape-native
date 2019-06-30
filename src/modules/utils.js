@@ -1,5 +1,5 @@
 import { Dropbox } from 'dropbox';
-import { FileSystem } from 'expo';
+import * as FileSystem from 'expo-file-system';
 import { get } from 'dot-prop';
 import moment from 'moment';
 import encoding from 'encoding';

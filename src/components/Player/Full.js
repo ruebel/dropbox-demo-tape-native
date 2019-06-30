@@ -106,8 +106,7 @@ const Full = ({
         </TimeWrapper>
         <ActionWrapper>
           <IconButton icon="skip-previous" onPress={onPrevious} />
-          {!canPlay &&
-            !downloading && (
+          {!canPlay && !downloading && (
             <IconButton icon="file-download" onPress={onDownload} />
           )}
           {downloading && <IconButton icon="timelapse" onPress={() => 1} />}
@@ -130,6 +129,7 @@ Full.propTypes = {
   currentTime: PropTypes.number,
   downloading: PropTypes.bool,
   duration: PropTypes.number,
+  isPaused: PropTypes.bool,
   name: PropTypes.string,
   onClose: PropTypes.func.isRequired,
   onDownload: PropTypes.func.isRequired,
@@ -138,7 +138,6 @@ Full.propTypes = {
   onPrevious: PropTypes.func.isRequired,
   onSeek: PropTypes.func.isRequired,
   onSeekEnd: PropTypes.func.isRequired,
-  isPaused: PropTypes.bool,
   position: PropTypes.number,
   title: PropTypes.string
 };

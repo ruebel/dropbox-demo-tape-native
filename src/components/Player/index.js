@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Audio, KeepAwake } from 'expo';
+import { Audio } from 'expo-av';
 import { connect } from 'react-redux';
 import { Modal, View } from 'react-native';
 
@@ -47,7 +47,8 @@ class Player extends React.Component {
       interruptionModeIOS: Audio.INTERRUPTION_MODE_IOS_DO_NOT_MIX,
       playsInSilentModeIOS: true,
       playThroughEarpieceAndroid: false,
-      shouldDuckAndroid: true
+      shouldDuckAndroid: true,
+      staysActiveInBackground: true
     });
 
     this.initializeSound();
@@ -164,22 +165,12 @@ class Player extends React.Component {
   };
 
   render() {
-    const {
-      changeTrack,
-      id,
-      isPlaying,
-      pause,
-      isPaused,
-      playlist,
-      track
-    } = this.props;
+    const { changeTrack, id, pause, isPaused, playlist, track } = this.props;
     const trackName = track
       ? `${playlist.data.tracks.findIndex(t => t.id === id) + 1}. ${track.name}`
       : null;
     return (
       <View>
-        {/* Using keep awake since expo does not support background audio */}
-        {track && isPlaying && !isPaused && <KeepAwake />}
         {track && (
           <Modal
             animationType="slide"
