@@ -1,5 +1,5 @@
-# Dropbox Demo Tape
+# Dropbox Demo Tape (native)
 
 > a react-native shareable demo tape app
 
-## THIS PROJECT IS STILL A PROOF OF CONCEPT SO LOWER THOSE EXPECTATIONS
+This was the original form of Dropbox Demo Tape, I transitioned it to a web app [here](https://github.com/ruebel/dropbox-demo-tape-web)
